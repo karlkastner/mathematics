@@ -1,0 +1,86 @@
+% Sun 12 Jun 13:43:27 CEST 2016
+% Karl Kastner, Berlin
+%
+%% non-linear conjugate gradient
+% input:
+% x   : nx1 start vectort
+% opt : struct options
+% fdx : gradient constraint
+function [x f r] = nlcg(afun,x,opt,fdx)
+	if (nargin() < 3 || isempty(opt))
+		opt = struct;
+	end
+	if (nargin() < 4)
+		fdx = true(size(x));
+	end
+	if (~isfield(opt,'maxiter'))
+		opt.maxiter = 100;
+	end
+	if (~isfield(opt,'abstol'))
+		opt.abstol = sqrt(eps);
+	end
+	if (~isfield(opt,'reltol'))
+		opt.reltol = 1e-3;
+	end
+	if (~isfield(opt,'verbose'))
+		opt.verbose = false;
+	end
+	if (~isfield(opt,'project'))
+		opt.project = [];
+	end
+
+	% calculate the residual at the initial step
+	% A'*residual = gradient : A'(Ax-b) = A'r
+	[f r] = afun(x);
+	f  = sqrt(f'*f);
+	f0 = f;
+	a  = 1;
+	% set initial search direction into direction of the gradient
+	p = r;
+	iter = 0;
+	while (1)
+		iter = iter+1;
+		if (iter >= opt.maxiter)
+			fprintf('Stopped at iteration %d, as maximum number of iterations was reached.\n',iter);
+			break;
+		end
+		rold = r;
+		fold = f;
+
+		% perform line search in search direction and step
+		% a = r'r / (p'Ap)
+		% x = x + a*p;
+		p(~fdx) = 0;
+		[x f a] = line_search2(afun,x,f,p,a);
+
+		% update the residual
+		% r = r - a Ap
+		[f r] = afun(x);
+		f = sqrt(f'*f);
+
+		% check for convergence
+		if (opt.verbose)
+			fprintf('Iteration: %d Objective function value %1.15f, delta %1.15f\n',iter,f,fold-f);
+		end
+		% stop if the value of the objective function is invalid
+		if (isnan(f))
+			fprintf('Stopped at iteration %d, without converging, as the objective function value was NaN\n',iter);
+			break;
+		end
+		% stop if there is no reduction of the objective function value
+		if (f >= fold-opt.abstol)
+			fprintf('Stopped at iteration %d, without coverging, as there was no reduction of the objective function value\n',iter);
+			break;
+		end
+		if (f < opt.reltol*f0)
+			fprintf('Stopped at iteration %d, as the value of the objective function converged below the relative tolerance\n',iter);
+			break;
+		end
+		% update search direction
+		%b = r'*r/(rold'*rold);
+		b = r'*(r-rold)/(rold'*rold);
+		b = max(b,0);
+		p = r + b*p;
+	end % while 1
+end % nlcg
+
