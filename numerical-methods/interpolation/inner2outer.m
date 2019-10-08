@@ -2,6 +2,9 @@
 %% linear interpolation of segment mit point to grid points at segment ends
 %% assumes equal grid spacing
 function x = inner2outer(x)
+	if (isvector(x))
+		x=cvec(x);
+	end
 	if (size(x,1) == 1)
 		x = [x;x];
 	else

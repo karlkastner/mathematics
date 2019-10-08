@@ -31,12 +31,15 @@ mathematics}
 
 
 \section{complex-analysis}
+\begin{lstlisting}
 operations on complex numbers
 
 
+\end{lstlisting}
 \subsection{complex\_exp\_product\_im\_im}
 ${}$
-\begin{lstlisting}  product of the imaginary part of two complex exponentials
+\begin{lstlisting}
+  product of the imaginary part of two complex exponentials
 
  the product has two frequency components
 
@@ -47,9 +50,11 @@ ${}$
 	cp : amplitude of the product
 	op : frequencies of the product
 
-\end{lstlisting}\subsection{complex\_exp\_product\_im\_re}
+\end{lstlisting}
+\subsection{complex\_exp\_product\_im\_re}
 ${}$
-\begin{lstlisting}  product of the imaginary part of one and the real part of a second
+\begin{lstlisting}
+  product of the imaginary part of one and the real part of a second
   complex exponential
 
  the product has two frequency components
@@ -61,9 +66,11 @@ ${}$
 	cp : amplitude of the product
 	op : frequencies of the product
 
-\end{lstlisting}\subsection{complex\_exp\_product\_re\_im}
+\end{lstlisting}
+\subsection{complex\_exp\_product\_re\_im}
 ${}$
 \begin{lstlisting}
+
  the product has two frequency components
 
   product of the imaginary part of one and the real part of a second
@@ -76,9 +83,11 @@ ${}$
 	cp : amplitude of the product
 	op : frequencies of the product
 
-\end{lstlisting}\subsection{complex\_exp\_product\_re\_re}
+\end{lstlisting}
+\subsection{complex\_exp\_product\_re\_re}
 ${}$
 \begin{lstlisting}
+
   product of the real part of two complex exponentials
 
  re(c1 exp(io1x))*re(c2 exp(io2x)) = 
@@ -94,9 +103,11 @@ ${}$
 	cp : amplitude of the product
 	op : frequencies of the product
 
-\end{lstlisting}\subsection{croots}
+\end{lstlisting}
+\subsection{croots}
 ${}$
-\begin{lstlisting} nth-roots of a complex number
+\begin{lstlisting}
+ nth-roots of a complex number
 
  input:
  c : complex number
@@ -106,82 +117,122 @@ ${}$
 
  r : roots of the complex number
 
-\end{lstlisting}\subsection{root\_complex}
-${}$
-\begin{lstlisting} root of a complex number
-
-\end{lstlisting}\subsection{test\_imroots}
+\end{lstlisting}
+\subsection{root\_complex}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{derivation}
+ root of a complex number
+
+\end{lstlisting}
+\subsection{test\_imroots}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{derivation}
+\begin{lstlisting}
 derivation of several functions by means of symbolic computation
 
 
+\end{lstlisting}
 \subsection{derive\_acfar1}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{derive\_ar2param}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_arc\_length}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_fourier\_power}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_fourier\_power\_exp}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_laplacian\_curvilinear}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_laplacian\_fourier\_piecewise\_linear}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_logtripdf}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{derive\_smooth1d\_parametric}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{simplify\_atan}
-${}$
-\begin{lstlisting} symbolic simplification of the arcus tangent
 
-\end{lstlisting}\section{fourier/@STFT}
+\end{lstlisting}
+\subsection{derive\_ar2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_arc\_length}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_fourier\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_fourier\_power\_exp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_laplacian\_curvilinear}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_laplacian\_fourier\_piecewise\_linear}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_logtripdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_smooth1d\_parametric}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{simplify\_atan}
+${}$
+\begin{lstlisting}
+ symbolic simplification of the arcus tangent
+
+\end{lstlisting}
+\section{fourier/@STFT}
 \subsection{STFT}
 ${}$
-\begin{lstlisting} class for short time fourier transform
+\begin{lstlisting}
+ class for short time fourier transform
 
  Note: the interval Ti should be set to at leat 2*max(T), as otherwise coefficients
        tend to oscillate in the presence of noise
  Note: for convenience, the independent variable is labeled as time (t),
        but the independent variable is arbitrary, so it works likewise in space
 
-\end{lstlisting}\subsection{itransform}
+\end{lstlisting}
+\subsection{itransform}
 ${}$
-\begin{lstlisting} inverse of the short time fourier transform
+\begin{lstlisting}
+ inverse of the short time fourier transform
 
-\end{lstlisting}\subsection{stft\_}
+\end{lstlisting}
+\subsection{stft\_}
 ${}$
-\begin{lstlisting} static wrapper for STFT
+\begin{lstlisting}
+ static wrapper for STFT
 
-\end{lstlisting}\subsection{stftmat}
+\end{lstlisting}
+\subsection{stftmat}
 ${}$
-\begin{lstlisting} transformation matrix for the short time fourier transform
+\begin{lstlisting}
+ transformation matrix for the short time fourier transform
 
-\end{lstlisting}\subsection{transform}
+\end{lstlisting}
+\subsection{transform}
 ${}$
-\begin{lstlisting} short time fourier transform
+\begin{lstlisting}
+ short time fourier transform
 
-\end{lstlisting}\section{fourier}
+\end{lstlisting}
+\section{fourier}
+\begin{lstlisting}
 support and analysis functions both for the discrete (fast) fourier transform (dft/fft)
 and continuous fourier analysis (fourier series)
 
 
+\end{lstlisting}
 \subsection{amplitude\_from\_peak}
 ${}$
-\begin{lstlisting} amplitude and standard deviation of the amplitude of a frequency component
+\begin{lstlisting}
+ amplitude and standard deviation of the amplitude of a frequency component
  represented by a peak in the fourier domain
  input :
  h : peak height
@@ -191,9 +242,11 @@ ${}$
  a : amplitude in real space
  s : standard deviation of the frequency (!)
 
-\end{lstlisting}\subsection{dftmtx\_man}
+\end{lstlisting}
+\subsection{dftmtx\_man}
 ${}$
-\begin{lstlisting} fourier matrix in matlab style with a limited number of rows,
+\begin{lstlisting}
+ fourier matrix in matlab style with a limited number of rows,
  columns of higher frequencies are omitted
 
  input :
@@ -203,12 +256,16 @@ ${}$
  output :
  F : fourier matrix
 
-\end{lstlisting}\subsection{example\_fourier\_window}
+\end{lstlisting}
+\subsection{example\_fourier\_window}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{fft\_derivative}
+
+\end{lstlisting}
+\subsection{fft\_derivative}
 ${}$
-\begin{lstlisting} derivative by fourier transform
+\begin{lstlisting}
+ derivative by fourier transform
  exponential convergence for periodic functions
  results in spurious oscillations for aperiodic functions
 
@@ -218,9 +275,11 @@ ${}$
 
  dx : kth-derivative of x
 
-\end{lstlisting}\subsection{fft\_man}
+\end{lstlisting}
+\subsection{fft\_man}
 ${}$
-\begin{lstlisting} fast fourier transform for complex input data
+\begin{lstlisting}
+ fast fourier transform for complex input data
 
  input:
  F : data in real space
@@ -230,9 +289,11 @@ ${}$
  F : fourier transformation of F
 
 
-\end{lstlisting}\subsection{fftsmooth}
+\end{lstlisting}
+\subsection{fftsmooth}
 ${}$
-\begin{lstlisting} smooth the fourier transform and determine upper and lower bound confidence intervals
+\begin{lstlisting}
+ smooth the fourier transform and determine upper and lower bound confidence intervals
 
  input :
  f :
@@ -247,17 +308,21 @@ ${}$
  l : lower bound
  u : upper bound
 
-\end{lstlisting}\subsection{fix\_fourier}
+\end{lstlisting}
+\subsection{fix\_fourier}
 ${}$
-\begin{lstlisting} fill gaps (missing data) by means of fourier extrapolation
+\begin{lstlisting}
+ fill gaps (missing data) by means of fourier extrapolation
 
  fix periodic data series with fourier interpolation
  longest gap should not exceed 1/2 of the shortest time span of interest (1/cutoff frequency)
   note: this limit equals the position of first side lobe of the ft of a rectangular window with gap length
 
-\end{lstlisting}\subsection{fourier\_axis}
+\end{lstlisting}
+\subsection{fourier\_axis}
 ${}$
-\begin{lstlisting} return axis of frequencies and periods for the discrete fourier transform
+\begin{lstlisting}
+ return axis of frequencies and periods for the discrete fourier transform
  as computed by fft (matlab-style)
 
  input:
@@ -272,9 +337,11 @@ ${}$
         (as both halves are complex conjugates)
  N    : frequency id
 
-\end{lstlisting}\subsection{fourier\_coefficient\_piecewise\_linear}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_piecewise\_linear}
 ${}$
-\begin{lstlisting} fourier series coefficients of a piecewise linear function
+\begin{lstlisting}
+ fourier series coefficients of a piecewise linear function
  (not coefficient of discrete fourier transform)
  function can be discontinuous between intervals
  scales domain length to 2pi
@@ -288,9 +355,11 @@ ${}$
  output :
  a, b : coefficients for frequency components
 
-\end{lstlisting}\subsection{fourier\_coefficient\_piecewise\_linear\_1}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_piecewise\_linear\_1}
 ${}$
-\begin{lstlisting} fourier series coefficients of a piecewise linear function
+\begin{lstlisting}
+ fourier series coefficients of a piecewise linear function
  (not coefficient of discrete fourier transform)
  function can be discontinuous between intervals
  scales domain length to 2pi
@@ -302,58 +371,82 @@ ${}$
  output :
  ab : coefficients for frequency components
 
-\end{lstlisting}\subsection{fourier\_coefficient\_ramp3}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_ramp3}
 ${}$
-\begin{lstlisting} fourier series coefficient of a ramp
+\begin{lstlisting}
+ fourier series coefficient of a ramp
 
-\end{lstlisting}\subsection{fourier\_coefficient\_ramp\_pulse}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_ramp\_pulse}
 ${}$
-\begin{lstlisting} fourier series coefficient of a ramp pules
+\begin{lstlisting}
+ fourier series coefficient of a ramp pules
 
-\end{lstlisting}\subsection{fourier\_coefficient\_ramp\_step}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_ramp\_step}
 ${}$
-\begin{lstlisting} fourier coefficient of a ramp-step
+\begin{lstlisting}
+ fourier coefficient of a ramp-step
 
-\end{lstlisting}\subsection{fourier\_coefficient\_square\_pulse}
+\end{lstlisting}
+\subsection{fourier\_coefficient\_square\_pulse}
 ${}$
-\begin{lstlisting} fourier series coefficients of a square pulse
+\begin{lstlisting}
+ fourier series coefficients of a square pulse
 
-\end{lstlisting}\subsection{fourier\_derivative}
+\end{lstlisting}
+\subsection{fourier\_derivative}
 ${}$
-\begin{lstlisting} coefficients of the derivative of a fourier series
+\begin{lstlisting}
+ coefficients of the derivative of a fourier series
  not of discrete fourier transform (fft) 
 
-\end{lstlisting}\subsection{fourier\_expand}
+\end{lstlisting}
+\subsection{fourier\_expand}
 ${}$
-\begin{lstlisting} expand values of fourier series
+\begin{lstlisting}
+ expand values of fourier series
 
-\end{lstlisting}\subsection{fourier\_fit}
+\end{lstlisting}
+\subsection{fourier\_fit}
 ${}$
-\begin{lstlisting} fit a fourier series to a set of sample points that are not spaced in
+\begin{lstlisting}
+ fit a fourier series to a set of sample points that are not spaced in
  equal intervals
 
-\end{lstlisting}\subsection{fourier\_interpolate}
+\end{lstlisting}
+\subsection{fourier\_interpolate}
 ${}$
-\begin{lstlisting} interpolate samples y sampled at moments (location) t to locations ti
+\begin{lstlisting}
+ interpolate samples y sampled at moments (location) t to locations ti
 
-\end{lstlisting}\subsection{fourier\_matrix}
+\end{lstlisting}
+\subsection{fourier\_matrix}
 ${}$
-\begin{lstlisting} transformation matrix for a continuous fourier series
+\begin{lstlisting}
+ transformation matrix for a continuous fourier series
  (not for the discrete dft/fft)
 
-\end{lstlisting}\subsection{fourier\_matrix2}
+\end{lstlisting}
+\subsection{fourier\_matrix2}
 ${}$
-\begin{lstlisting} transformation matrix for a continuous fourier series
+\begin{lstlisting}
+ transformation matrix for a continuous fourier series
  (not for the discrete dft/fft)
 
-\end{lstlisting}\subsection{fourier\_matrix3}
+\end{lstlisting}
+\subsection{fourier\_matrix3}
 ${}$
-\begin{lstlisting} transformation matrix for the continous fourier transform
+\begin{lstlisting}
+ transformation matrix for the continous fourier transform
  this is a matrix with (2*n+1) real columns
 
-\end{lstlisting}\subsection{fourier\_power}
+\end{lstlisting}
+\subsection{fourier\_power}
 ${}$
-\begin{lstlisting} powers of a continuous fourier series in sin/cos form
+\begin{lstlisting}
+ powers of a continuous fourier series in sin/cos form
 
  powers of a^p = (ur + u1 sin(ot) + u2 sin(ot+dp))^p
  phase of first component assumed 0
@@ -361,9 +454,11 @@ ${}$
  frequencies higher than 2-omega ignored in input
  frequencies higher than 3-omega not computed
 
-\end{lstlisting}\subsection{fourier\_power\_exp}
+\end{lstlisting}
+\subsection{fourier\_power\_exp}
 ${}$
-\begin{lstlisting} powers of the continuous fourier series 
+\begin{lstlisting}
+ powers of the continuous fourier series 
  	a^p = (ur + u1 sin(ot) + u2 sin(ot+dp))^p
  phase of first component assumed 0
  
@@ -375,41 +470,55 @@ ${}$
 
  NOT the alternative sum_{i=-inf}^inf \tilde c_i, tile c_j = 1/2 a_j + 1/2i b_j
 
-\end{lstlisting}\subsection{fourier\_predict}
+\end{lstlisting}
+\subsection{fourier\_predict}
 ${}$
-\begin{lstlisting} expand a continous fourier series at times t
+\begin{lstlisting}
+ expand a continous fourier series at times t
 
-\end{lstlisting}\subsection{fourier\_range}
+\end{lstlisting}
+\subsection{fourier\_range}
 ${}$
-\begin{lstlisting} approximate range of a continous Fourier series with 2 components
+\begin{lstlisting}
+ approximate range of a continous Fourier series with 2 components
  range(y) = max(y) - min(y)
 
-\end{lstlisting}\subsection{fourier\_regress}
+\end{lstlisting}
+\subsection{fourier\_regress}
 ${}$
-\begin{lstlisting} fit a continous fourier series to a set of sample points not sampled
+\begin{lstlisting}
+ fit a continous fourier series to a set of sample points not sampled
  at equal intervals
 
-\end{lstlisting}\subsection{fourier\_resampled\_fit}
+\end{lstlisting}
+\subsection{fourier\_resampled\_fit}
 ${}$
-\begin{lstlisting} fits coefficients of a continuous fourier transform,
+\begin{lstlisting}
+ fits coefficients of a continuous fourier transform,
  but stores them as resampled values
 
-\end{lstlisting}\subsection{fourier\_resampled\_predict}
+\end{lstlisting}
+\subsection{fourier\_resampled\_predict}
 ${}$
-\begin{lstlisting} interpolates a continuous fourier series that has been stored as values
+\begin{lstlisting}
+ interpolates a continuous fourier series that has been stored as values
  at their support points
 
-\end{lstlisting}\subsection{fourier\_signed\_square}
+\end{lstlisting}
+\subsection{fourier\_signed\_square}
 ${}$
-\begin{lstlisting} coefficients of the fourier series of | cos a + cos t | (cos a + cos t)
+\begin{lstlisting}
+ coefficients of the fourier series of | cos a + cos t | (cos a + cos t)
  in general
             cos a is midrange
             cos t is tidal variation
  c.f Dronkers
 
-\end{lstlisting}\subsection{fourier\_transform}
+\end{lstlisting}
+\subsection{fourier\_transform}
 ${}$
-\begin{lstlisting} continuous fourier transformation of y
+\begin{lstlisting}
+ continuous fourier transformation of y
  (not discrete fourier transformation dft/fft)
 
  input:
@@ -423,18 +532,24 @@ ${}$
        p  : fourier transformation of b
 	tt : TODO 
 
-\end{lstlisting}\subsection{hyperbolic\_fourier\_box}
+\end{lstlisting}
+\subsection{hyperbolic\_fourier\_box}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{idftmtx\_man}
+
+\end{lstlisting}
+\subsection{idftmtx\_man}
 ${}$
-\begin{lstlisting} inverse matrix for the discrete fourier transform in matlab style
+\begin{lstlisting}
+ inverse matrix for the discrete fourier transform in matlab style
  with a limited number of columns, thus ignoring higher frequencies
  keep 2nc+1 columns (mean and conj-complex pairs of nc frequencies)
 
-\end{lstlisting}\subsection{laplace\_2d\_pwlinear}
+\end{lstlisting}
+\subsection{laplace\_2d\_pwlinear}
 ${}$
-\begin{lstlisting} solution to the Laplacian in two dimensions for a finite rectangular domain
+\begin{lstlisting}
+ solution to the Laplacian in two dimensions for a finite rectangular domain
  with piecewise constant boundary conditions
  linear system with 4 unknowns per freqency component
  these are coefficients of s,c,sh,ch
@@ -446,13 +561,17 @@ ${}$
   least squares with piecewise integration
  [x0,p,q,r] piecewise linear polynomials at the boundaries
 
-\end{lstlisting}\subsection{nanfft}
+\end{lstlisting}
+\subsection{nanfft}
 ${}$
-\begin{lstlisting} discrete fourier transform of a data series with gaps
+\begin{lstlisting}
+ discrete fourier transform of a data series with gaps
 
-\end{lstlisting}\subsection{peaks}
+\end{lstlisting}
+\subsection{peaks}
 ${}$
-\begin{lstlisting} peaks of the power spectrum of a disctrete fourier transform
+\begin{lstlisting}
+ peaks of the power spectrum of a disctrete fourier transform
 
  rule for peaks: there is no higher value left or right of the "peak"
                  until the signal drops to p*y_peak, p = 0.5
@@ -473,29 +592,41 @@ ${}$
  pdx : index of peak
  f : frequency (if not given as input) 
 
-\end{lstlisting}\subsection{roots\_fourier}
+\end{lstlisting}
+\subsection{roots\_fourier}
 ${}$
-\begin{lstlisting} zeros of continuous fourier series series
+\begin{lstlisting}
+ zeros of continuous fourier series series
 
 	f  = a_0 + sum_j=^n a_i cos(j x) + b_i sin(j x)
 
-\end{lstlisting}\subsection{spectral\_density}
+\end{lstlisting}
+\subsection{spectral\_density}
 ${}$
-\begin{lstlisting} spectral density
+\begin{lstlisting}
+ spectral density
 
-\end{lstlisting}\subsection{test\_complex\_exp\_product}
+\end{lstlisting}
+\subsection{test\_complex\_exp\_product}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_idftmtx}
+
+\end{lstlisting}
+\subsection{test\_idftmtx}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{geometry/@Geometry}
+
+\end{lstlisting}
+\section{geometry/@Geometry}
 \subsection{Geometry}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{arclength}
+
+\end{lstlisting}
+\subsection{arclength}
 ${}$
-\begin{lstlisting} arc length of a two dimensional curve
+\begin{lstlisting}
+ arc length of a two dimensional curve
 
  8th order accurate
  does not require the segments length to vary smoothly
@@ -505,237 +636,349 @@ ${}$
       thus a non smooth t (strongly varying distance between points)
       requires the scaling as done below
 
-\end{lstlisting}\subsection{arclength\_old}
+\end{lstlisting}
+\subsection{arclength\_old}
 ${}$
-\begin{lstlisting} arc length of a two dimensional function
+\begin{lstlisting}
+ arc length of a two dimensional function
 
-\end{lstlisting}\subsection{arclength\_old2}
+\end{lstlisting}
+\subsection{arclength\_old2}
 ${}$
-\begin{lstlisting} arc length of a two dimensional function
+\begin{lstlisting}
+ arc length of a two dimensional function
 
-\end{lstlisting}\subsection{base\_point}
+\end{lstlisting}
+\subsection{base\_point}
 ${}$
-\begin{lstlisting} base point (fusspunkt), i.e. point on a line with shortest distance
+\begin{lstlisting}
+ base point (fusspunkt), i.e. point on a line with shortest distance
  to another point
 
-\end{lstlisting}\subsection{base\_point\_limited}
+\end{lstlisting}
+\subsection{base\_point\_limited}
 ${}$
-\begin{lstlisting} base point (Fusspunkt) of a point on a line
+\begin{lstlisting}
+ base point (Fusspunkt) of a point on a line
 
-\end{lstlisting}\subsection{centroid}
+\end{lstlisting}
+\subsection{centroid}
 ${}$
-\begin{lstlisting} centroid pf a polygone
+\begin{lstlisting}
+ centroid pf a polygone
 
-\end{lstlisting}\subsection{cross2}
+\end{lstlisting}
+\subsection{cross2}
 ${}$
-\begin{lstlisting} cross product in two dimensions
+\begin{lstlisting}
+ cross product in two dimensions
 
-\end{lstlisting}\subsection{curvature}
+\end{lstlisting}
+\subsection{curvature}
 ${}$
-\begin{lstlisting} curvature of a function in two dimensions
+\begin{lstlisting}
+ curvature of a function in two dimensions
 
-\end{lstlisting}\subsection{ddot}
+\end{lstlisting}
+\subsection{ddot}
 ${}$
-\begin{lstlisting} sum of squares of cos of inner angles of triangle
+\begin{lstlisting}
+ sum of squares of cos of inner angles of triangle
 
-\end{lstlisting}\subsection{distance}
+\end{lstlisting}
+\subsection{distance}
 ${}$
-\begin{lstlisting} equclidan distance between two points
+\begin{lstlisting}
+ equclidan distance between two points
 
-\end{lstlisting}\subsection{distance2}
+\end{lstlisting}
+\subsection{distance2}
 ${}$
-\begin{lstlisting} euclidean distance between two points
+\begin{lstlisting}
+ euclidean distance between two points
  this function requires a and be of equal dimensions, or the least the first pair or second pair to be a scalar
 
-\end{lstlisting}\subsection{dot}
+\end{lstlisting}
+\subsection{dot}
 ${}$
-\begin{lstlisting} dot product
+\begin{lstlisting}
+ dot product
 
-\end{lstlisting}\subsection{edge\_length}
+\end{lstlisting}
+\subsection{edge\_length}
 ${}$
-\begin{lstlisting} edge length
+\begin{lstlisting}
+ edge length
 
-\end{lstlisting}\subsection{enclosed\_angle}
+\end{lstlisting}
+\subsection{enclosed\_angle}
 ${}$
-\begin{lstlisting} angle enclosed between two lines
+\begin{lstlisting}
+ angle enclosed between two lines
 
-\end{lstlisting}\subsection{enclosing\_triangle}
+\end{lstlisting}
+\subsection{enclosing\_triangle}
 ${}$
-\begin{lstlisting} smallest enclosing equilateral triangle with bottom site paralle to X axis
+\begin{lstlisting}
+ smallest enclosing equilateral triangle with bottom site paralle to X axis
 
-\end{lstlisting}\subsection{hexagon}
+\end{lstlisting}
+\subsection{hexagon}
 ${}$
-\begin{lstlisting} coordinates of a hexagon, scaled and rotated
+\begin{lstlisting}
+ coordinates of a hexagon, scaled and rotated
 
-\end{lstlisting}\subsection{inPolygon}
+\end{lstlisting}
+\subsection{inPolygon}
 ${}$
-\begin{lstlisting} flag points contained in a polygon
+\begin{lstlisting}
+ flag points contained in a polygon
  much faster than matlab internal function
 
-\end{lstlisting}\subsection{inTetra}
-${}$
-\begin{lstlisting} flag points contained in tetrahedron
-
-\end{lstlisting}\subsection{inTetra2}
-${}$
-\begin{lstlisting} flag points contained in tetrahedron
-
-\end{lstlisting}\subsection{inTriangle}
-${}$
-\begin{lstlisting} flag points contained in triangle
-
-\end{lstlisting}\subsection{intersect}
-${}$
-\begin{lstlisting} intersect between two lines
-
-\end{lstlisting}\subsection{lineintersect}
-${}$
-\begin{lstlisting} intersect of two lines
-
-\end{lstlisting}\subsection{lineintersect1}
-${}$
-\begin{lstlisting} intersect of two lines
-
-\end{lstlisting}\subsection{minimum\_distance\_lines}
-${}$
-\begin{lstlisting} minimum distance of two lines in three dimensions
-
-\end{lstlisting}\subsection{mittenpunkt}
-${}$
-\begin{lstlisting} mittenpunkt of a triangle
-
-\end{lstlisting}\subsection{nagelpoint}
-${}$
-\begin{lstlisting} nagelpoint of a triangle
-
-\end{lstlisting}\subsection{onLine}
+\end{lstlisting}
+\subsection{inTetra}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{orthocentre}
-${}$
-\begin{lstlisting} orthocentre of triangle
+ flag points contained in tetrahedron
 
-\end{lstlisting}\subsection{plumb\_line}
+\end{lstlisting}
+\subsection{inTetra2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{poly\_area}
-${}$
-\begin{lstlisting} area of a polygon
+ flag points contained in tetrahedron
 
-\end{lstlisting}\subsection{poly\_edges}
+\end{lstlisting}
+\subsection{inTriangle}
 ${}$
-\begin{lstlisting} edges of a polygon
+\begin{lstlisting}
+ flag points contained in triangle
 
-\end{lstlisting}\subsection{poly\_set}
+\end{lstlisting}
+\subsection{intersect}
 ${}$
-\begin{lstlisting} associate point at arbitary location with a polygon it is contained in
+\begin{lstlisting}
+ intersect between two lines
+
+\end{lstlisting}
+\subsection{lineintersect}
+${}$
+\begin{lstlisting}
+ intersect of two lines
+
+\end{lstlisting}
+\subsection{lineintersect1}
+${}$
+\begin{lstlisting}
+ intersect of two lines
+
+\end{lstlisting}
+\subsection{minimum\_distance\_lines}
+${}$
+\begin{lstlisting}
+ minimum distance of two lines in three dimensions
+
+\end{lstlisting}
+\subsection{mittenpunkt}
+${}$
+\begin{lstlisting}
+ mittenpunkt of a triangle
+
+\end{lstlisting}
+\subsection{nagelpoint}
+${}$
+\begin{lstlisting}
+ nagelpoint of a triangle
+
+\end{lstlisting}
+\subsection{onLine}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{orthocentre}
+${}$
+\begin{lstlisting}
+ orthocentre of triangle
+
+\end{lstlisting}
+\subsection{plumb\_line}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{poly\_area}
+${}$
+\begin{lstlisting}
+ area of a polygon
+
+\end{lstlisting}
+\subsection{poly\_edges}
+${}$
+\begin{lstlisting}
+ edges of a polygon
+
+\end{lstlisting}
+\subsection{poly\_set}
+${}$
+\begin{lstlisting}
+ associate point at arbitary location with a polygon it is contained in
  and assign the value of the polygon to it
 
-\end{lstlisting}\subsection{poly\_width}
+\end{lstlisting}
+\subsection{poly\_width}
 ${}$
-\begin{lstlisting} width of polygon width holes by surface normals
+\begin{lstlisting}
+ width of polygon width holes by surface normals
  holes / islands separated with NaN
  order of points of outer boundary must be cw
  order of points of holes must be ccw
  note that this function does not give the true width for expanding sections
  use voronoi polygons for this
 
-\end{lstlisting}\subsection{polyxpoly}
+\end{lstlisting}
+\subsection{polyxpoly}
 ${}$
-\begin{lstlisting} intersections of two polygons
+\begin{lstlisting}
+ intersections of two polygons
 
-\end{lstlisting}\subsection{project\_to\_curve}
+\end{lstlisting}
+\subsection{project\_to\_curve}
 ${}$
-\begin{lstlisting} closest point on a curve with respect to a point at distance to the curve
+\begin{lstlisting}
+ closest point on a curve with respect to a point at distance to the curve
 
-\end{lstlisting}\subsection{random\_disk}
+\end{lstlisting}
+\subsection{random\_disk}
 ${}$
-\begin{lstlisting} draw random points on the unit disk
+\begin{lstlisting}
+ draw random points on the unit disk
 
-\end{lstlisting}\subsection{random\_simplex}
+\end{lstlisting}
+\subsection{random\_simplex}
 ${}$
-\begin{lstlisting} random point inside of a triangle
+\begin{lstlisting}
+ random point inside of a triangle
 
-\end{lstlisting}\subsection{sphere\_volume}
+\end{lstlisting}
+\subsection{sphere\_volume}
 ${}$
-\begin{lstlisting} volume of a sphere
+\begin{lstlisting}
+ volume of a sphere
 
-\end{lstlisting}\subsection{tetra\_volume}
+\end{lstlisting}
+\subsection{tetra\_volume}
 ${}$
-\begin{lstlisting} volume of a tetrahedron
+\begin{lstlisting}
+ volume of a tetrahedron
 
-\end{lstlisting}\subsection{tobarycentric}
+\end{lstlisting}
+\subsection{tobarycentric}
 ${}$
-\begin{lstlisting} cartesian to barycentric coordinates
+\begin{lstlisting}
+ cartesian to barycentric coordinates
 
-\end{lstlisting}\subsection{tobarycentric1}
+\end{lstlisting}
+\subsection{tobarycentric1}
 ${}$
-\begin{lstlisting} cartesian to barycentric coordinates
+\begin{lstlisting}
+ cartesian to barycentric coordinates
 
-\end{lstlisting}\subsection{tobarycentric2}
+\end{lstlisting}
+\subsection{tobarycentric2}
 ${}$
-\begin{lstlisting} cartesian to barycentric coordinates
+\begin{lstlisting}
+ cartesian to barycentric coordinates
 
-\end{lstlisting}\subsection{tobarycentric3}
+\end{lstlisting}
+\subsection{tobarycentric3}
 ${}$
-\begin{lstlisting} cartesian to barycentric coordinates
+\begin{lstlisting}
+ cartesian to barycentric coordinates
 
-\end{lstlisting}\subsection{tri\_angle}
+\end{lstlisting}
+\subsection{tri\_angle}
 ${}$
-\begin{lstlisting} cos of angles of a triangle
+\begin{lstlisting}
+ cos of angles of a triangle
 
-\end{lstlisting}\subsection{tri\_area}
+\end{lstlisting}
+\subsection{tri\_area}
 ${}$
-\begin{lstlisting} angle of a triangle
+\begin{lstlisting}
+ angle of a triangle
 
-\end{lstlisting}\subsection{tri\_centroid}
+\end{lstlisting}
+\subsection{tri\_centroid}
 ${}$
-\begin{lstlisting} centroid of a triangle
+\begin{lstlisting}
+ centroid of a triangle
 
-\end{lstlisting}\subsection{tri\_distance\_opposit\_midpoint}
+\end{lstlisting}
+\subsection{tri\_distance\_opposit\_midpoint}
 ${}$
-\begin{lstlisting} distance between corner of a triangle and its opposing mid-point
+\begin{lstlisting}
+ distance between corner of a triangle and its opposing mid-point
 
-\end{lstlisting}\subsection{tri\_edge\_length}
+\end{lstlisting}
+\subsection{tri\_edge\_length}
 ${}$
-\begin{lstlisting} edge length of a triangle
+\begin{lstlisting}
+ edge length of a triangle
 
-\end{lstlisting}\subsection{tri\_edge\_midpoint}
+\end{lstlisting}
+\subsection{tri\_edge\_midpoint}
 ${}$
-\begin{lstlisting} mid point of a triangle
+\begin{lstlisting}
+ mid point of a triangle
 
-\end{lstlisting}\subsection{tri\_excircle}
+\end{lstlisting}
+\subsection{tri\_excircle}
 ${}$
-\begin{lstlisting} excircle of a triangle
+\begin{lstlisting}
+ excircle of a triangle
 
-\end{lstlisting}\subsection{tri\_height}
+\end{lstlisting}
+\subsection{tri\_height}
 ${}$
-\begin{lstlisting} height of a triangle
+\begin{lstlisting}
+ height of a triangle
 
-\end{lstlisting}\subsection{tri\_incircle}
+\end{lstlisting}
+\subsection{tri\_incircle}
 ${}$
-\begin{lstlisting} incircle of a triangle
+\begin{lstlisting}
+ incircle of a triangle
 
-\end{lstlisting}\subsection{tri\_isacute}
+\end{lstlisting}
+\subsection{tri\_isacute}
 ${}$
-\begin{lstlisting} flag acute triangles
+\begin{lstlisting}
+ flag acute triangles
 
-\end{lstlisting}\subsection{tri\_isobtuse}
+\end{lstlisting}
+\subsection{tri\_isobtuse}
 ${}$
-\begin{lstlisting} flag obntuse triangles
+\begin{lstlisting}
+ flag obntuse triangles
 
-\end{lstlisting}\subsection{tri\_semiperimeter}
+\end{lstlisting}
+\subsection{tri\_semiperimeter}
 ${}$
-\begin{lstlisting} semiperimeter of a triangle
+\begin{lstlisting}
+ semiperimeter of a triangle
 
-\end{lstlisting}\subsection{tri\_side\_length}
+\end{lstlisting}
+\subsection{tri\_side\_length}
 ${}$
-\begin{lstlisting} edge lenght of triangle
+\begin{lstlisting}
+ edge lenght of triangle
 
-\end{lstlisting}\section{geometry}
+\end{lstlisting}
+\section{geometry}
 \subsection{Polygon}
 ${}$
-\begin{lstlisting} Simple 2D polygon class
+\begin{lstlisting}
+ Simple 2D polygon class
 
    Polygon properties:
        x - x coordinates of polygon
@@ -749,69 +992,101 @@ ${}$
        iscw - check whether polygon is clockwise
        reverse - reverse the order of the polygon
 
-\end{lstlisting}\subsection{bounding\_box}
-${}$
-\begin{lstlisting} bounding box of X
-
-\end{lstlisting}\subsection{curvature\_1d}
-${}$
-\begin{lstlisting} curvature of a sampled parametric curve in two dimensions
-
-\end{lstlisting}\subsection{cvt}
-${}$
-\begin{lstlisting} centroidal voronoi tesselation
-
-\end{lstlisting}\subsection{deg\_to\_frac}
-${}$
-\begin{lstlisting} degree, minutes and seconds to fractions
-
-\end{lstlisting}\subsection{ellipse}
-${}$
-\begin{lstlisting} n-points on an ellipse
-
-\end{lstlisting}\subsection{ellipseX}
-${}$
-\begin{lstlisting} x-coordinates of y-coordinates of an ellipse
-
-\end{lstlisting}\subsection{ellipseY}
+\end{lstlisting}
+\subsection{bounding\_box}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{first\_intersect}
-${}$
-\begin{lstlisting} get first intersection between lines in A and B
+ bounding box of X
 
-\end{lstlisting}\subsection{golden\_ratio}
+\end{lstlisting}
+\subsection{curvature\_1d}
 ${}$
-\begin{lstlisting} golden ratio
+\begin{lstlisting}
+ curvature of a sampled parametric curve in two dimensions
 
-\end{lstlisting}\subsection{hypot3}
+\end{lstlisting}
+\subsection{cvt}
 ${}$
-\begin{lstlisting} hypothenuse in 3D
+\begin{lstlisting}
+ centroidal voronoi tesselation
 
-\end{lstlisting}\subsection{meanangle}
+\end{lstlisting}
+\subsection{deg\_to\_frac}
 ${}$
-\begin{lstlisting} weighted mean of angles
+\begin{lstlisting}
+ degree, minutes and seconds to fractions
 
-\end{lstlisting}\subsection{meanangle2}
+\end{lstlisting}
+\subsection{ellipse}
 ${}$
-\begin{lstlisting} mean angle
+\begin{lstlisting}
+ n-points on an ellipse
 
-\end{lstlisting}\subsection{meanangle3}
+\end{lstlisting}
+\subsection{ellipseX}
 ${}$
-\begin{lstlisting} mean angle
+\begin{lstlisting}
+ x-coordinates of y-coordinates of an ellipse
 
-\end{lstlisting}\subsection{meanangle4}
+\end{lstlisting}
+\subsection{ellipseY}
 ${}$
-\begin{lstlisting} mean angle
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{medianangle}
+\end{lstlisting}
+\subsection{first\_intersect}
 ${}$
-\begin{lstlisting} median angle
+\begin{lstlisting}
+ get first intersection between lines in A and B
+
+\end{lstlisting}
+\subsection{golden\_ratio}
+${}$
+\begin{lstlisting}
+ golden ratio
+
+\end{lstlisting}
+\subsection{hypot3}
+${}$
+\begin{lstlisting}
+ hypothenuse in 3D
+
+\end{lstlisting}
+\subsection{meanangle}
+${}$
+\begin{lstlisting}
+ weighted mean of angles
+
+\end{lstlisting}
+\subsection{meanangle2}
+${}$
+\begin{lstlisting}
+ mean angle
+
+\end{lstlisting}
+\subsection{meanangle3}
+${}$
+\begin{lstlisting}
+ mean angle
+
+\end{lstlisting}
+\subsection{meanangle4}
+${}$
+\begin{lstlisting}
+ mean angle
+
+\end{lstlisting}
+\subsection{medianangle}
+${}$
+\begin{lstlisting}
+ median angle
  angle, that has the smallest squared distance to all others
 
-\end{lstlisting}\subsection{medianangle2}
+\end{lstlisting}
+\subsection{medianangle2}
 ${}$
-\begin{lstlisting} median angle
+\begin{lstlisting}
+ median angle
 
  input
  alpha : x*m, [rad] angle
@@ -820,124 +1095,178 @@ ${}$
  ma    : 1*m, [rad] median angle
  sa    : 1*m, [rad] standard error of median angle for uncorrelated error
 
-\end{lstlisting}\subsection{pilim}
+\end{lstlisting}
+\subsection{pilim}
 ${}$
-\begin{lstlisting} limit to +- pi
+\begin{lstlisting}
+ limit to +- pi
 
-\end{lstlisting}\subsection{streamline\_radius\_of\_curvature}
+\end{lstlisting}
+\subsection{streamline\_radius\_of\_curvature}
 ${}$
-\begin{lstlisting} streamline radius of curvature
+\begin{lstlisting}
+ streamline radius of curvature
  simplifies when rotatate to streamwise coordinates to R = 1/dv/ds * u
 
-\end{lstlisting}\section{linear-algebra}
+\end{lstlisting}
+\section{linear-algebra}
 \subsection{averaging\_matrix\_2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{colnorm}
-${}$
-\begin{lstlisting} norms of columns
 
-\end{lstlisting}\subsection{condest\_}
+\end{lstlisting}
+\subsection{colnorm}
 ${}$
-\begin{lstlisting} estimation of the condition number
+\begin{lstlisting}
+ norms of columns
 
-\end{lstlisting}\section{linear-algebra/coordinate-transformation}
+\end{lstlisting}
+\subsection{condest\_}
+${}$
+\begin{lstlisting}
+ estimation of the condition number
+
+\end{lstlisting}
+\section{linear-algebra/coordinate-transformation}
 \subsection{barycentric2cartesian}
 ${}$
-\begin{lstlisting} barycentric to cartesian coordinates
+\begin{lstlisting}
+ barycentric to cartesian coordinates
 
-\end{lstlisting}\subsection{barycentric2cartesian3}
+\end{lstlisting}
+\subsection{barycentric2cartesian3}
 ${}$
-\begin{lstlisting} convert barycentric to cartesian coordinates
+\begin{lstlisting}
+ convert barycentric to cartesian coordinates
 
-\end{lstlisting}\subsection{cartesian2barycentric}
+\end{lstlisting}
+\subsection{cartesian2barycentric}
 ${}$
-\begin{lstlisting} cartesian to barycentric coordinates
+\begin{lstlisting}
+ cartesian to barycentric coordinates
 
-\end{lstlisting}\subsection{cartesian\_to\_unit\_triangle\_basis}
+\end{lstlisting}
+\subsection{cartesian\_to\_unit\_triangle\_basis}
 ${}$
-\begin{lstlisting} transform coodinates into unit triangle
+\begin{lstlisting}
+ transform coodinates into unit triangle
 
-\end{lstlisting}\subsection{latlon2utm}
+\end{lstlisting}
+\subsection{latlon2utm}
 ${}$
-\begin{lstlisting} transform latitude and longitude to WGS84 UTM
+\begin{lstlisting}
+ transform latitude and longitude to WGS84 UTM
 
-\end{lstlisting}\subsection{lowrance\_mercator\_to\_wgs84}
+\end{lstlisting}
+\subsection{lowrance\_mercator\_to\_wgs84}
 ${}$
-\begin{lstlisting} convert lowrance coordinates to wgs84
+\begin{lstlisting}
+ convert lowrance coordinates to wgs84
 
  based on spreadsheet by D Whitney King and Patty B at Lowrance
 
-\end{lstlisting}\subsection{nmea2utm}
+\end{lstlisting}
+\subsection{nmea2utm}
 ${}$
-\begin{lstlisting} convert nmea messages to utm coordinates
+\begin{lstlisting}
+ convert nmea messages to utm coordinates
 
-\end{lstlisting}\subsection{sn2xy}
+\end{lstlisting}
+\subsection{sn2xy}
 ${}$
-\begin{lstlisting} convert sn to xy coordinates
+\begin{lstlisting}
+ convert sn to xy coordinates
 
-\end{lstlisting}\subsection{unit\_triangle\_to\_cartesian}
+\end{lstlisting}
+\subsection{unit\_triangle\_to\_cartesian}
 ${}$
-\begin{lstlisting} transform coordinates in unit triangle to cartesian coordinates
+\begin{lstlisting}
+ transform coordinates in unit triangle to cartesian coordinates
 
-\end{lstlisting}\subsection{utm2latlon}
+\end{lstlisting}
+\subsection{utm2latlon}
 ${}$
-\begin{lstlisting} convert wgs84 utm to latitute and longitude
+\begin{lstlisting}
+ convert wgs84 utm to latitute and longitude
 
-\end{lstlisting}\subsection{xy2nt}
+\end{lstlisting}
+\subsection{xy2nt}
 ${}$
-\begin{lstlisting} project all points onto the cross section and assign them nz-coordinates
+\begin{lstlisting}
+ project all points onto the cross section and assign them nz-coordinates
 
  transform coordinate into N-T reference
  rotate coordinate, so that cross section goes along x-axis
  then x and y are n and t respectively scaled by width
  N and T coordinates
 
-\end{lstlisting}\subsection{xy2sn}
+\end{lstlisting}
+\subsection{xy2sn}
 ${}$
-\begin{lstlisting} convert cartesian to streamwise coordiantes
+\begin{lstlisting}
+ convert cartesian to streamwise coordiantes
 
-\end{lstlisting}\subsection{xy2sn\_java}
+\end{lstlisting}
+\subsection{xy2sn\_java}
 ${}$
-\begin{lstlisting} use java port for speed up
+\begin{lstlisting}
+ use java port for speed up
 
-\end{lstlisting}\subsection{xy2sn\_old}
+\end{lstlisting}
+\subsection{xy2sn\_old}
 ${}$
-\begin{lstlisting} transform points from cartesian into streamwise coordinates
+\begin{lstlisting}
+ transform points from cartesian into streamwise coordinates
 
  NOTE : prefer the java version, this has some problems with round off
 
-\end{lstlisting}\section{linear-algebra}
+\end{lstlisting}
+\section{linear-algebra}
 \subsection{det2x2}
 ${}$
-\begin{lstlisting} 2x2 matrix inverse of 2x2 matrices stacked along dim 3
+\begin{lstlisting}
+ 2x2 matrix inverse of 2x2 matrices stacked along dim 3
 
-\end{lstlisting}\subsection{det3x3}
-${}$
-\begin{lstlisting} determinant of stacked 3x3 matrices
-
-\end{lstlisting}\subsection{det4x4}
-${}$
-\begin{lstlisting} determinant of stacked 4x4 matrices
-
-\end{lstlisting}\subsection{diag2x2}
-${}$
-\begin{lstlisting} diagonal of stacked 2x2 matrices
-
-\end{lstlisting}\subsection{eig2x2}
-${}$
-\begin{lstlisting} eigenvalues of stacked 2x2 matrices
-
-\end{lstlisting}\subsection{first}
+\end{lstlisting}
+\subsection{det3x3}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{gershgorin\_circle}
-${}$
-\begin{lstlisting} range of eigenvalues determined by the gershgorin circle theorem
+ determinant of stacked 3x3 matrices
 
-\end{lstlisting}\subsection{haussdorff}
+\end{lstlisting}
+\subsection{det4x4}
 ${}$
-\begin{lstlisting} haussdorf dimension
+\begin{lstlisting}
+ determinant of stacked 4x4 matrices
+
+\end{lstlisting}
+\subsection{diag2x2}
+${}$
+\begin{lstlisting}
+ diagonal of stacked 2x2 matrices
+
+\end{lstlisting}
+\subsection{eig2x2}
+${}$
+\begin{lstlisting}
+ eigenvalues of stacked 2x2 matrices
+
+\end{lstlisting}
+\subsection{first}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gershgorin\_circle}
+${}$
+\begin{lstlisting}
+ range of eigenvalues determined by the gershgorin circle theorem
+
+\end{lstlisting}
+\subsection{haussdorff}
+${}$
+\begin{lstlisting}
+ haussdorf dimension
  box counting: count cectangles passed through by line (covered by polygon)
 
  Koch snow flake 3:4 -> 1.2619
@@ -945,201 +1274,295 @@ ${}$
  quadrat         4:2, 9:3, 16:4 -> 2
 
 
-\end{lstlisting}\subsection{ieig2x2}
-${}$
-\begin{lstlisting} reconstruct matrix from eigenvalue decomposition
-
-\end{lstlisting}\subsection{inv2x2}
-${}$
-\begin{lstlisting} 2x2 inverse of stacked matrices
-
-\end{lstlisting}\subsection{inv3x3}
+\end{lstlisting}
+\subsection{ieig2x2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{inv4x4}
-${}$
-\begin{lstlisting} inverse of stacked 4x4 matrices
+ reconstruct matrix from eigenvalue decomposition
 
-\end{lstlisting}\subsection{lpmean}
-${}$
-\begin{lstlisting} mean of pth-power of a
-
-\end{lstlisting}\subsection{lpnorm}
-${}$
-\begin{lstlisting} norm of lth-power of a
-
-\end{lstlisting}\subsection{matvec3}
-${}$
-\begin{lstlisting} matrix-vector product of stacked matrices and vectors
-
-\end{lstlisting}\subsection{max2d}
-${}$
-\begin{lstlisting} maximum value and i-j index for matrix
-
-\end{lstlisting}\subsection{mpoweri}
-${}$
-\begin{lstlisting} approximation of A^p, where p is not integer by quadtratic interpolation
-
-\end{lstlisting}\subsection{mtimes2x2}
+\end{lstlisting}
+\subsection{inv2x2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{mtimes3x3}
-${}$
-\begin{lstlisting} product of stacked 3x3 matrices
+ 2x2 inverse of stacked matrices
 
-\end{lstlisting}\subsection{nannorm}
+\end{lstlisting}
+\subsection{inv3x3}
 ${}$
-\begin{lstlisting} norm of a vector, skips nan-values
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{nanshift}
+\end{lstlisting}
+\subsection{inv4x4}
 ${}$
-\begin{lstlisting} shift vector, but set out of range values to NaN
+\begin{lstlisting}
+ inverse of stacked 4x4 matrices
 
-\end{lstlisting}\subsection{nl}
+\end{lstlisting}
+\subsection{lpmean}
 ${}$
-\begin{lstlisting} number rows (lines) of a matrix
+\begin{lstlisting}
+ mean of pth-power of a
+
+\end{lstlisting}
+\subsection{lpnorm}
+${}$
+\begin{lstlisting}
+ norm of lth-power of a
+
+\end{lstlisting}
+\subsection{matvec3}
+${}$
+\begin{lstlisting}
+ matrix-vector product of stacked matrices and vectors
+
+\end{lstlisting}
+\subsection{max2d}
+${}$
+\begin{lstlisting}
+ maximum value and i-j index for matrix
+
+\end{lstlisting}
+\subsection{mpoweri}
+${}$
+\begin{lstlisting}
+ approximation of A^p, where p is not integer by quadtratic interpolation
+
+\end{lstlisting}
+\subsection{mtimes2x2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mtimes3x3}
+${}$
+\begin{lstlisting}
+ product of stacked 3x3 matrices
+
+\end{lstlisting}
+\subsection{nannorm}
+${}$
+\begin{lstlisting}
+ norm of a vector, skips nan-values
+
+\end{lstlisting}
+\subsection{nanshift}
+${}$
+\begin{lstlisting}
+ shift vector, but set out of range values to NaN
+
+\end{lstlisting}
+\subsection{nl}
+${}$
+\begin{lstlisting}
+ number rows (lines) of a matrix
 
  analogue to unix nl command
 
-\end{lstlisting}\subsection{normalise}
+\end{lstlisting}
+\subsection{normalise}
 ${}$
-\begin{lstlisting} normalise a vector or the columns of a matrix
+\begin{lstlisting}
+ normalise a vector or the columns of a matrix
  note that the columns are independently normalised, and hence not necessarily
  orthogonal to each other use the gram schmidt algorithm for this (qr or orth)
 
-\end{lstlisting}\subsection{normalize1}
-${}$
-\begin{lstlisting} normalize columns in x to [-1,1]
-
-\end{lstlisting}\subsection{normrows}
+\end{lstlisting}
+\subsection{normalize1}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{orth2}
-${}$
-\begin{lstlisting} make matrix A orhogonal to B
+ normalize columns in x to [-1,1]
 
-\end{lstlisting}\subsection{orth\_man}
+\end{lstlisting}
+\subsection{normrows}
 ${}$
-\begin{lstlisting} orthogonalize the columns of A
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{orthogonalise}
+\end{lstlisting}
+\subsection{orth2}
 ${}$
-\begin{lstlisting} make x orthogonal to Y
+\begin{lstlisting}
+ make matrix A orhogonal to B
 
-\end{lstlisting}\subsection{paddext}
+\end{lstlisting}
+\subsection{orth\_man}
 ${}$
-\begin{lstlisting} padd values to vactor
+\begin{lstlisting}
+ orthogonalize the columns of A
+
+\end{lstlisting}
+\subsection{orthogonalise}
+${}$
+\begin{lstlisting}
+ make x orthogonal to Y
+
+\end{lstlisting}
+\subsection{paddext}
+${}$
+\begin{lstlisting}
+ padd values to vactor
  not suitable for noisy data
  order = 0 : constant extrapolation (hold)
  order = 1 : linear extrapolation
 
-\end{lstlisting}\subsection{paddval1}
+\end{lstlisting}
+\subsection{paddval1}
 ${}$
-\begin{lstlisting} padd values at end of x
+\begin{lstlisting}
+ padd values at end of x
 
-\end{lstlisting}\subsection{paddval2}
+\end{lstlisting}
+\subsection{paddval2}
 ${}$
-\begin{lstlisting} padd values to x
+\begin{lstlisting}
+ padd values to x
 
-\end{lstlisting}\section{linear-algebra/polynomial}
+\end{lstlisting}
+\section{linear-algebra/polynomial}
 \subsection{chebychev}
 ${}$
-\begin{lstlisting} chebycheff polynomials
+\begin{lstlisting}
+ chebycheff polynomials
 
-\end{lstlisting}\subsection{piecewise\_polynomial}
+\end{lstlisting}
+\subsection{piecewise\_polynomial}
 ${}$
-\begin{lstlisting} evaluate piecewise polynomial
+\begin{lstlisting}
+ evaluate piecewise polynomial
 
-\end{lstlisting}\subsection{roots1}
+\end{lstlisting}
+\subsection{roots1}
 ${}$
-\begin{lstlisting} roots of linear functions
+\begin{lstlisting}
+ roots of linear functions
 
-\end{lstlisting}\subsection{roots2}
+\end{lstlisting}
+\subsection{roots2}
 ${}$
-\begin{lstlisting} roots of quadratic function
+\begin{lstlisting}
+ roots of quadratic function
  c1 x^2 + c2 x + c3 = 0
 
-\end{lstlisting}\subsection{vanderi\_1d}
+\end{lstlisting}
+\subsection{vanderi\_1d}
 ${}$
-\begin{lstlisting} vandermonde matrix of an integral
+\begin{lstlisting}
+ vandermonde matrix of an integral
 
-\end{lstlisting}\subsection{vandermonde}
+\end{lstlisting}
+\subsection{vandermonde}
 ${}$
-\begin{lstlisting} van der monde matrix
+\begin{lstlisting}
+ van der monde matrix
 
-\end{lstlisting}\section{linear-algebra}
+\end{lstlisting}
+\section{linear-algebra}
 \subsection{randrot}
 ${}$
-\begin{lstlisting} random rotation matrix
+\begin{lstlisting}
+ random rotation matrix
 
-\end{lstlisting}\subsection{right}
+\end{lstlisting}
+\subsection{right}
 ${}$
-\begin{lstlisting} get right column by shifting columns to left
+\begin{lstlisting}
+ get right column by shifting columns to left
  extrapolate rightmost column
 
-\end{lstlisting}\subsection{rot2}
-${}$
-\begin{lstlisting} rotation matrix from angle
-
-\end{lstlisting}\subsection{rot2dir}
-${}$
-\begin{lstlisting} rotation matrix from direction vector
-
-\end{lstlisting}\subsection{rot3}
+\end{lstlisting}
+\subsection{rot2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{rownorm}
+ rotation matrix from angle
+
+\end{lstlisting}
+\subsection{rot2dir}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{simmilarity\_matrix}
+ rotation matrix from direction vector
+
+\end{lstlisting}
+\subsection{rot3}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{spnorm}
-${}$
-\begin{lstlisting} frobenius norm
 
-\end{lstlisting}\subsection{spzeros}
-${}$
-\begin{lstlisting} allocate a sparze matrix of zeros
-
-\end{lstlisting}\subsection{transpose3}
-${}$
-\begin{lstlisting} transpose stacked 3x3 matrices
-
-\end{lstlisting}\subsection{transposeall}
+\end{lstlisting}
+\subsection{rownorm}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{logic}
+
+\end{lstlisting}
+\subsection{simmilarity\_matrix}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spnorm}
+${}$
+\begin{lstlisting}
+ frobenius norm
+
+\end{lstlisting}
+\subsection{spzeros}
+${}$
+\begin{lstlisting}
+ allocate a sparze matrix of zeros
+
+\end{lstlisting}
+\subsection{transpose3}
+${}$
+\begin{lstlisting}
+ transpose stacked 3x3 matrices
+
+\end{lstlisting}
+\subsection{transposeall}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{logic}
+\begin{lstlisting}
 bitwise operations on integers
 
 
+\end{lstlisting}
 \subsection{bitor\_man}
 ${}$
-\begin{lstlisting} bitwise OR of the numbers of the columns of A
+\begin{lstlisting}
+ bitwise OR of the numbers of the columns of A
 
  input:
 	A (positive integer)
 
-\end{lstlisting}\section{number-theory}
+\end{lstlisting}
+\section{number-theory}
 \subsection{ceiln}
 ${}$
-\begin{lstlisting} floor to leading n-digits
+\begin{lstlisting}
+ floor to leading n-digits
 
-\end{lstlisting}\subsection{digitsb}
+\end{lstlisting}
+\subsection{digitsb}
 ${}$
-\begin{lstlisting} number of digits with respect to specified base
+\begin{lstlisting}
+ number of digits with respect to specified base
 
-\end{lstlisting}\subsection{floorn}
+\end{lstlisting}
+\subsection{floorn}
 ${}$
-\begin{lstlisting} floor to n-digits
+\begin{lstlisting}
+ floor to n-digits
 
-\end{lstlisting}\subsection{iseven}
+\end{lstlisting}
+\subsection{iseven}
 ${}$
-\begin{lstlisting} true for even numbers in X
+\begin{lstlisting}
+ true for even numbers in X
 
-\end{lstlisting}\subsection{multichoosek}
+\end{lstlisting}
+\subsection{multichoosek}
 ${}$
-\begin{lstlisting} all combinations of lenght k from set values with repetitions
+\begin{lstlisting}
+ all combinations of lenght k from set values with repetitions
  c.f. nchoosek, combinations without repetition
 
  input :
@@ -1150,80 +1573,112 @@ ${}$
 	if x vector : the exact combinations
 
 
-\end{lstlisting}\subsection{nchoosek\_man}
+\end{lstlisting}
+\subsection{nchoosek\_man}
 ${}$
-\begin{lstlisting} vecotrised binomial coefficient
+\begin{lstlisting}
+ vecotrised binomial coefficient
  b = N!/K!(N-K)!
 
-\end{lstlisting}\subsection{pythagorean\_triple}
+\end{lstlisting}
+\subsection{pythagorean\_triple}
 ${}$
-\begin{lstlisting} pythagorean triple
+\begin{lstlisting}
+ pythagorean triple
 
-\end{lstlisting}\subsection{roundn}
+\end{lstlisting}
+\subsection{roundn}
 ${}$
-\begin{lstlisting} round to n digits
+\begin{lstlisting}
+ round to n digits
 
-\end{lstlisting}\section{numerical-methods/differentiation}
+\end{lstlisting}
+\section{numerical-methods/differentiation}
 \subsection{derivative1}
 ${}$
-\begin{lstlisting} first derivative on variable mesh
+\begin{lstlisting}
+ first derivative on variable mesh
  second order accurate
 
-\end{lstlisting}\subsection{derivative2}
+\end{lstlisting}
+\subsection{derivative2}
 ${}$
-\begin{lstlisting} second derivative on a variable mesh
+\begin{lstlisting}
+ second derivative on a variable mesh
 
-\end{lstlisting}\section{numerical-methods/finite-difference}
+\end{lstlisting}
+\section{numerical-methods/finite-difference}
 \subsection{cdiff}
 ${}$
-\begin{lstlisting} differences of columns of X
+\begin{lstlisting}
+ differences of columns of X
  degree  = 1 : central first order differences
  degreee = 2 : central second order differences
 
-\end{lstlisting}\subsection{cdiffb}
+\end{lstlisting}
+\subsection{cdiffb}
 ${}$
-\begin{lstlisting} differences of columns of X
+\begin{lstlisting}
+ differences of columns of X
  degree  = 1 : central first order differences
  degreee = 2 : central second order differences
  TODO use difference matrix function for simplicity
 
-\end{lstlisting}\subsection{cmean}
+\end{lstlisting}
+\subsection{cmean}
 ${}$
-\begin{lstlisting} single gaussian smoothing step with kernel 1/4*[1,2,1]
+\begin{lstlisting}
+ single gaussian smoothing step with kernel 1/4*[1,2,1]
 
-\end{lstlisting}\subsection{derivative\_matrix\_1\_1d}
+\end{lstlisting}
+\subsection{derivative\_matrix\_1\_1d}
 ${}$
-\begin{lstlisting} finite difference matrix of first derivative in one dimensions
+\begin{lstlisting}
+ finite difference matrix of first derivative in one dimensions
 
-\end{lstlisting}\subsection{derivative\_matrix\_2\_1d}
+\end{lstlisting}
+\subsection{derivative\_matrix\_2\_1d}
 ${}$
-\begin{lstlisting} finite derivative matrix of second derivative in one dimension
+\begin{lstlisting}
+ finite derivative matrix of second derivative in one dimension
 
-\end{lstlisting}\subsection{derivative\_matrix\_2d}
+\end{lstlisting}
+\subsection{derivative\_matrix\_2d}
 ${}$
-\begin{lstlisting} finite difference derivative matrix in two dimensions
+\begin{lstlisting}
+ finite difference derivative matrix in two dimensions
 
-\end{lstlisting}\subsection{derivative\_matrix\_curvilinear}
+\end{lstlisting}
+\subsection{derivative\_matrix\_curvilinear}
 ${}$
-\begin{lstlisting} derivative matrix on a curvilinear grid
+\begin{lstlisting}
+ derivative matrix on a curvilinear grid
 
-\end{lstlisting}\subsection{derivative\_matrix\_curvilinear\_2}
+\end{lstlisting}
+\subsection{derivative\_matrix\_curvilinear\_2}
 ${}$
-\begin{lstlisting} derivative matrix on a two dimensional curvilinear grid
+\begin{lstlisting}
+ derivative matrix on a two dimensional curvilinear grid
  the grid has not necessarily to be orthogonal
 
-\end{lstlisting}\subsection{difference\_kernel}
+\end{lstlisting}
+\subsection{difference\_kernel}
 ${}$
-\begin{lstlisting} difference kernels for equispaced grids
+\begin{lstlisting}
+ difference kernels for equispaced grids
  c.f. Computing the Spectrum of the Confined Hydrogen Atom, Kastner, 2012
 
-\end{lstlisting}\subsection{distmat}
+\end{lstlisting}
+\subsection{distmat}
 ${}$
-\begin{lstlisting} distance matrix for a 2 dimensional rectangular matrix
+\begin{lstlisting}
+ distance matrix for a 2 dimensional rectangular matrix
 
-\end{lstlisting}\subsection{gradpde2d}
+\end{lstlisting}
+\subsection{gradpde2d}
 ${}$
-\begin{lstlisting} objective function gradiend on two dimensional regular grid
+\begin{lstlisting}
+ objective function gradiend on two dimensional regular grid
  numeric gradient for non-linear least squares optimisation
  of a PDE on a rectangular grid
  x_* = min(f(x))
@@ -1231,178 +1686,250 @@ ${}$
  a_ij = df_i/dx_j
  
 
-\end{lstlisting}\subsection{laplacian}
+\end{lstlisting}
+\subsection{laplacian}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{laplacian\_fdm}
+
+\end{lstlisting}
+\subsection{laplacian\_fdm}
 ${}$
-\begin{lstlisting} finite difference matrix of the laplacian
+\begin{lstlisting}
+ finite difference matrix of the laplacian
  BC
 
-\end{lstlisting}\subsection{left}
-${}$
-\begin{lstlisting} left element of vector, leftmost column is extrapolated
-
-\end{lstlisting}\subsection{lrmean}
-${}$
-\begin{lstlisting} mean of the left and right element
-
-\end{lstlisting}\subsection{mid}
-${}$
-\begin{lstlisting} mid point between neighbouring vector elements
-
-\end{lstlisting}\subsection{pwmid}
-${}$
-\begin{lstlisting} segment end point to segment mid point transformation for regular 1d grids
-
-\end{lstlisting}\subsection{ratio}
-${}$
-\begin{lstlisting} ratio of two subsequent values
-
-\end{lstlisting}\subsection{steplength}
-${}$
-\begin{lstlisting} step length of a vector if it were equispaced
-
-\end{lstlisting}\subsection{swapoddeven}
-${}$
-\begin{lstlisting} swap odd and even elements in a vector
-
-\end{lstlisting}\subsection{test\_derivative\_matrix\_2d}
+\end{lstlisting}
+\subsection{left}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_derivative\_matrix\_curvilinear}
+ left element of vector, leftmost column is extrapolated
+
+\end{lstlisting}
+\subsection{lrmean}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_difference\_kernel}
+ mean of the left and right element
+
+\end{lstlisting}
+\subsection{mid}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{numerical-methods/finite-volume/@Advection}
+ mid point between neighbouring vector elements
+
+\end{lstlisting}
+\subsection{pwmid}
+${}$
+\begin{lstlisting}
+ segment end point to segment mid point transformation for regular 1d grids
+
+\end{lstlisting}
+\subsection{ratio}
+${}$
+\begin{lstlisting}
+ ratio of two subsequent values
+
+\end{lstlisting}
+\subsection{steplength}
+${}$
+\begin{lstlisting}
+ step length of a vector if it were equispaced
+
+\end{lstlisting}
+\subsection{swapoddeven}
+${}$
+\begin{lstlisting}
+ swap odd and even elements in a vector
+
+\end{lstlisting}
+\subsection{test\_derivative\_matrix\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_derivative\_matrix\_curvilinear}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_difference\_kernel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@Advection}
 \subsection{Advection}
 ${}$
-\begin{lstlisting} FVM treatment of the Advection equation
+\begin{lstlisting}
+ FVM treatment of the Advection equation
 
-\end{lstlisting}\subsection{dot\_advection}
+\end{lstlisting}
+\subsection{dot\_advection}
 ${}$
-\begin{lstlisting} advection equation
+\begin{lstlisting}
+ advection equation
 
-\end{lstlisting}\section{numerical-methods/finite-volume/@Burgers}
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@Burgers}
 \subsection{burgers\_split}
 ${}$
-\begin{lstlisting} viscous Burgers' equation,
+\begin{lstlisting}
+ viscous Burgers' equation,
  mixed analytic and numerical derivative in frequency space
  by splitting sheme
  u_t = -(0.5*u^2)_x + c*u_xx
 
-\end{lstlisting}\subsection{dot\_burgers\_fdm}
+\end{lstlisting}
+\subsection{dot\_burgers\_fdm}
 ${}$
-\begin{lstlisting} viscous burgers' equation
+\begin{lstlisting}
+ viscous burgers' equation
  u_t = -d/dx (1/2*u^2) + c d^2/dx^2 u_xx
 
-\end{lstlisting}\subsection{dot\_burgers\_fft}
+\end{lstlisting}
+\subsection{dot\_burgers\_fft}
 ${}$
-\begin{lstlisting} viscous Burgers' equation in frequency space
+\begin{lstlisting}
+ viscous Burgers' equation in frequency space
  u_t + (0.5*u^2)_x = c*u_xx
 
-\end{lstlisting}\section{numerical-methods/finite-volume/@Finite\_Volume}
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@Finite\_Volume}
 \subsection{Finite\_Volume}
 ${}$
-\begin{lstlisting} finite volume method for partial differential equations 1+1 dimensions
+\begin{lstlisting}
+ finite volume method for partial differential equations 1+1 dimensions
  (time and space)
 
 
-\end{lstlisting}\subsection{apply\_bc}
+\end{lstlisting}
+\subsection{apply\_bc}
 ${}$
 \begin{lstlisting}
+
  apply boundary conditions
 
-\end{lstlisting}\subsection{solve}
+\end{lstlisting}
+\subsection{solve}
 ${}$
-\begin{lstlisting} solve the the PDE by successively stepping in time
+\begin{lstlisting}
+ solve the the PDE by successively stepping in time
  this is a trivial implmentation with constant step length
  severity of diffusive error depends on dt/dx-ratio
  stability depends on wave height
 			printf('Progress %2.1f%% %2.1fs\n',100*(t-Ti(1))/(Ti(2)-Ti(1)),t_real);
 
-\end{lstlisting}\subsection{step\_split\_strang}
+\end{lstlisting}
+\subsection{step\_split\_strang}
 ${}$
-\begin{lstlisting} step in time, treat inhomogeneous part by Strang splitting 
+\begin{lstlisting}
+ step in time, treat inhomogeneous part by Strang splitting 
  this scheme is not suitable for stationary solutions, for example
  steady shallow water flow
 
-\end{lstlisting}\subsection{step\_unsplit}
+\end{lstlisting}
+\subsection{step\_unsplit}
 ${}$
 \begin{lstlisting}
+
  step in time, without splitting the inhomogeneous term
 
-\end{lstlisting}\section{numerical-methods/finite-volume/@Flux\_Limiter}
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@Flux\_Limiter}
 \subsection{Flux\_Limiter}
 ${}$
-\begin{lstlisting} class of flux limiters
+\begin{lstlisting}
+ class of flux limiters
 
-\end{lstlisting}\subsection{beam\_warming}
+\end{lstlisting}
+\subsection{beam\_warming}
 ${}$
-\begin{lstlisting} beam warming sheme
+\begin{lstlisting}
+ beam warming sheme
  low resolution
  note: works only if sign of eigenvalues point into the same direction according to RL
 
-\end{lstlisting}\subsection{fromm}
+\end{lstlisting}
+\subsection{fromm}
 ${}$
-\begin{lstlisting} fromme limiter
+\begin{lstlisting}
+ fromme limiter
  low res
 
-\end{lstlisting}\subsection{lax\_wendroff}
+\end{lstlisting}
+\subsection{lax\_wendroff}
 ${}$
-\begin{lstlisting} lax wendroff scheme
+\begin{lstlisting}
+ lax wendroff scheme
  second order accurate, but no tvd
  this is effectively not a limiter
  eq. 6.39 in randall, leveque
 
-\end{lstlisting}\subsection{minmod}
+\end{lstlisting}
+\subsection{minmod}
 ${}$
-\begin{lstlisting} min-mod schock limiter
+\begin{lstlisting}
+ min-mod schock limiter
 
-\end{lstlisting}\subsection{monotized\_central}
+\end{lstlisting}
+\subsection{monotized\_central}
 ${}$
-\begin{lstlisting} monotonized central flux limiter
+\begin{lstlisting}
+ monotonized central flux limiter
 
-\end{lstlisting}\subsection{muscl}
+\end{lstlisting}
+\subsection{muscl}
 ${}$
-\begin{lstlisting} muscl flux limiter
+\begin{lstlisting}
+ muscl flux limiter
 
-\end{lstlisting}\subsection{superbee}
+\end{lstlisting}
+\subsection{superbee}
 ${}$
-\begin{lstlisting} superbee limiter
+\begin{lstlisting}
+ superbee limiter
 
-\end{lstlisting}\subsection{upwind}
+\end{lstlisting}
+\subsection{upwind}
 ${}$
-\begin{lstlisting} godunov scheme
+\begin{lstlisting}
+ godunov scheme
  godunov, first order accurate
 
-\end{lstlisting}\subsection{vanLeer}
+\end{lstlisting}
+\subsection{vanLeer}
 ${}$
-\begin{lstlisting} van Leer limiter
+\begin{lstlisting}
+ van Leer limiter
 
-\end{lstlisting}\section{numerical-methods/finite-volume/@KDV}
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@KDV}
 \subsection{dot\_kdv\_fdm}
 ${}$
-\begin{lstlisting} korteweg de vries equation
+\begin{lstlisting}
+ korteweg de vries equation
  u_t + (0.5*u^2)_x = c*u_xxx
 
-\end{lstlisting}\subsection{dot\_kdv\_fft}
+\end{lstlisting}
+\subsection{dot\_kdv\_fft}
 ${}$
-\begin{lstlisting} korteweg de vries equation
+\begin{lstlisting}
+ korteweg de vries equation
  compute derivatives in frequency space
  u_t + (0.5*u^2)_x = c*u_xxx
 
-\end{lstlisting}\subsection{kdv\_split}
+\end{lstlisting}
+\subsection{kdv\_split}
 ${}$
-\begin{lstlisting} korteweg de vries equation in frequency space,
+\begin{lstlisting}
+ korteweg de vries equation in frequency space,
  derivative treated by splitting scheme
 
-\end{lstlisting}\section{numerical-methods/finite-volume/@Reconstruct\_Average\_Evolve}
+\end{lstlisting}
+\section{numerical-methods/finite-volume/@Reconstruct\_Average\_Evolve}
 \subsection{Reconstruct\_Average\_Evolve}
 ${}$
-\begin{lstlisting} Reconstruct Average Evolve Finite Volume Method for treatment of 1+1D pdes
+\begin{lstlisting}
+ Reconstruct Average Evolve Finite Volume Method for treatment of 1+1D pdes
 
  McCronack Scheme
  err = O(dt^2) + O(dx^2), except as discontinuities
@@ -1410,83 +1937,115 @@ ${}$
 	h_xxx(3:end-2) = 1/dx^3*( -0.5*h(1:end-4) + h(2:end-3) - h(4:end-1)  + 0.5*h(5:end) );
 	th = -1/6*dx^2*qh_.*(1 - (qh_*dt/dx).^2).*h_xxx;
 
-\end{lstlisting}\subsection{advect\_highres}
+\end{lstlisting}
+\subsection{advect\_highres}
 ${}$
-\begin{lstlisting} single time step for the reconstruct evolve algorithm
+\begin{lstlisting}
+ single time step for the reconstruct evolve algorithm
 
-\end{lstlisting}\subsection{advect\_lowress}
+\end{lstlisting}
+\subsection{advect\_lowress}
 ${}$
-\begin{lstlisting} single time step
+\begin{lstlisting}
+ single time step
  low resolution
 
-\end{lstlisting}\section{numerical-methods/finite-volume}
+\end{lstlisting}
+\section{numerical-methods/finite-volume}
 \subsection{Godunov}
 ${}$
-\begin{lstlisting} Godunov, upwind method for systems of pdes
+\begin{lstlisting}
+ Godunov, upwind method for systems of pdes
 
-\end{lstlisting}\subsection{Lax\_Friedrich}
+\end{lstlisting}
+\subsection{Lax\_Friedrich}
 ${}$
-\begin{lstlisting} Lax-Friedrich-Method
+\begin{lstlisting}
+ Lax-Friedrich-Method
  for hyperbolic conservation laws
  err = O(dt) + O(dx)
  |a dt/dx| < 1
 
-\end{lstlisting}\subsection{Measure}
+\end{lstlisting}
+\subsection{Measure}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{Roe}
+
+\end{lstlisting}
+\subsection{Roe}
 ${}$
-\begin{lstlisting} non linear roe solver for the SWE (randall, leveque 15.3.1)
+\begin{lstlisting}
+ non linear roe solver for the SWE (randall, leveque 15.3.1)
 
  The roe solver guarantess:
  - A is diagonalisable with real eigenvalues (15.12)
  - can be determined by a closed formula
  - is an efficient replacement for true Rieman solver
 
-\end{lstlisting}\subsection{fv\_swe}
+\end{lstlisting}
+\subsection{fv\_swe}
 ${}$
-\begin{lstlisting} wrapper for solving SWE
+\begin{lstlisting}
+ wrapper for solving SWE
 
-\end{lstlisting}\subsection{staggered\_euler}
+\end{lstlisting}
+\subsection{staggered\_euler}
 ${}$
-\begin{lstlisting} forward euler method with staggered grid
+\begin{lstlisting}
+ forward euler method with staggered grid
 
-\end{lstlisting}\subsection{staggered\_grid}
+\end{lstlisting}
+\subsection{staggered\_grid}
 ${}$
-\begin{lstlisting} staggered grid approximation to the SWE
+\begin{lstlisting}
+ staggered grid approximation to the SWE
 
-\end{lstlisting}\section{numerical-methods}
+\end{lstlisting}
+\section{numerical-methods}
 \subsection{grid2quad}
 ${}$
-\begin{lstlisting} extract rectangular elements of a structured grid
+\begin{lstlisting}
+ extract rectangular elements of a structured grid
  in form of an unstructured quad-mesh format
 
-\end{lstlisting}\section{numerical-methods/integration}
+\end{lstlisting}
+\section{numerical-methods/integration}
 \subsection{cumintL}
 ${}$
-\begin{lstlisting} cumulative integral from left to right
+\begin{lstlisting}
+ cumulative integral from left to right
 
-\end{lstlisting}\subsection{cumintR}
+\end{lstlisting}
+\subsection{cumintR}
 ${}$
-\begin{lstlisting} cumulative integral from right to left
+\begin{lstlisting}
+ cumulative integral from right to left
 
-\end{lstlisting}\subsection{int\_trapezoidal}
+\end{lstlisting}
+\subsection{int\_trapezoidal}
 ${}$
-\begin{lstlisting} integrate y along x with the trapezoidal rule
+\begin{lstlisting}
+ integrate y along x with the trapezoidal rule
 
-\end{lstlisting}\section{numerical-methods/interpolation/@Kriging}
+\end{lstlisting}
+\section{numerical-methods/interpolation/@Kriging}
 \subsection{Kriging}
 ${}$
-\begin{lstlisting} class for Kriging interpolation
+\begin{lstlisting}
+ class for Kriging interpolation
 
-\end{lstlisting}\subsection{estimate\_semivariance}
+\end{lstlisting}
+\subsection{estimate\_semivariance}
 ${}$
-\begin{lstlisting} estimate the parameter of the semivariance model for Kriging interpolation
+\begin{lstlisting}
+ estimate the parameter of the semivariance model for Kriging interpolation
 		% set up the regression matrix and solve for parameters
 
-\end{lstlisting}\subsection{interpolate\_}
+\end{lstlisting}
+\subsection{interpolate\_}
 ${}$
-\begin{lstlisting} interpolate with Krieging method
+\begin{lstlisting}
+ interpolate with Krieging method
 
  this function may interpolate several quantities per coordinate,
  using the same variogram, if the semivariance of the quantities differs,
@@ -1499,170 +2058,244 @@ ${}$
  Vt  : value at target points
  E2t : squared interpolation error at target points
 
-\end{lstlisting}\section{numerical-methods/interpolation/@RegularizedInterpolator1}
+\end{lstlisting}
+\section{numerical-methods/interpolation/@RegularizedInterpolator1}
 \subsection{RegularizedInterpolator1}
 ${}$
-\begin{lstlisting} class for regularized interpolation (Thikonov) on a 1D mesh
+\begin{lstlisting}
+ class for regularized interpolation (Thikonov) on a 1D mesh
 
-\end{lstlisting}\subsection{init}
+\end{lstlisting}
+\subsection{init}
 ${}$
-\begin{lstlisting} initialize the interpolator with a set of sampling points
+\begin{lstlisting}
+ initialize the interpolator with a set of sampling points
 
-\end{lstlisting}\section{numerical-methods/interpolation/@RegularizedInterpolator2}
+\end{lstlisting}
+\section{numerical-methods/interpolation/@RegularizedInterpolator2}
 \subsection{RegularizedInterpolator2}
 ${}$
-\begin{lstlisting} class for regularized interpolation on an unstructures mesh (interpolation)
+\begin{lstlisting}
+ class for regularized interpolation on an unstructures mesh (interpolation)
 
-\end{lstlisting}\subsection{init}
+\end{lstlisting}
+\subsection{init}
 ${}$
-\begin{lstlisting} initialize the interpolator with a set of point samples
+\begin{lstlisting}
+ initialize the interpolator with a set of point samples
 
-\end{lstlisting}\section{numerical-methods/interpolation/@RegularizedInterpolator3}
+\end{lstlisting}
+\section{numerical-methods/interpolation/@RegularizedInterpolator3}
 \subsection{RegularizedInterpolator3}
 ${}$
-\begin{lstlisting} class for regularized interpolation (Tikhonov) on a triangulation
+\begin{lstlisting}
+ class for regularized interpolation (Tikhonov) on a triangulation
  (unstructured mesh)
 
-\end{lstlisting}\subsection{init}
+\end{lstlisting}
+\subsection{init}
 ${}$
-\begin{lstlisting} initialize the interpolator with a set of sampling points
+\begin{lstlisting}
+ initialize the interpolator with a set of sampling points
 
-\end{lstlisting}\section{numerical-methods/interpolation}
+\end{lstlisting}
+\section{numerical-methods/interpolation}
 \subsection{IDW}
 ${}$
-\begin{lstlisting} spatial averaging by inverse distance weighting
+\begin{lstlisting}
+ spatial averaging by inverse distance weighting
 
-\end{lstlisting}\subsection{IPoly}
+\end{lstlisting}
+\subsection{IPoly}
 ${}$
-\begin{lstlisting} polynomial interpolation class
+\begin{lstlisting}
+ polynomial interpolation class
 
-\end{lstlisting}\subsection{IRBM}
+\end{lstlisting}
+\subsection{IRBM}
 ${}$
-\begin{lstlisting} interpolate by the radial basis function method
+\begin{lstlisting}
+ interpolate by the radial basis function method
 			fprintf(1,'Progress IRBM: %d%%\n',round(100*idx/size(Xi,1)));
 
-\end{lstlisting}\subsection{ISparse}
+\end{lstlisting}
+\subsection{ISparse}
 ${}$
-\begin{lstlisting} sparse interpolation class
+\begin{lstlisting}
+ sparse interpolation class
 
-\end{lstlisting}\subsection{Inn}
+\end{lstlisting}
+\subsection{Inn}
 ${}$
-\begin{lstlisting} nearest neighbour interpolation
+\begin{lstlisting}
+ nearest neighbour interpolation
 
-\end{lstlisting}\subsection{Interpolator}
+\end{lstlisting}
+\subsection{Interpolator}
 ${}$
-\begin{lstlisting} interpolator super-class
+\begin{lstlisting}
+ interpolator super-class
 				fprintf(1,'Progress: %f%% %fs\n',100*idx/size(Xt,1),t);
 
-\end{lstlisting}\subsection{fixnan}
+\end{lstlisting}
+\subsection{fixnan}
 ${}$
-\begin{lstlisting} fill nan-values in vector with gaps
+\begin{lstlisting}
+ fill nan-values in vector with gaps
 
-\end{lstlisting}\subsection{idw1}
+\end{lstlisting}
+\subsection{idw1}
 ${}$
-\begin{lstlisting} spatial average ny inverse distance weighting
+\begin{lstlisting}
+ spatial average ny inverse distance weighting
 
-\end{lstlisting}\subsection{idw2}
+\end{lstlisting}
+\subsection{idw2}
 ${}$
-\begin{lstlisting} spatial average by inverse distance weighting
+\begin{lstlisting}
+ spatial average by inverse distance weighting
 
-\end{lstlisting}\subsection{inner2outer}
+\end{lstlisting}
+\subsection{inner2outer}
 ${}$
-\begin{lstlisting} linear interpolation of segment mit point to grid points at segment ends
+\begin{lstlisting}
+ linear interpolation of segment mit point to grid points at segment ends
  assumes equal grid spacing
 
-\end{lstlisting}\subsection{inner2outer2}
+\end{lstlisting}
+\subsection{inner2outer2}
 ${}$
-\begin{lstlisting} interpolate from element (segment) centres to edge points
+\begin{lstlisting}
+ interpolate from element (segment) centres to edge points
 
-\end{lstlisting}\subsection{interp1\_limited}
+\end{lstlisting}
+\subsection{interp1\_limited}
 ${}$
-\begin{lstlisting} interpolate values, but not beyond a certain distance
+\begin{lstlisting}
+ interpolate values, but not beyond a certain distance
  this function is idempotent, i.e. it will not extrapolate over into gaps
  exceedint the limit and thus not spuriously extend the series when called a second time on the same data
 
-\end{lstlisting}\subsection{interp1\_man}
+\end{lstlisting}
+\subsection{interp1\_man}
 ${}$
-\begin{lstlisting} interpolate
+\begin{lstlisting}
+ interpolate
 
-\end{lstlisting}\subsection{interp1\_save}
+\end{lstlisting}
+\subsection{interp1\_save}
 ${}$
-\begin{lstlisting} make interpolation save to round off errors
+\begin{lstlisting}
+ make interpolation save to round off errors
  the matlab internal interpolation suffers from rounding errors, which
  are unacceptable when values of X and Y are large (for example UTm coordinates)
  this normalization prevents this
 
-\end{lstlisting}\subsection{interp1\_smooth}
+\end{lstlisting}
+\subsection{interp1\_smooth}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{interp1\_unique}
+
+\end{lstlisting}
+\subsection{interp1\_unique}
 ${}$
-\begin{lstlisting} matlab fails to interpolate, when x values are not unique
+\begin{lstlisting}
+ matlab fails to interpolate, when x values are not unique
  this function makes the values unique before use
 
-\end{lstlisting}\subsection{interp2\_man}
+\end{lstlisting}
+\subsection{interp2\_man}
 ${}$
-\begin{lstlisting} nearest neighbour interpolation in two dimensions
+\begin{lstlisting}
+ nearest neighbour interpolation in two dimensions
 
-\end{lstlisting}\subsection{interp\_angle}
+\end{lstlisting}
+\subsection{interp\_angle}
 ${}$
-\begin{lstlisting} interpolate an angle
+\begin{lstlisting}
+ interpolate an angle
 
-\end{lstlisting}\subsection{interp\_fourier}
+\end{lstlisting}
+\subsection{interp\_fourier}
 ${}$
-\begin{lstlisting} interpolation by the fourier method
+\begin{lstlisting}
+ interpolation by the fourier method
 
-\end{lstlisting}\subsection{interp\_fourier\_batch}
+\end{lstlisting}
+\subsection{interp\_fourier\_batch}
 ${}$
-\begin{lstlisting} batch interpolation by the fourier interpolation
+\begin{lstlisting}
+ batch interpolation by the fourier interpolation
 
-\end{lstlisting}\subsection{interp\_sn}
+\end{lstlisting}
+\subsection{interp\_sn}
 ${}$
-\begin{lstlisting} interpolate along streamwise coordinates
+\begin{lstlisting}
+ interpolate along streamwise coordinates
  This gives similar result to setting aspect ratio for sN to infinity,
  but not quite,as the input point set is not dense (scale for sN to infinity does not work)
 		sdx  = sdx(sdx_); 
 
-\end{lstlisting}\subsection{interp\_sn2}
+\end{lstlisting}
+\subsection{interp\_sn2}
 ${}$
-\begin{lstlisting} interpolation in streamwise coordinates
+\begin{lstlisting}
+ interpolation in streamwise coordinates
 
-\end{lstlisting}\subsection{interp\_sn3}
+\end{lstlisting}
+\subsection{interp\_sn3}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{interp\_sn\_}
+
+\end{lstlisting}
+\subsection{interp\_sn\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{limit\_by\_distance\_1d}
+
+\end{lstlisting}
+\subsection{limit\_by\_distance\_1d}
 ${}$
-\begin{lstlisting} smooth subsequent values along a curve such that
+\begin{lstlisting}
+ smooth subsequent values along a curve such that
 	v(x0+dx) < v(x0) + (ratio-1)*dx
  if v is the edge length in a resampled polygon, then v_i/v_(i+1) < ratio
  	ratio^1 = exp(a*1)
 
-\end{lstlisting}\subsection{resample1}
-${}$
-\begin{lstlisting} interpolation along a parametric curve with variable step width
-
-\end{lstlisting}\subsection{resample\_d\_min}
-${}$
-\begin{lstlisting} resample a function
-
-\end{lstlisting}\subsection{resample\_vector}
-${}$
-\begin{lstlisting} resample a track so that velocity vectors do not run into each other
-
-\end{lstlisting}\subsection{test\_interp1\_limited}
+\end{lstlisting}
+\subsection{resample1}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{numerical-methods}
+ interpolation along a parametric curve with variable step width
+
+\end{lstlisting}
+\subsection{resample\_d\_min}
+${}$
+\begin{lstlisting}
+ resample a function
+
+\end{lstlisting}
+\subsection{resample\_vector}
+${}$
+\begin{lstlisting}
+ resample a track so that velocity vectors do not run into each other
+
+\end{lstlisting}
+\subsection{test\_interp1\_limited}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{numerical-methods}
 \subsection{inverse\_complex}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{numerical-methods/ode}
+
+\end{lstlisting}
+\section{numerical-methods/ode}
 \subsection{bvp2c}
 ${}$
-\begin{lstlisting} solve system of non-linear second order odes (in more than one variable)
+\begin{lstlisting}
+ solve system of non-linear second order odes (in more than one variable)
  as boundary value problems
 
  odefun provides ode coefficients c:
@@ -1677,9 +2310,11 @@ ${}$
   + q(x,2)*( p(x,1) y_r(x) + p(x,2) y_r'(x)    = v(x)
  where q weighs the waves travelling from left to right and right to left (default [1 1])
 
-\end{lstlisting}\subsection{bvp2c2}
+\end{lstlisting}
+\subsection{bvp2c2}
 ${}$
-\begin{lstlisting} solve second order boundary value problem via roots of the characteristic
+\begin{lstlisting}
+ solve second order boundary value problem via roots of the characteristic
  polynomial
 
  input:
@@ -1700,9 +2335,11 @@ ${}$
  y = A^-1 rhs
 
 
-\end{lstlisting}\subsection{bvp2fdm}
+\end{lstlisting}
+\subsection{bvp2fdm}
 ${}$
-\begin{lstlisting} solve system of non-linear second order odes (in more than one variable)
+\begin{lstlisting}
+ solve system of non-linear second order odes (in more than one variable)
  as boundary value problems by the finite difference method
 
  odefun provides ode coefficients c:
@@ -1717,26 +2354,36 @@ ${}$
   + q(x,2)*( p(x,1) y_r(x) + p(x,2) y_r'(x)    = v(x)
  where q weighs the waves travelling from left to right and right to left (default [1 1])
 
-\end{lstlisting}\subsection{bvp2wavetrain}
+\end{lstlisting}
+\subsection{bvp2wavetrain}
 ${}$
-\begin{lstlisting} solve second order boundary value problem by repeated integration
+\begin{lstlisting}
+ solve second order boundary value problem by repeated integration
 
-\end{lstlisting}\subsection{bvp2wavetwopass}
+\end{lstlisting}
+\subsection{bvp2wavetwopass}
 ${}$
-\begin{lstlisting} two pass solution for the linearised wave equation
+\begin{lstlisting}
+ two pass solution for the linearised wave equation
  solve first for the wave number k, and then for y
 
-\end{lstlisting}\subsection{ivp\_euler\_forward}
+\end{lstlisting}
+\subsection{ivp\_euler\_forward}
 ${}$
-\begin{lstlisting} solve intial value problem by the euler forward method
+\begin{lstlisting}
+ solve intial value problem by the euler forward method
 
-\end{lstlisting}\subsection{ivprk2}
+\end{lstlisting}
+\subsection{ivprk2}
 ${}$
-\begin{lstlisting} solve initial value problem by the two step runge kutta method
+\begin{lstlisting}
+ solve initial value problem by the two step runge kutta method
 
-\end{lstlisting}\subsection{ode2\_matrix}
+\end{lstlisting}
+\subsection{ode2\_matrix}
 ${}$
-\begin{lstlisting} transformation matrix of second order ode
+\begin{lstlisting}
+ transformation matrix of second order ode
  to left and right going wave
 
  c = odefun(x)
@@ -1744,45 +2391,65 @@ ${}$
  y = y_p + y_m, left and right going wave
  d/dx [y_p, y_m] = A*[y_m, y_p]
 
-\end{lstlisting}\subsection{ode2characteristic}
+\end{lstlisting}
+\subsection{ode2characteristic}
 ${}$
-\begin{lstlisting} second order odes 
+\begin{lstlisting}
+ second order odes 
  transmittded and reflected wave
 
-\end{lstlisting}\subsection{step\_trapezoidal}
+\end{lstlisting}
+\subsection{step\_trapezoidal}
 ${}$
-\begin{lstlisting} single trapezoidal step
+\begin{lstlisting}
+ single trapezoidal step
 
-\end{lstlisting}\section{numerical-methods/optimisation}
+\end{lstlisting}
+\section{numerical-methods/optimisation}
 \subsection{armijo\_stopping\_criterion}
 ${}$
-\begin{lstlisting} armijo stopping criterion for optimizations
+\begin{lstlisting}
+ armijo stopping criterion for optimizations
 
-\end{lstlisting}\subsection{astar}
-${}$
-\begin{lstlisting} astar path finding alforithm
-
-\end{lstlisting}\subsection{binsearch}
-${}$
-\begin{lstlisting} binary search on a line
-
-\end{lstlisting}\subsection{bisection}
-${}$
-\begin{lstlisting} bisection
-
-\end{lstlisting}\subsection{box1}
-${}$
-\begin{lstlisting} test objective function for optimisation routines 
-
-\end{lstlisting}\subsection{box2}
+\end{lstlisting}
+\subsection{astar}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{cauchy}
+ astar path finding alforithm
+
+\end{lstlisting}
+\subsection{binsearch}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{cauchy2}
+ binary search on a line
+
+\end{lstlisting}
+\subsection{bisection}
 ${}$
-\begin{lstlisting} solve non-linear system by cuachy's method
+\begin{lstlisting}
+ bisection
+
+\end{lstlisting}
+\subsection{box1}
+${}$
+\begin{lstlisting}
+ test objective function for optimisation routines 
+
+\end{lstlisting}
+\subsection{box2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{cauchy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{cauchy2}
+${}$
+\begin{lstlisting}
+ solve non-linear system by cuachy's method
  slower than quadratic optimisation, but does not require a hessian
  fun : objective function, returns
 	f  : scalar, objective function value 
@@ -1790,19 +2457,25 @@ ${}$
  x   : nx1, initial position
  opt : options
 
-\end{lstlisting}\subsection{directional\_derivative}
+\end{lstlisting}
+\subsection{directional\_derivative}
 ${}$
-\begin{lstlisting} directional (projected) derivative
+\begin{lstlisting}
+ directional (projected) derivative
  d : derivative, highest first
  p : series expansion around x0
 
-\end{lstlisting}\subsection{dud}
+\end{lstlisting}
+\subsection{dud}
 ${}$
-\begin{lstlisting} optimization by the dud algorithm
+\begin{lstlisting}
+ optimization by the dud algorithm
 
-\end{lstlisting}\subsection{extreme3}
+\end{lstlisting}
+\subsection{extreme3}
 ${}$
-\begin{lstlisting} extract maxima by quadratic approximation from sampled function val(t)
+\begin{lstlisting}
+ extract maxima by quadratic approximation from sampled function val(t)
  intended to be called after [mval, mid] = max(val) for refinement of
  locatian and maximum
 
@@ -1816,35 +2489,51 @@ ${}$
 
  v'(dt0) = 0 and v''(dt0) determines type of extremum
 
-\end{lstlisting}\subsection{extreme\_quadratic}
+\end{lstlisting}
+\subsection{extreme\_quadratic}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{ftest}
+
+\end{lstlisting}
+\subsection{ftest}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{grad}
-${}$
-\begin{lstlisting} numerical gradient
 
-\end{lstlisting}\subsection{hessian}
+\end{lstlisting}
+\subsection{grad}
 ${}$
-\begin{lstlisting} numerical hessian
+\begin{lstlisting}
+ numerical gradient
 
-\end{lstlisting}\subsection{hessian\_from\_gradient}
+\end{lstlisting}
+\subsection{hessian}
 ${}$
-\begin{lstlisting} numerical hessian from gradient
+\begin{lstlisting}
+ numerical hessian
 
-\end{lstlisting}\subsection{hessian\_projected}
+\end{lstlisting}
+\subsection{hessian\_from\_gradient}
 ${}$
-\begin{lstlisting} numerical hessian projected to one dimenstion
+\begin{lstlisting}
+ numerical hessian from gradient
 
-\end{lstlisting}\subsection{line\_search}
+\end{lstlisting}
+\subsection{hessian\_projected}
 ${}$
-\begin{lstlisting} bisection routine
+\begin{lstlisting}
+ numerical hessian projected to one dimenstion
 
-\end{lstlisting}\subsection{line\_search2}
+\end{lstlisting}
+\subsection{line\_search}
 ${}$
-\begin{lstlisting} bisection method
+\begin{lstlisting}
+ bisection routine
+
+\end{lstlisting}
+\subsection{line\_search2}
+${}$
+\begin{lstlisting}
+ bisection method
 
  fun : objective funct
  x0  : start value
@@ -1855,9 +2544,11 @@ ${}$
  lb  : lower bound for x
  up  : upper bound for x
 
-\end{lstlisting}\subsection{line\_search\_polynomial}
+\end{lstlisting}
+\subsection{line\_search\_polynomial}
 ${}$
-\begin{lstlisting} polynomial line search
+\begin{lstlisting}
+ polynomial line search
  fun : objective funct
  x0  : start value
  f0  : objective function value at x0
@@ -1867,9 +2558,11 @@ ${}$
  lb  : lower bound for x
  up  : upper bound for x
 
-\end{lstlisting}\subsection{line\_search\_polynomial2}
+\end{lstlisting}
+\subsection{line\_search\_polynomial2}
 ${}$
-\begin{lstlisting} cubic line search
+\begin{lstlisting}
+ cubic line search
  fun : objective funct
  x0  : start value
  f0  : objective function value at x0
@@ -1879,9 +2572,11 @@ ${}$
  lb  : lower bound for x
  up  : upper bound for x
 
-\end{lstlisting}\subsection{line\_search\_quadratic}
+\end{lstlisting}
+\subsection{line\_search\_quadratic}
 ${}$
-\begin{lstlisting} quadratic line search
+\begin{lstlisting}
+ quadratic line search
  fun : objective funct
  x0  : start value
  f0  : objective function value at x0
@@ -1891,22 +2586,30 @@ ${}$
  lb  : lower bound for x
  up  : upper bound for x
 
-\end{lstlisting}\subsection{line\_search\_quadratic2}
+\end{lstlisting}
+\subsection{line\_search\_quadratic2}
 ${}$
-\begin{lstlisting} quadratic line search
+\begin{lstlisting}
+ quadratic line search
 
-\end{lstlisting}\subsection{line\_search\_wolfe}
+\end{lstlisting}
+\subsection{line\_search\_wolfe}
 ${}$
-\begin{lstlisting} line search by wolfe method
+\begin{lstlisting}
+ line search by wolfe method
  c.f.: OPTIMIZATION THEORY AND METHODS - Nonlinear Programming, Sun, Yuan
 
-\end{lstlisting}\subsection{ls\_bgfs}
+\end{lstlisting}
+\subsection{ls\_bgfs}
 ${}$
-\begin{lstlisting} least squares by the bgfs method
+\begin{lstlisting}
+ least squares by the bgfs method
 
-\end{lstlisting}\subsection{ls\_broyden}
+\end{lstlisting}
+\subsection{ls\_broyden}
 ${}$
-\begin{lstlisting} least squares by the broyden method
+\begin{lstlisting}
+ least squares by the broyden method
  for rectangular / non symmetric systems
 	Numerical  Optimization nocedal
 	Practical  Methods  of  Optimization fletcher
@@ -1920,82 +2623,118 @@ ${}$
  Goldfarb 1970
  Shanno 1970
 
-\end{lstlisting}\subsection{ls\_generalized\_secant}
+\end{lstlisting}
+\subsection{ls\_generalized\_secant}
 ${}$
-\begin{lstlisting} least squares by the secant method
+\begin{lstlisting}
+ least squares by the secant method
  Barnes, 1965
  Wolfe, 1959
  Fletcher 1980, 6.3
  seber 2003
  gerber
 
-\end{lstlisting}\subsection{nlcg}
+\end{lstlisting}
+\subsection{nlcg}
 ${}$
-\begin{lstlisting} non-linear conjugate gradient
+\begin{lstlisting}
+ non-linear conjugate gradient
  input:
  x   : nx1 start vectort
  opt : struct options
  fdx : gradient constraint
 
-\end{lstlisting}\subsection{nlls}
-${}$
-\begin{lstlisting} non-linear least squares
-
-\end{lstlisting}\subsection{picard}
-${}$
-\begin{lstlisting} picard iteration
-
-\end{lstlisting}\subsection{poly\_extrema}
-${}$
-\begin{lstlisting} extrema of a polynomial
-
-\end{lstlisting}\subsection{quadratic\_function}
-${}$
-\begin{lstlisting} evaluate quadratic function in higher dimensions
-
-\end{lstlisting}\subsection{quadratic\_programming}
-${}$
-\begin{lstlisting} optimize by quadratic programming
-
-\end{lstlisting}\subsection{quadratic\_step}
-${}$
-\begin{lstlisting} single step of the quadratic programming
-
-\end{lstlisting}\subsection{rosenbrock}
-${}$
-\begin{lstlisting} rosenbrock test function
-
-\end{lstlisting}\subsection{sqrt\_heron}
-${}$
-\begin{lstlisting} Heron's method for the square root
-
-\end{lstlisting}\subsection{test\_directional\_derivative}
+\end{lstlisting}
+\subsection{nlls}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_dud}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_line\_search\_quadratic2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ls\_generalized\_secant}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_nlcg\_6\_order}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_nlls}
-${}$
-\begin{lstlisting}	f = w'*(p*abs(x-1).^4) + w'*(1-p)*abs(x-1).^2;
+ non-linear least squares
 
-\end{lstlisting}\section{numerical-methods/piecewise-polynomials}
+\end{lstlisting}
+\subsection{picard}
+${}$
+\begin{lstlisting}
+ picard iteration
+
+\end{lstlisting}
+\subsection{poly\_extrema}
+${}$
+\begin{lstlisting}
+ extrema of a polynomial
+
+\end{lstlisting}
+\subsection{quadratic\_function}
+${}$
+\begin{lstlisting}
+ evaluate quadratic function in higher dimensions
+
+\end{lstlisting}
+\subsection{quadratic\_programming}
+${}$
+\begin{lstlisting}
+ optimize by quadratic programming
+
+\end{lstlisting}
+\subsection{quadratic\_step}
+${}$
+\begin{lstlisting}
+ single step of the quadratic programming
+
+\end{lstlisting}
+\subsection{rosenbrock}
+${}$
+\begin{lstlisting}
+ rosenbrock test function
+
+\end{lstlisting}
+\subsection{sqrt\_heron}
+${}$
+\begin{lstlisting}
+ Heron's method for the square root
+
+\end{lstlisting}
+\subsection{test\_directional\_derivative}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_dud}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_line\_search\_quadratic2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ls\_generalized\_secant}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_nlcg\_6\_order}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_nlls}
+${}$
+\begin{lstlisting}
+	f = w'*(p*abs(x-1).^4) + w'*(1-p)*abs(x-1).^2;
+
+\end{lstlisting}
+\section{numerical-methods/piecewise-polynomials}
 \subsection{Hermite1}
 ${}$
-\begin{lstlisting} hermite polynomial interpolation in 1d
+\begin{lstlisting}
+ hermite polynomial interpolation in 1d
 
-\end{lstlisting}\subsection{hp2\_fit}
+\end{lstlisting}
+\subsection{hp2\_fit}
 ${}$
 \begin{lstlisting}
+
  fit a hermite polynomial
  coefficients are derivative free
  x0  : left point of first segment
@@ -2005,318 +2744,448 @@ ${}$
  val : sample y-value
  c   : coefficients (values at points, no derivatives)
 
-\end{lstlisting}\subsection{hp2\_predict}
+\end{lstlisting}
+\subsection{hp2\_predict}
 ${}$
-\begin{lstlisting} prediction with pw hermite polynomial
+\begin{lstlisting}
+ prediction with pw hermite polynomial
  c are values at support points
 
-\end{lstlisting}\subsection{hp\_predict}
+\end{lstlisting}
+\subsection{hp\_predict}
 ${}$
-\begin{lstlisting} predict with piecewise hermite polynomial
+\begin{lstlisting}
+ predict with piecewise hermite polynomial
 
-\end{lstlisting}\subsection{hp\_regress}
+\end{lstlisting}
+\subsection{hp\_regress}
 ${}$
-\begin{lstlisting} fit piecewise hermite polynomial
+\begin{lstlisting}
+ fit piecewise hermite polynomial
  coefficients are values and derivatives
 
-\end{lstlisting}\subsection{lp\_count}
+\end{lstlisting}
+\subsection{lp\_count}
 ${}$
-\begin{lstlisting} lagrangian basis for interpolation
+\begin{lstlisting}
+ lagrangian basis for interpolation
  count number of valid samples
 
-\end{lstlisting}\subsection{lp\_predict}
+\end{lstlisting}
+\subsection{lp\_predict}
 ${}$
-\begin{lstlisting} lagrangian basis piecwie interpolation, predicor
+\begin{lstlisting}
+ lagrangian basis piecwie interpolation, predicor
 
-\end{lstlisting}\subsection{lp\_regress}
+\end{lstlisting}
+\subsection{lp\_regress}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{lp\_regress\_}
+
+\end{lstlisting}
+\subsection{lp\_regress\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{regression/@PolyOLS}
+
+\end{lstlisting}
+\section{regression/@PolyOLS}
 \subsection{PolyOLS}
 ${}$
-\begin{lstlisting} class for polynomial least squares
+\begin{lstlisting}
+ class for polynomial least squares
 
-\end{lstlisting}\subsection{coefftest}
+\end{lstlisting}
+\subsection{coefftest}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{detrend}
-${}$
-\begin{lstlisting} detrending by polynomial regression
 
-\end{lstlisting}\subsection{fit}
+\end{lstlisting}
+\subsection{detrend}
 ${}$
-\begin{lstlisting} fit a polynomial function
+\begin{lstlisting}
+ detrending by polynomial regression
+
+\end{lstlisting}
+\subsection{fit}
+${}$
+\begin{lstlisting}
+ fit a polynomial function
  like polyfit, but returns parameter error estimates
 
-\end{lstlisting}\subsection{fit\_}
-${}$
-\begin{lstlisting} fit a polynomial function
-
-\end{lstlisting}\subsection{predict}
-${}$
-\begin{lstlisting} predict polynomial function values
-
-\end{lstlisting}\subsection{predict\_}
+\end{lstlisting}
+\subsection{fit\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{slope}
-${}$
-\begin{lstlisting} slope by linear regression
+ fit a polynomial function
 
-\end{lstlisting}\section{regression/@PowerLS}
+\end{lstlisting}
+\subsection{predict}
+${}$
+\begin{lstlisting}
+ predict polynomial function values
+
+\end{lstlisting}
+\subsection{predict\_}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{slope}
+${}$
+\begin{lstlisting}
+ slope by linear regression
+
+\end{lstlisting}
+\section{regression/@PowerLS}
 \subsection{PowerLS}
 ${}$
-\begin{lstlisting} class for power law regression
+\begin{lstlisting}
+ class for power law regression
 
-\end{lstlisting}\subsection{fit}
+\end{lstlisting}
+\subsection{fit}
 ${}$
-\begin{lstlisting} fit a power law
+\begin{lstlisting}
+ fit a power law
  like polyfit, but returns parameter error estimates
 
-\end{lstlisting}\subsection{predict}
+\end{lstlisting}
+\subsection{predict}
 ${}$
-\begin{lstlisting} predict with power law
+\begin{lstlisting}
+ predict with power law
 	S2 = diag((A*obj.C)*A');
 	L  = Y - S;
 	U  = Y + S;
 
-\end{lstlisting}\subsection{predict\_}
+\end{lstlisting}
+\subsection{predict\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{regression/@Theil}
+
+\end{lstlisting}
+\section{regression/@Theil}
 \subsection{Theil}
 ${}$
-\begin{lstlisting} Kendal-Theil-Sen robust regression
+\begin{lstlisting}
+ Kendal-Theil-Sen robust regression
 
-\end{lstlisting}\subsection{detrend}
+\end{lstlisting}
+\subsection{detrend}
 ${}$
-\begin{lstlisting} linear detrending of a set of samples by the Theil-Senn Slope
+\begin{lstlisting}
+ linear detrending of a set of samples by the Theil-Senn Slope
 
-\end{lstlisting}\subsection{fit}
+\end{lstlisting}
+\subsection{fit}
 ${}$
-\begin{lstlisting} fit slope and intercept to a set of sample with the Theil-Sen method
+\begin{lstlisting}
+ fit slope and intercept to a set of sample with the Theil-Sen method
  
  c     : confidence interval c = 2*ns*normcdf(1) for ns-sigma intervals
  param : itercept and slope
  P : confidence interval
 
-\end{lstlisting}\subsection{predict}
+\end{lstlisting}
+\subsection{predict}
 ${}$
-\begin{lstlisting} predict values and confidence intervals with the Theil-Sen method
+\begin{lstlisting}
+ predict values and confidence intervals with the Theil-Sen method
 
-\end{lstlisting}\subsection{slope}
+\end{lstlisting}
+\subsection{slope}
 ${}$
-\begin{lstlisting} fit the slope with the Theil-Sen method
+\begin{lstlisting}
+ fit the slope with the Theil-Sen method
 
-\end{lstlisting}\section{regression}
+\end{lstlisting}
+\section{regression}
+\begin{lstlisting}
 linear and non-linear regression
 
+\end{lstlisting}
 \subsection{Theil\_Multivariate}
 ${}$
-\begin{lstlisting} extension of the Theil-Senn regression to higher dimensions by
+\begin{lstlisting}
+ extension of the Theil-Senn regression to higher dimensions by
  means of the Gauss-Seidel iteration
 
-\end{lstlisting}\subsection{areg}
+\end{lstlisting}
+\subsection{areg}
 ${}$
-\begin{lstlisting} regression using the pth-fraction of samples with smallest residual
+\begin{lstlisting}
+ regression using the pth-fraction of samples with smallest residual
 
-\end{lstlisting}\subsection{ginireg}
+\end{lstlisting}
+\subsection{ginireg}
 ${}$
-\begin{lstlisting} gini regression
+\begin{lstlisting}
+ gini regression
 
-\end{lstlisting}\subsection{hesssimplereg}
+\end{lstlisting}
+\subsection{hesssimplereg}
 ${}$
-\begin{lstlisting} hessian, gradient and objective function value of the simple regression
+\begin{lstlisting}
+ hessian, gradient and objective function value of the simple regression
  rhs = p(1) + p(2) x + eps
 
-\end{lstlisting}\subsection{l1lin}
+\end{lstlisting}
+\subsection{l1lin}
 ${}$
-\begin{lstlisting} solve ||Ax - b||_L1 by means of linear programming
+\begin{lstlisting}
+ solve ||Ax - b||_L1 by means of linear programming
 
-\end{lstlisting}\subsection{lsq\_sparam}
+\end{lstlisting}
+\subsection{lsq\_sparam}
 ${}$
-\begin{lstlisting} parameter covariance of the least squares regression
+\begin{lstlisting}
+ parameter covariance of the least squares regression
 
  fun : model function for predtiction
  b   : sample values
  f(p) = b
  p   : parameter at point of evaluation (preferably optimum)
 
-\end{lstlisting}\subsection{polyfitd}
+\end{lstlisting}
+\subsection{polyfitd}
 ${}$
-\begin{lstlisting} fit a polynomial of order n to a set of sampled values and sampled values
+\begin{lstlisting}
+ fit a polynomial of order n to a set of sampled values and sampled values
  of the derivative
 
  x0 must contain at least for conditioning as otherwise the intercept
  cannot be determined
 
-\end{lstlisting}\subsection{regression\_method\_of\_moments}
+\end{lstlisting}
+\subsection{regression\_method\_of\_moments}
 ${}$
-\begin{lstlisting} fit linear function ||a b x = y||_L2 by the method of moments
+\begin{lstlisting}
+ fit linear function ||a b x = y||_L2 by the method of moments
  y+eps = alpha + beta*x
 
-\end{lstlisting}\subsection{robustlinreg}
+\end{lstlisting}
+\subsection{robustlinreg}
 ${}$
-\begin{lstlisting} fit a linear function by splitting the x-values at their median
+\begin{lstlisting}
+ fit a linear function by splitting the x-values at their median
  	(med(y_left) - med(y_right))/(med(x_left)-med(x_right)
  this approach performs poorly compared to the theil-senn operator
 
-\end{lstlisting}\subsection{theil2}
+\end{lstlisting}
+\subsection{theil2}
 ${}$
-\begin{lstlisting} Theil senn-estimator for two dimensions (glm)
+\begin{lstlisting}
+ Theil senn-estimator for two dimensions (glm)
 
-\end{lstlisting}\subsection{theil\_generalised}
+\end{lstlisting}
+\subsection{theil\_generalised}
 ${}$
-\begin{lstlisting} generalization of the Theil-Senn operator to higher dimensions,
+\begin{lstlisting}
+ generalization of the Theil-Senn operator to higher dimensions,
  for arbitrary functions such as polynomials and multivariate regression
  either higher order polynomials or glm
  c.f. "On theil's fitting method", Pegoraro, 1991
 
-\end{lstlisting}\subsection{total\_least\_squares}
+\end{lstlisting}
+\subsection{total\_least\_squares}
 ${}$
-\begin{lstlisting} total least squares
+\begin{lstlisting}
+ total least squares
 
-\end{lstlisting}\subsection{weighted\_median\_regression}
+\end{lstlisting}
+\subsection{weighted\_median\_regression}
 ${}$
-\begin{lstlisting} weighted median regression 
+\begin{lstlisting}
+ weighted median regression 
  c.f. Scholz, 1978
 
-\end{lstlisting}\section{set-theory}
+\end{lstlisting}
+\section{set-theory}
 \subsection{issubset}
 ${}$
-\begin{lstlisting} test if set B is subset of A in O(n)-runtime
+\begin{lstlisting}
+ test if set B is subset of A in O(n)-runtime
 
  A : first set
  B : second set
  P : set of primes (auxiliary)
 
-\end{lstlisting}\section{signal-processing}
+\end{lstlisting}
+\section{signal-processing}
 \subsection{acf\_effective\_sample\_size}
 ${}$
-\begin{lstlisting} effective sample size from acf
+\begin{lstlisting}
+ effective sample size from acf
 
-\end{lstlisting}\subsection{acf\_genton}
+\end{lstlisting}
+\subsection{acf\_genton}
 ${}$
-\begin{lstlisting} autocorrelation function
+\begin{lstlisting}
+ autocorrelation function
 
-\end{lstlisting}\subsection{acfar1}
+\end{lstlisting}
+\subsection{acfar1}
 ${}$
-\begin{lstlisting} Autocorrelation function of the finite AR1 process
+\begin{lstlisting}
+ Autocorrelation function of the finite AR1 process
 
  a_k = 1/(n-k)sum x_ix_i+1 + (xi + xi+k)mu + mu^2
      = r^k + 1/n sum_ij + 1/n
 	pause
 
-\end{lstlisting}\subsection{acfar1\_2}
-${}$
-\begin{lstlisting} autocorrelation of the ar1 process
-
-\end{lstlisting}\subsection{acfar2}
-${}$
-\begin{lstlisting} impulse response of the ar2 process
-
-\end{lstlisting}\subsection{acfar2\_2}
-${}$
-\begin{lstlisting} autocorrelation of the ar2 process
- X_i + a1 X_i-1 + a2 X_i-2 = 0
-
-\end{lstlisting}\subsection{ar1\_cutoff\_frequency}
+\end{lstlisting}
+\subsection{acfar1\_2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{ar1\_effective\_sample\_size}
-${}$
-\begin{lstlisting} effective sample size correction for autocorrelated series
+ autocorrelation of the ar1 process
 
-\end{lstlisting}\subsection{ar1\_mse\_mu\_single\_sample}
+\end{lstlisting}
+\subsection{acfar2}
 ${}$
-\begin{lstlisting} standard error of a single sample of an ar1 correlated process
+\begin{lstlisting}
+ impulse response of the ar2 process
 
-\end{lstlisting}\subsection{ar1\_mse\_pop}
+\end{lstlisting}
+\subsection{acfar2\_2}
 ${}$
-\begin{lstlisting} variance of the population mean of a single realisation around zero
+\begin{lstlisting}
+ autocorrelation of the ar2 process
+ X_i + a1 X_i-1 + a2 X_i-2 = 0
+
+\end{lstlisting}
+\subsection{ar1\_cutoff\_frequency}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{ar1\_effective\_sample\_size}
+${}$
+\begin{lstlisting}
+ effective sample size correction for autocorrelated series
+
+\end{lstlisting}
+\subsection{ar1\_mse\_mu\_single\_sample}
+${}$
+\begin{lstlisting}
+ standard error of a single sample of an ar1 correlated process
+
+\end{lstlisting}
+\subsection{ar1\_mse\_pop}
+${}$
+\begin{lstlisting}
+ variance of the population mean of a single realisation around zero
 
  E[(mu_N-0)^2] = E[mu_N^]
 
 
-\end{lstlisting}\subsection{ar1\_mse\_range}
+\end{lstlisting}
+\subsection{ar1\_mse\_range}
 ${}$
-\begin{lstlisting} mean standard error of the mean of a range of values taken from an ar1 process
+\begin{lstlisting}
+ mean standard error of the mean of a range of values taken from an ar1 process
 
-\end{lstlisting}\subsection{ar1\_spectrum}
+\end{lstlisting}
+\subsection{ar1\_spectrum}
 ${}$
-\begin{lstlisting} spectrum of the ar1 process
+\begin{lstlisting}
+ spectrum of the ar1 process
 
-\end{lstlisting}\subsection{ar1\_to\_tikhonov}
+\end{lstlisting}
+\subsection{ar1\_to\_tikhonov}
 ${}$
-\begin{lstlisting} convert ar1 correlation to tikhonovs lambda
+\begin{lstlisting}
+ convert ar1 correlation to tikhonovs lambda
 
-\end{lstlisting}\subsection{ar1\_var\_factor}
+\end{lstlisting}
+\subsection{ar1\_var\_factor}
 ${}$
-\begin{lstlisting} variance correction factor for an autocorrelated finite process
+\begin{lstlisting}
+ variance correction factor for an autocorrelated finite process
  n   : [1 .. inf] population size
  m   : [1 .. n]   samples size
  rho : [ -1 < rho < 1 (for convergence) ] correlation of samples
 
-\end{lstlisting}\subsection{ar1\_var\_factor\_}
+\end{lstlisting}
+\subsection{ar1\_var\_factor\_}
 ${}$
-\begin{lstlisting} variance of an autocorrelated finite process
+\begin{lstlisting}
+ variance of an autocorrelated finite process
 
-\end{lstlisting}\subsection{ar1\_var\_range2}
+\end{lstlisting}
+\subsection{ar1\_var\_range2}
 ${}$
-\begin{lstlisting} variance of sub sample starting at the end of the series
+\begin{lstlisting}
+ variance of sub sample starting at the end of the series
 
  from the finite length first order autocorrelated process
 
  s2 = 1/m^2 sum_i^m sum_j^m rho^-|i-j|
 
-\end{lstlisting}\subsection{ar1delay}
+\end{lstlisting}
+\subsection{ar1delay}
 ${}$
-\begin{lstlisting} approximate acf by the ar1 process
+\begin{lstlisting}
+ approximate acf by the ar1 process
  acf: autocovariance or autocorrerlation function
  nf : skip first samples (for mixed geometric-arithmetic series (ARMA)
 
-\end{lstlisting}\subsection{ar1delay\_old}
+\end{lstlisting}
+\subsection{ar1delay\_old}
 ${}$
-\begin{lstlisting} autocorrelation of the residual
+\begin{lstlisting}
+ autocorrelation of the residual
 
-\end{lstlisting}\subsection{ar2conv}
+\end{lstlisting}
+\subsection{ar2conv}
 ${}$
-\begin{lstlisting} coefficients of the ar2 process determined from the two leading correlations
+\begin{lstlisting}
+ coefficients of the ar2 process determined from the two leading correlations
  of the acf [1,r1,r2,...]
 
-\end{lstlisting}\subsection{ar2dof}
+\end{lstlisting}
+\subsection{ar2dof}
 ${}$
-\begin{lstlisting} effective samples size for the ar2 process
+\begin{lstlisting}
+ effective samples size for the ar2 process
 
-\end{lstlisting}\subsection{ar2param}
+\end{lstlisting}
+\subsection{ar2param}
 ${}$
-\begin{lstlisting} ar2 parameter estimation from first two terms of acf
+\begin{lstlisting}
+ ar2 parameter estimation from first two terms of acf
 
  acf = [1 a1 a2 ...]
 
-\end{lstlisting}\subsection{asymwin}
+\end{lstlisting}
+\subsection{asymwin}
 ${}$
-\begin{lstlisting} creates asymmetrical filter windows
+\begin{lstlisting}
+ creates asymmetrical filter windows
  filter will always have negative weights
 
-\end{lstlisting}\subsection{autocorr\_fft}
+\end{lstlisting}
+\subsection{autocorr\_fft}
 ${}$
-\begin{lstlisting} autocorrelation function
+\begin{lstlisting}
+ autocorrelation function
 
-\end{lstlisting}\subsection{bandpass}
+\end{lstlisting}
+\subsection{bandpass}
 ${}$
-\begin{lstlisting} bandpass filter
+\begin{lstlisting}
+ bandpass filter
 
-\end{lstlisting}\subsection{bandpass2}
+\end{lstlisting}
+\subsection{bandpass2}
 ${}$
-\begin{lstlisting} bandpass filter
+\begin{lstlisting}
+ bandpass filter
 
-\end{lstlisting}\subsection{bartlett}
+\end{lstlisting}
+\subsection{bartlett}
 ${}$
-\begin{lstlisting} Effective sample size factor for bartlett window
+\begin{lstlisting}
+ Effective sample size factor for bartlett window
  c.f. thiebaux
  c.f spectral analysis-jenkins, eq. (6.3.27)
  c = acf
@@ -2324,126 +3193,182 @@ ${}$
  T : reduction factor for dof
  for ar1 with a = rho^k = exp(-k/L), T = 2L
 
-\end{lstlisting}\subsection{bartlett\_spectrogram}
+\end{lstlisting}
+\subsection{bartlett\_spectrogram}
 ${}$
-\begin{lstlisting} bartlet spectrogramm
+\begin{lstlisting}
+ bartlet spectrogramm
  TODO sliding window
 
-\end{lstlisting}\subsection{bin1d}
+\end{lstlisting}
+\subsection{bin1d}
 ${}$
-\begin{lstlisting} bin values of v sampled at x into bins bounded by "edges"
+\begin{lstlisting}
+ bin values of v sampled at x into bins bounded by "edges"
  apply function v to it
 
-\end{lstlisting}\subsection{bin2d}
+\end{lstlisting}
+\subsection{bin2d}
 ${}$
-\begin{lstlisting} bin values of V sampled at X and Y into the grid structured grid ex,ey
+\begin{lstlisting}
+ bin values of V sampled at X and Y into the grid structured grid ex,ey
  apply function func to all walues in the bin
  func = mean : default
  func = sum : non-normalized frequency histogram in 2D
 
-\end{lstlisting}\subsection{binormrnd}
-${}$
-\begin{lstlisting} generate two correlated normally distributed vectors
-
-\end{lstlisting}\subsection{conv1\_man}
-${}$
-\begin{lstlisting} convolutions with padding
-
-\end{lstlisting}\subsection{conv2\_man}
-${}$
-\begin{lstlisting} convolution in 2d
-
-\end{lstlisting}\subsection{conv2z}
+\end{lstlisting}
+\subsection{binormrnd}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{conv30}
+ generate two correlated normally distributed vectors
+
+\end{lstlisting}
+\subsection{conv1\_man}
 ${}$
-\begin{lstlisting} convolve with rectangular window of lenght n
+\begin{lstlisting}
+ convolutions with padding
+
+\end{lstlisting}
+\subsection{conv2\_man}
+${}$
+\begin{lstlisting}
+ convolution in 2d
+
+\end{lstlisting}
+\subsection{conv2z}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{conv30}
+${}$
+\begin{lstlisting}
+ convolve with rectangular window of lenght n
  circular boundaries
 
-\end{lstlisting}\subsection{conv\_}
+\end{lstlisting}
+\subsection{conv\_}
 ${}$
-\begin{lstlisting} convolution of a with b
+\begin{lstlisting}
+ convolution of a with b
 
-\end{lstlisting}\subsection{conv\_centered}
+\end{lstlisting}
+\subsection{conv\_centered}
 ${}$
-\begin{lstlisting} convolve x with filter window f
+\begin{lstlisting}
+ convolve x with filter window f
  when length of f is even, this guarantees a symmetric result (no off by on
  displacement) by making the lenght of f odd at first
 
-\end{lstlisting}\subsection{convz}
+\end{lstlisting}
+\subsection{convz}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{cosexpdelay}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{csmooth}
-${}$
-\begin{lstlisting} smooth recursively with [1,2,1]/4 kernel
 
-\end{lstlisting}\subsection{daniell\_window}
+\end{lstlisting}
+\subsection{cosexpdelay}
 ${}$
-\begin{lstlisting} Daniell window for smoothing the power spectrum
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{csmooth}
+${}$
+\begin{lstlisting}
+ smooth recursively with [1,2,1]/4 kernel
+
+\end{lstlisting}
+\subsection{daniell\_window}
+${}$
+\begin{lstlisting}
+ Daniell window for smoothing the power spectrum
  c.f. Daniell 1946
  Bloomfield 2000
  meko 2015
 
-\end{lstlisting}\subsection{danielle\_window}
-${}$
-\begin{lstlisting} danielle fourier window
-
-\end{lstlisting}\subsection{db2neper}
-${}$
-\begin{lstlisting} convert decibel to neper
-
-\end{lstlisting}\subsection{db2power}
-${}$
-\begin{lstlisting} power ratio from db
-
-\end{lstlisting}\subsection{derive\_danielle\_weight}
+\end{lstlisting}
+\subsection{danielle\_window}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{derive\_limit\_0\_acfar}
+ danielle fourier window
+
+\end{lstlisting}
+\subsection{db2neper}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{detect\_peak}
+ convert decibel to neper
+
+\end{lstlisting}
+\subsection{db2power}
 ${}$
-\begin{lstlisting} detect peaks in a vector
+\begin{lstlisting}
+ power ratio from db
+
+\end{lstlisting}
+\subsection{derive\_danielle\_weight}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_limit\_0\_acfar}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{detect\_peak}
+${}$
+\begin{lstlisting}
+ detect peaks in a vector
  requires function value to fall to p*max before new value is allowed
 
-\end{lstlisting}\subsection{digital\_low\_pass\_filter}
+\end{lstlisting}
+\subsection{digital\_low\_pass\_filter}
 ${}$
-\begin{lstlisting} design coefficients of a low pass filter with specified cut of frequency
+\begin{lstlisting}
+ design coefficients of a low pass filter with specified cut of frequency
  and sampling period
  alalogue low pass with pole at s=-omega_c=1/tau=1/RC
  Ha = tau/(tau + s) = 1/(1 + omega_c*s)
 
-\end{lstlisting}\subsection{doublesum\_ij}
-${}$
-\begin{lstlisting} double sum of r^i
-
-\end{lstlisting}\subsection{effective\_sample\_size\_to\_ar1}
-${}$
-\begin{lstlisting} convert effective sample size to ar1 correlation
-
-\end{lstlisting}\subsection{filt\_hodges\_lehman}
+\end{lstlisting}
+\subsection{doublesum\_ij}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{filter1}
-${}$
-\begin{lstlisting} filter along one dimension
+ double sum of r^i
 
-\end{lstlisting}\subsection{filter2}
+\end{lstlisting}
+\subsection{effective\_sample\_size\_to\_ar1}
 ${}$
-\begin{lstlisting} filter columns of x (matlab does only support vector input)
+\begin{lstlisting}
+ convert effective sample size to ar1 correlation
 
-\end{lstlisting}\subsection{filter\_}
+\end{lstlisting}
+\subsection{filt\_hodges\_lehman}
 ${}$
-\begin{lstlisting} invalidate values that exceed n-times the robust standard deviation
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{filteriir}
+\end{lstlisting}
+\subsection{filter1}
 ${}$
-\begin{lstlisting} filter adcp t-n data over time
+\begin{lstlisting}
+ filter along one dimension
+
+\end{lstlisting}
+\subsection{filter2}
+${}$
+\begin{lstlisting}
+ filter columns of x (matlab does only support vector input)
+
+\end{lstlisting}
+\subsection{filter\_}
+${}$
+\begin{lstlisting}
+ invalidate values that exceed n-times the robust standard deviation
+
+\end{lstlisting}
+\subsection{filteriir}
+${}$
+\begin{lstlisting}
+ filter adcp t-n data over time
 
  v : nz,nt   : values to be filtered
  H : nt,1    : depth of ensemble
@@ -2474,421 +3399,635 @@ ${}$
  (the inverse step is actually not necessary)
  write filtered value
 
-\end{lstlisting}\subsection{filterp}
+\end{lstlisting}
+\subsection{filterp}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{filterp1}
-${}$
-\begin{lstlisting} fir filter with some fancy extras
 
-\end{lstlisting}\subsection{filterstd}
+\end{lstlisting}
+\subsection{filterp1}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{firls\_man}
-${}$
-\begin{lstlisting} design finite impulse response filter by the least squares method
+ fir filter with some fancy extras
 
-\end{lstlisting}\subsection{flattopwin}
-${}$
-\begin{lstlisting} the flat top window
-
-\end{lstlisting}\subsection{frequency\_response\_boxcar}
-${}$
-\begin{lstlisting} frquency response of a boxcar filter
-
-\end{lstlisting}\subsection{freqz\_boxcar}
-${}$
-\begin{lstlisting} frequncy response of a boxcar filter
-
-\end{lstlisting}\subsection{gaussfilt1}
-${}$
-\begin{lstlisting} filter data series with a gaussian window
-
-\end{lstlisting}\subsection{hanchangewin}
-${}$
-\begin{lstlisting} hanning window for change point detection
-
-\end{lstlisting}\subsection{hanchangewin2}
-${}$
-\begin{lstlisting} nanning window for chage point detection
-
-\end{lstlisting}\subsection{hanwin}
-${}$
-\begin{lstlisting} hanning filter window
-
-\end{lstlisting}\subsection{hanwin\_}
-${}$
-\begin{lstlisting} hanning filter window
-
-\end{lstlisting}\subsection{highpass}
-${}$
-\begin{lstlisting} high pass filter
-
-\end{lstlisting}\subsection{kaiserwin}
-${}$
-\begin{lstlisting} kaiser filter window
-
-\end{lstlisting}\subsection{kalman}
-${}$
-\begin{lstlisting} Kalman filter
-
-\end{lstlisting}\subsection{lanczoswin}
-${}$
-\begin{lstlisting} Lanczos window
-
-\end{lstlisting}\subsection{last}
-${}$
-\begin{lstlisting} lake tail, but for matrices
-
-\end{lstlisting}\subsection{lowpass}
-${}$
-\begin{lstlisting} low pass filter
-
-\end{lstlisting}\subsection{lowpass2}
-${}$
-\begin{lstlisting} design low pass filter with cutoff-frequency f1
-
-\end{lstlisting}\subsection{lowpass\_iir}
-${}$
-\begin{lstlisting} iir-low pass
-
-\end{lstlisting}\subsection{lowpass\_iir\_symmetric}
-${}$
-\begin{lstlisting} two-sided iir low pass filter (for symmetry)
-
-\end{lstlisting}\subsection{lowpassfilter2}
-${}$
-\begin{lstlisting} low-pass filter of data
-
-\end{lstlisting}\subsection{maxfilt1}
+\end{lstlisting}
+\subsection{filterstd}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{meanfilt1}
-${}$
-\begin{lstlisting} moving average filter with special treatment of the boundaries
 
-\end{lstlisting}\subsection{medfilt1\_man}
-${}$
-\begin{lstlisting} moving median filter, supports columnwise operation
-
-\end{lstlisting}\subsection{medfilt1\_man2}
-${}$
-\begin{lstlisting} moving median filter with special treatment of boundaries
-
-\end{lstlisting}\subsection{medfilt1\_padded}
-${}$
-\begin{lstlisting} median filter with padding
-
-\end{lstlisting}\subsection{medfilt1\_reduced}
-${}$
-\begin{lstlisting} median filter with padding
-
-\end{lstlisting}\subsection{mid\_term\_single\_sample}
-${}$
-\begin{lstlisting} variance of single sample, mid term
-
-\end{lstlisting}\subsection{minfilt1}
+\end{lstlisting}
+\subsection{firls\_man}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{mu2ar1}
+ design finite impulse response filter by the least squares method
+
+\end{lstlisting}
+\subsection{flattopwin}
 ${}$
-\begin{lstlisting} error variance of the mean of the finite length ar1 process
+\begin{lstlisting}
+ the flat top window
+
+\end{lstlisting}
+\subsection{frequency\_response\_boxcar}
+${}$
+\begin{lstlisting}
+ frquency response of a boxcar filter
+
+\end{lstlisting}
+\subsection{freqz\_boxcar}
+${}$
+\begin{lstlisting}
+ frequncy response of a boxcar filter
+
+\end{lstlisting}
+\subsection{gaussfilt1}
+${}$
+\begin{lstlisting}
+ filter data series with a gaussian window
+
+\end{lstlisting}
+\subsection{hanchangewin}
+${}$
+\begin{lstlisting}
+ hanning window for change point detection
+
+\end{lstlisting}
+\subsection{hanchangewin2}
+${}$
+\begin{lstlisting}
+ nanning window for chage point detection
+
+\end{lstlisting}
+\subsection{hanwin}
+${}$
+\begin{lstlisting}
+ hanning filter window
+
+\end{lstlisting}
+\subsection{hanwin\_}
+${}$
+\begin{lstlisting}
+ hanning filter window
+
+\end{lstlisting}
+\subsection{highpass}
+${}$
+\begin{lstlisting}
+ high pass filter
+
+\end{lstlisting}
+\subsection{kaiserwin}
+${}$
+\begin{lstlisting}
+ kaiser filter window
+
+\end{lstlisting}
+\subsection{kalman}
+${}$
+\begin{lstlisting}
+ Kalman filter
+
+\end{lstlisting}
+\subsection{lanczoswin}
+${}$
+\begin{lstlisting}
+ Lanczos window
+
+\end{lstlisting}
+\subsection{last}
+${}$
+\begin{lstlisting}
+ lake tail, but for matrices
+
+\end{lstlisting}
+\subsection{lowpass}
+${}$
+\begin{lstlisting}
+ low pass filter
+
+\end{lstlisting}
+\subsection{lowpass2}
+${}$
+\begin{lstlisting}
+ design low pass filter with cutoff-frequency f1
+
+\end{lstlisting}
+\subsection{lowpass\_iir}
+${}$
+\begin{lstlisting}
+ iir-low pass
+
+\end{lstlisting}
+\subsection{lowpass\_iir\_symmetric}
+${}$
+\begin{lstlisting}
+ two-sided iir low pass filter (for symmetry)
+
+\end{lstlisting}
+\subsection{lowpassfilter2}
+${}$
+\begin{lstlisting}
+ low-pass filter of data
+
+\end{lstlisting}
+\subsection{maxfilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{meanfilt1}
+${}$
+\begin{lstlisting}
+ moving average filter with special treatment of the boundaries
+
+\end{lstlisting}
+\subsection{medfilt1\_man}
+${}$
+\begin{lstlisting}
+ moving median filter, supports columnwise operation
+
+\end{lstlisting}
+\subsection{medfilt1\_man2}
+${}$
+\begin{lstlisting}
+ moving median filter with special treatment of boundaries
+
+\end{lstlisting}
+\subsection{medfilt1\_padded}
+${}$
+\begin{lstlisting}
+ median filter with padding
+
+\end{lstlisting}
+\subsection{medfilt1\_reduced}
+${}$
+\begin{lstlisting}
+ median filter with padding
+
+\end{lstlisting}
+\subsection{mid\_term\_single\_sample}
+${}$
+\begin{lstlisting}
+ variance of single sample, mid term
+
+\end{lstlisting}
+\subsection{minfilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mu2ar1}
+${}$
+\begin{lstlisting}
+ error variance of the mean of the finite length ar1 process
 
 
  (mu)^2 = (sum epsi)^2 = sum_i sum_j eps_i eps_j = sum_ii(rho,n)/n^2
  this has the limit s^2 for rho->1 
 
-\end{lstlisting}\subsection{nanautocorr}
+\end{lstlisting}
+\subsection{nanautocorr}
 ${}$
-\begin{lstlisting} autocorrelation with nan-values
+\begin{lstlisting}
+ autocorrelation with nan-values
 
-\end{lstlisting}\subsection{nanmedfilt1}
+\end{lstlisting}
+\subsection{nanmedfilt1}
 ${}$
-\begin{lstlisting} medfilt1, skipping nans
+\begin{lstlisting}
+ medfilt1, skipping nans
 
-\end{lstlisting}\subsection{neper2db}
+\end{lstlisting}
+\subsection{neper2db}
 ${}$
-\begin{lstlisting} convert neper to db
+\begin{lstlisting}
+ convert neper to db
 
-\end{lstlisting}\subsection{peaks\_man}
+\end{lstlisting}
+\subsection{peaks\_man}
 ${}$
-\begin{lstlisting} peaks of a periodogram
+\begin{lstlisting}
+ peaks of a periodogram
 
-\end{lstlisting}\subsection{polyfilt1}
+\end{lstlisting}
+\subsection{polyfilt1}
 ${}$
-\begin{lstlisting} polynomial filter,
+\begin{lstlisting}
+ polynomial filter,
  can be achieved by iteratively processing the data with
  a mean (zero-order) filter
 
-\end{lstlisting}\subsection{qmedfilt1}
+\end{lstlisting}
+\subsection{qmedfilt1}
 ${}$
-\begin{lstlisting} medfilt1, after fitting a quadratic polynomial
+\begin{lstlisting}
+ medfilt1, after fitting a quadratic polynomial
 
-\end{lstlisting}\subsection{randar1}
+\end{lstlisting}
+\subsection{randar1}
 ${}$
-\begin{lstlisting} generate random ar1 process
+\begin{lstlisting}
+ generate random ar1 process
  e1 = randar1(sigma,p,n,m)
 
-\end{lstlisting}\subsection{randar1\_dual}
-${}$
-\begin{lstlisting} draw random variables of two corrlated ar1 processes
-
-\end{lstlisting}\subsection{randar2}
-${}$
-\begin{lstlisting} generate ar2 process
-
-\end{lstlisting}\subsection{randarp}
-${}$
-\begin{lstlisting} randomly generate the instance of an ar-p process
-
-\end{lstlisting}\subsection{range\_window}
-${}$
-\begin{lstlisting} range of values within a certain range of indices (window)
-
-\end{lstlisting}\subsection{rectwin}
-${}$
-\begin{lstlisting} rectangular window
-
-\end{lstlisting}\subsection{recursive\_sum}
+\end{lstlisting}
+\subsection{randar1\_dual}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{select\_range}
+ draw random variables of two corrlated ar1 processes
+
+\end{lstlisting}
+\subsection{randar2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{smooth1d\_parametric}
+ generate ar2 process
+
+\end{lstlisting}
+\subsection{randarp}
 ${}$
-\begin{lstlisting} smooth position of p0=x0,y0 between p1=x1,y1 and p2=x2,y2,
+\begin{lstlisting}
+ randomly generate the instance of an ar-p process
+
+\end{lstlisting}
+\subsection{range\_window}
+${}$
+\begin{lstlisting}
+ range of values within a certain range of indices (window)
+
+\end{lstlisting}
+\subsection{rectwin}
+${}$
+\begin{lstlisting}
+ rectangular window
+
+\end{lstlisting}
+\subsection{recursive\_sum}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{select\_range}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{smooth1d\_parametric}
+${}$
+\begin{lstlisting}
+ smooth position of p0=x0,y0 between p1=x1,y1 and p2=x2,y2,
  so that distance to p1 and p2 becomes equal
  and the chord length remains the same
 
-\end{lstlisting}\subsection{smooth2}
-${}$
-\begin{lstlisting} smooth vectos of X
-
-\end{lstlisting}\subsection{smooth\_man}
+\end{lstlisting}
+\subsection{smooth2}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{smooth\_parametric}
+ smooth vectos of X
+
+\end{lstlisting}
+\subsection{smooth\_man}
 ${}$
-\begin{lstlisting} smooth a parametric function given in x-y coordinates
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{smooth\_parametric}
+${}$
+\begin{lstlisting}
+ smooth a parametric function given in x-y coordinates
 	matvec2x2(R,[dxc;dyc])
 
-\end{lstlisting}\subsection{smooth\_parametric2}
+\end{lstlisting}
+\subsection{smooth\_parametric2}
 ${}$
-\begin{lstlisting} parametrically smooth the curve
+\begin{lstlisting}
+ parametrically smooth the curve
 
-\end{lstlisting}\subsection{smoothfft}
+\end{lstlisting}
+\subsection{smoothfft}
 ${}$
-\begin{lstlisting} filter with fast fourier transform
+\begin{lstlisting}
+ filter with fast fourier transform
 
-\end{lstlisting}\subsection{spectrogram}
+\end{lstlisting}
+\subsection{spectrogram}
 ${}$
-\begin{lstlisting} spectrogram
+\begin{lstlisting}
+ spectrogram
 
-\end{lstlisting}\subsection{std\_window}
+\end{lstlisting}
+\subsection{std\_window}
 ${}$
-\begin{lstlisting} moving block standard deviation
+\begin{lstlisting}
+ moving block standard deviation
 
-\end{lstlisting}\subsection{sum\_i\_lag}
+\end{lstlisting}
+\subsection{sum\_i\_lag}
 ${}$
-\begin{lstlisting} sum of ar1 matrix with lag
+\begin{lstlisting}
+ sum of ar1 matrix with lag
  sum_i=1^n rho^|i-k|
 
-\end{lstlisting}\subsection{sum\_ii}
+\end{lstlisting}
+\subsection{sum\_ii}
 ${}$
-\begin{lstlisting} sum of ar1 matrix
+\begin{lstlisting}
+ sum of ar1 matrix
  sum_i=1^n sum_j=1^n rho^|i-j|
  this is for the variance, take square root for the standard deviation factor
 
-\end{lstlisting}\subsection{sum\_ii\_}
+\end{lstlisting}
+\subsection{sum\_ii\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{sum\_ij}
+
+\end{lstlisting}
+\subsection{sum\_ij}
 ${}$
-\begin{lstlisting} sum of ar1 matrix
+\begin{lstlisting}
+ sum of ar1 matrix
  sum_{i=1}^n sum_{j=1}^m r^|i-j|
 
-\end{lstlisting}\subsection{sum\_ij\_}
+\end{lstlisting}
+\subsection{sum\_ij\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{sum\_ij\_partial\_}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{sum\_multivar}
-${}$
-\begin{lstlisting} sum of matrix entries of bivariate ar1 process
 
-\end{lstlisting}\subsection{test\_acfar1}
+\end{lstlisting}
+\subsection{sum\_ij\_partial\_}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_acfar1\_2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_acfar1\_3}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_acfar1\_4}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_acfar2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1\_var\_factor}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1\_var\_factor\_2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1\_var\_mu\_single\_sample}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1\_var\_pop}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1\_var\_pop\_1}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_ar1delay}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_bivariate\_covariance\_term}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_convexity}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_lanczoswin}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_madcorr}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_randar1}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_randar1\_multivariate}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_randar2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_sum\_ij}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_sum\_multivar}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_trifilt1}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wautocorr}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wavelet\_transform}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wordfilt}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_xar1\_mid\_term}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{tikhonov\_to\_ar1}
-${}$
-\begin{lstlisting} convert coefficient of the tikhonov regularization to correlatioon of the ar1 process
 
-\end{lstlisting}\subsection{trapwin}
+\end{lstlisting}
+\subsection{sum\_multivar}
 ${}$
-\begin{lstlisting} trapezoidal filter window
+\begin{lstlisting}
+ sum of matrix entries of bivariate ar1 process
 
-\end{lstlisting}\subsection{trifilt1}
+\end{lstlisting}
+\subsection{test\_acfar1}
 ${}$
-\begin{lstlisting} filter with triangular window
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{triwin}
+\end{lstlisting}
+\subsection{test\_acfar1\_2}
 ${}$
-\begin{lstlisting} triangular filter window
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{triwin2}
+\end{lstlisting}
+\subsection{test\_acfar1\_3}
 ${}$
-\begin{lstlisting} triangular filter window
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{varar1}
+\end{lstlisting}
+\subsection{test\_acfar1\_4}
 ${}$
-\begin{lstlisting} error variance of a single sample of a finite length ar1 process
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_acfar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_factor}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_factor\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_mu\_single\_sample}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_pop}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_pop\_1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1delay}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bivariate\_covariance\_term}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_convexity}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_lanczoswin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_madcorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar1\_multivariate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_sum\_ij}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_sum\_multivar}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_trifilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wautocorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet\_transform}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wordfilt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_xar1\_mid\_term}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{tikhonov\_to\_ar1}
+${}$
+\begin{lstlisting}
+ convert coefficient of the tikhonov regularization to correlatioon of the ar1 process
+
+\end{lstlisting}
+\subsection{trapwin}
+${}$
+\begin{lstlisting}
+ trapezoidal filter window
+
+\end{lstlisting}
+\subsection{trifilt1}
+${}$
+\begin{lstlisting}
+ filter with triangular window
+
+\end{lstlisting}
+\subsection{triwin}
+${}$
+\begin{lstlisting}
+ triangular filter window
+
+\end{lstlisting}
+\subsection{triwin2}
+${}$
+\begin{lstlisting}
+ triangular filter window
+
+\end{lstlisting}
+\subsection{varar1}
+${}$
+\begin{lstlisting}
+ error variance of a single sample of a finite length ar1 process
  with respect to the mean, averaged over the population
 
-\end{lstlisting}\subsection{welch\_spectrogram}
-${}$
-\begin{lstlisting} welch spectrogram
-
-\end{lstlisting}\subsection{wfilt}
-${}$
-\begin{lstlisting} filter with window
-
-\end{lstlisting}\subsection{winbandpass}
-${}$
-\begin{lstlisting} filter with bandpass
-
-\end{lstlisting}\subsection{window\_make\_odd}
+\end{lstlisting}
+\subsection{welch\_spectrogram}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{winfilt0}
-${}$
-\begin{lstlisting} filter with window
+ welch spectrogram
 
-\end{lstlisting}\subsection{winlength}
+\end{lstlisting}
+\subsection{wfilt}
 ${}$
-\begin{lstlisting} window length for desired cutoff frequency
+\begin{lstlisting}
+ filter with window
+
+\end{lstlisting}
+\subsection{winbandpass}
+${}$
+\begin{lstlisting}
+ filter with bandpass
+
+\end{lstlisting}
+\subsection{window\_make\_odd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{winfilt0}
+${}$
+\begin{lstlisting}
+ filter with window
+
+\end{lstlisting}
+\subsection{winlength}
+${}$
+\begin{lstlisting}
+ window length for desired cutoff frequency
  power at fc is halved
  H(wf) = 1/sqrt(2) H(f)
  if the filter window were used as a low pass filter
  note: the user should prefer a windowed ideal low pass filter
  TODO, relate this to DOF
 
-\end{lstlisting}\subsection{wmeanfilt}
+\end{lstlisting}
+\subsection{wmeanfilt}
 ${}$
-\begin{lstlisting} mean filter with window
+\begin{lstlisting}
+ mean filter with window
 
-\end{lstlisting}\subsection{wmedfilt}
+\end{lstlisting}
+\subsection{wmedfilt}
 ${}$
-\begin{lstlisting} median filter with window
+\begin{lstlisting}
+ median filter with window
 
-\end{lstlisting}\subsection{wordfilt}
+\end{lstlisting}
+\subsection{wordfilt}
 ${}$
-\begin{lstlisting} weighted order filter
+\begin{lstlisting}
+ weighted order filter
 
-\end{lstlisting}\subsection{wordfilt\_edgeworth}
+\end{lstlisting}
+\subsection{wordfilt\_edgeworth}
 ${}$
-\begin{lstlisting} weighed order filter
+\begin{lstlisting}
+ weighed order filter
 
-\end{lstlisting}\subsection{xcorr\_man}
+\end{lstlisting}
+\subsection{xcorr\_man}
 ${}$
-\begin{lstlisting} cross correlation of two sampled ar1 processes
+\begin{lstlisting}
+ cross correlation of two sampled ar1 processes
 
-\end{lstlisting}\section{sorting}
+\end{lstlisting}
+\section{sorting}
 \subsection{sort2}
 ${}$
-\begin{lstlisting} sort two numbers
+\begin{lstlisting}
+ sort two numbers
 
-\end{lstlisting}\subsection{sort2d}
+\end{lstlisting}
+\subsection{sort2d}
 ${}$
-\begin{lstlisting} sort elements of matrix in X
+\begin{lstlisting}
+ sort elements of matrix in X
  returns row and column index of sorted values
 
-\end{lstlisting}\section{special-functions}
+\end{lstlisting}
+\section{special-functions}
 \subsection{bessel\_sphere}
 ${}$
-\begin{lstlisting} spherical Bessel function of the first kind
+\begin{lstlisting}
+ spherical Bessel function of the first kind
 
-\end{lstlisting}\subsection{hankel\_sphere}
+\end{lstlisting}
+\subsection{hankel\_sphere}
 ${}$
-\begin{lstlisting} spherical Hankel function for the far field (incident plane wave)
+\begin{lstlisting}
+ spherical Hankel function for the far field (incident plane wave)
  first kind
 
-\end{lstlisting}\subsection{hermite}
+\end{lstlisting}
+\subsection{hermite}
 ${}$
-\begin{lstlisting} probabilistic's hermite polynomial by recurrence relation
+\begin{lstlisting}
+ probabilistic's hermite polynomial by recurrence relation
 
  input :
  n : order
@@ -2899,111 +4038,157 @@ ${}$
  df : d/dx H_n(x)
 
 
-\end{lstlisting}\subsection{legendre\_man}
-${}$
-\begin{lstlisting} legendre polynomials
-
-\end{lstlisting}\subsection{neumann\_sphere}
-${}$
-\begin{lstlisting} spherical Neumann function
- Bessel function of the second kind
-
-\end{lstlisting}\section{statistics}
-\subsection{atan\_s2}
-${}$
-\begin{lstlisting} stadard deviation of the arcus tangens by means of taylor expansion
-
-\end{lstlisting}\subsection{beta\_mode\_to\_parameter}
-${}$
-\begin{lstlisting} transform modes (mean and sd) to paramets of the beta function
-
-\end{lstlisting}\subsection{correlation\_confidence\_pearson}
-${}$
-\begin{lstlisting} confience intervals of the correlation coefficient
- c.f. Fischer 1921
-
-\end{lstlisting}\section{statistics/distributions}
-\subsection{PDF}
-${}$
-\begin{lstlisting} class for quasi-distributions from a set of sampling points
-
-\end{lstlisting}\subsection{binorm\_separation\_coefficient}
-${}$
-\begin{lstlisting} separation coefficient of a bimodal normal distribution
-
-\end{lstlisting}\subsection{binormcdf}
-${}$
-\begin{lstlisting} bio-modal gaussian distribution
-
-\end{lstlisting}\subsection{binormfit}
-${}$
-\begin{lstlisting} fit sum of to normal distribution to a histogram
-
-\end{lstlisting}\subsection{binormpdf}
+\end{lstlisting}
+\subsection{legendre\_man}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{edgeworth\_cdf}
+ legendre polynomials
+
+\end{lstlisting}
+\subsection{neumann\_sphere}
 ${}$
-\begin{lstlisting} edgeworth expansion of an unknown cumulative distribution
+\begin{lstlisting}
+ spherical Neumann function
+ Bessel function of the second kind
+
+\end{lstlisting}
+\section{statistics}
+\subsection{atan\_s2}
+${}$
+\begin{lstlisting}
+ stadard deviation of the arcus tangens by means of taylor expansion
+
+\end{lstlisting}
+\subsection{beta\_mode\_to\_parameter}
+${}$
+\begin{lstlisting}
+ transform modes (mean and sd) to paramets of the beta function
+
+\end{lstlisting}
+\subsection{correlation\_confidence\_pearson}
+${}$
+\begin{lstlisting}
+ confience intervals of the correlation coefficient
+ c.f. Fischer 1921
+
+\end{lstlisting}
+\section{statistics/distributions}
+\subsection{PDF}
+${}$
+\begin{lstlisting}
+ class for quasi-distributions from a set of sampling points
+
+\end{lstlisting}
+\subsection{binorm\_separation\_coefficient}
+${}$
+\begin{lstlisting}
+ separation coefficient of a bimodal normal distribution
+
+\end{lstlisting}
+\subsection{binormcdf}
+${}$
+\begin{lstlisting}
+ bio-modal gaussian distribution
+
+\end{lstlisting}
+\subsection{binormfit}
+${}$
+\begin{lstlisting}
+ fit sum of to normal distribution to a histogram
+
+\end{lstlisting}
+\subsection{binormpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{edgeworth\_cdf}
+${}$
+\begin{lstlisting}
+ edgeworth expansion of an unknown cumulative distribution
  with mean mu, standard deviation sigma, and third and fourth cumulants
  c.f. Rao 2010
 
-\end{lstlisting}\subsection{edgeworth\_pdf}
+\end{lstlisting}
+\subsection{edgeworth\_pdf}
 ${}$
 \begin{lstlisting}
+
  probability density of and unknown distribution
  with mean mu, standard deviation sigma, and third and fourth cumulants
  c.f. Rao 2010
 
-\end{lstlisting}\subsection{logn\_mode2param}
+\end{lstlisting}
+\subsection{logn\_mode2param}
 ${}$
-\begin{lstlisting} transform modes (mu,sd) to parameters of the log normal distribution
+\begin{lstlisting}
+ transform modes (mu,sd) to parameters of the log normal distribution
 
-\end{lstlisting}\subsection{logn\_param2mode}
+\end{lstlisting}
+\subsection{logn\_param2mode}
 ${}$
-\begin{lstlisting} transform parameters to mode (mu, sd) for the log normal distribution
+\begin{lstlisting}
+ transform parameters to mode (mu, sd) for the log normal distribution
 
-\end{lstlisting}\subsection{lognpdf\_}
+\end{lstlisting}
+\subsection{lognpdf\_}
 ${}$
-\begin{lstlisting} log normal distribution called by modes rather than parameters
+\begin{lstlisting}
+ log normal distribution called by modes rather than parameters
 
-\end{lstlisting}\subsection{pdfsample}
+\end{lstlisting}
+\subsection{pdfsample}
 ${}$
-\begin{lstlisting} pdf from sample distribution
+\begin{lstlisting}
+ pdf from sample distribution
  Note: better use kernal density estimates
 
-\end{lstlisting}\subsection{t2cdf}
+\end{lstlisting}
+\subsection{t2cdf}
 ${}$
-\begin{lstlisting} Hotelling's T-squared cumulative distribution
+\begin{lstlisting}
+ Hotelling's T-squared cumulative distribution
 
-\end{lstlisting}\subsection{t2inv}
+\end{lstlisting}
+\subsection{t2inv}
 ${}$
-\begin{lstlisting} inverse of Hotelling's T-squared cumulative distribution
+\begin{lstlisting}
+ inverse of Hotelling's T-squared cumulative distribution
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
 \subsection{example\_standard\_error\_of\_sample\_quantiles}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{f\_var\_finite}
+
+\end{lstlisting}
+\subsection{f\_var\_finite}
 ${}$
-\begin{lstlisting} reduction of variance when sampling from a finite population
+\begin{lstlisting}
+ reduction of variance when sampling from a finite population
  without replacement
 
-\end{lstlisting}\subsection{gamma\_mode\_to\_parameter}
+\end{lstlisting}
+\subsection{gamma\_mode\_to\_parameter}
 ${}$
-\begin{lstlisting} transform modes (mu,sd) to parameters of the gamma distribution
+\begin{lstlisting}
+ transform modes (mu,sd) to parameters of the gamma distribution
 
-\end{lstlisting}\subsection{hodges\_lehmann\_correlation}
+\end{lstlisting}
+\subsection{hodges\_lehmann\_correlation}
 ${}$
-\begin{lstlisting} hodges_lehmann correlatoon coefficient
+\begin{lstlisting}
+ hodges_lehmann correlatoon coefficient
  c.f. Shamos 1976
  c.f. Bickel and Lehmann 1976
  c.f. rousseeuw 1993
  c.f. Shevlyakov 2011
 
-\end{lstlisting}\subsection{hodges\_lehmann\_dispersion}
+\end{lstlisting}
+\subsection{hodges\_lehmann\_dispersion}
 ${}$
-\begin{lstlisting} dispersion determined by the hodges lehman method
+\begin{lstlisting}
+ dispersion determined by the hodges lehman method
  asymptotic efficiency of dispersion estimates:
  standard deviation:      E(s - hat s)/s = 2/sqrt(2 n) ~ 0.707/sqrt(n)			(100%)
  hodges lehmann dispersion E(s-\hat s)/s = (pi/3)^2 /(sqrt(2 n)) ~ 0.775/sqrt(n)	(91%)
@@ -3013,10 +4198,12 @@ ${}$
  c.f. rousseeuw 1993
  nb: rousseeuw uses the 25th percentile, which is more efficient for small sample sizes
 
-\end{lstlisting}\section{statistics/information-theory}
+\end{lstlisting}
+\section{statistics/information-theory}
 \subsection{akaike\_information\_criterion}
 ${}$
-\begin{lstlisting} akaike information criterion
+\begin{lstlisting}
+ akaike information criterion
 
  serr : rmse of model prediction
  n : effective sample size
@@ -3025,161 +4212,247 @@ ${}$
  c.f. akaike (1974)
  c.f. sugiura 1978
 
-\end{lstlisting}\subsection{bayesian\_information\_criterion}
+\end{lstlisting}
+\subsection{bayesian\_information\_criterion}
 ${}$
-\begin{lstlisting} bayesian information criterion
+\begin{lstlisting}
+ bayesian information criterion
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
+\subsection{kurtncdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{kurtnpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{kurtosis\_bias\_corrected}
 ${}$
-\begin{lstlisting} bias corrected kurtosis
+\begin{lstlisting}
+ bias corrected kurtosis
 
-\end{lstlisting}\subsection{limit}
-${}$
-\begin{lstlisting} limit a by lower and upper bound
-
-\end{lstlisting}\subsection{logfactorial}
-${}$
-\begin{lstlisting} approximate log of the factorial
-
-\end{lstlisting}\subsection{loglogpdf}
+\end{lstlisting}
+\subsection{limit}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{logskewcdf}
+ limit a by lower and upper bound
+
+\end{lstlisting}
+\subsection{logfactorial}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{logskewpdf}
+ approximate log of the factorial
+
+\end{lstlisting}
+\subsection{loglogpdf}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{statistics/logu}
+
+\end{lstlisting}
+\subsection{logskewcdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{logskewpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/logu}
 \subsection{lambertw\_numeric}
 ${}$
-\begin{lstlisting} lambert-w function
+\begin{lstlisting}
+ lambert-w function
 
-\end{lstlisting}\subsection{logtrialtcdf}
+\end{lstlisting}
+\subsection{logtrialtcdf}
 ${}$
-\begin{lstlisting} pdf of a logarithmic triangular distribution
+\begin{lstlisting}
+ pdf of a logarithmic triangular distribution
 
-\end{lstlisting}\subsection{logtrialtinv}
+\end{lstlisting}
+\subsection{logtrialtinv}
 ${}$
-\begin{lstlisting} inverse of the logarithmic triangular distribution
+\begin{lstlisting}
+ inverse of the logarithmic triangular distribution
  = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
 x = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
 
-\end{lstlisting}\subsection{logtrialtmean}
-${}$
-\begin{lstlisting} mean of the logarithmic triangular distribution
-
-\end{lstlisting}\subsection{logtrialtpdf}
-${}$
-\begin{lstlisting} density of the logarithmic triangular distribution
-
-\end{lstlisting}\subsection{logtrialtrnd}
+\end{lstlisting}
+\subsection{logtrialtmean}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{logtricdf}
-${}$
-\begin{lstlisting} cumulative distribution of the logarithmic triangular distribution
+ mean of the logarithmic triangular distribution
 
-\end{lstlisting}\subsection{logtriinv}
-${}$
-\begin{lstlisting} invere of the logarithmic triangular distribution
-
-\end{lstlisting}\subsection{logtrimean}
-${}$
-\begin{lstlisting} mean of the logarithmic triangular distribution
-
-\end{lstlisting}\subsection{logtripdf}
-${}$
-\begin{lstlisting} probability density of the logarithmic triangular distribution
-
-\end{lstlisting}\subsection{logtrirnd}
+\end{lstlisting}
+\subsection{logtrialtpdf}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{logucdf}
-${}$
-\begin{lstlisting} probability density of the logarithmic uniform distribution
+ density of the logarithmic triangular distribution
 
-\end{lstlisting}\subsection{logucm}
-${}$
-\begin{lstlisting} central moments of the log-uniform distribution
-
-\end{lstlisting}\subsection{loguinv}
-${}$
-\begin{lstlisting} inverse of the log-uniform distribution  
-
-\end{lstlisting}\subsection{logumean}
-${}$
-\begin{lstlisting} mean of the log-uniform distribution
-
-\end{lstlisting}\subsection{logupdf}
-${}$
-\begin{lstlisting} pdf of the log uniform distribution
-
-\end{lstlisting}\subsection{logurnd}
-${}$
-\begin{lstlisting} random numbers following a log-uniform distribution
-
-\end{lstlisting}\subsection{loguvar}
-${}$
-\begin{lstlisting} variance of the log-uniform distribution
-
-\end{lstlisting}\subsection{medlogu}
-${}$
-\begin{lstlisting} median of the log-uniform distribution
-
-\end{lstlisting}\subsection{test\_logurnd}
+\end{lstlisting}
+\subsection{logtrialtrnd}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{tricdf}
-${}$
-\begin{lstlisting} cumulative distribution of the log-triangular distribution
 
-\end{lstlisting}\subsection{triinv}
+\end{lstlisting}
+\subsection{logtricdf}
 ${}$
-\begin{lstlisting} inverse of the triangular distribution
+\begin{lstlisting}
+ cumulative distribution of the logarithmic triangular distribution
 
-\end{lstlisting}\subsection{trimedian}
+\end{lstlisting}
+\subsection{logtriinv}
 ${}$
-\begin{lstlisting} median of the triangular distribution
+\begin{lstlisting}
+ invere of the logarithmic triangular distribution
 
-\end{lstlisting}\subsection{tripdf}
+\end{lstlisting}
+\subsection{logtrimean}
 ${}$
-\begin{lstlisting} probability density of the triangular distribution
+\begin{lstlisting}
+ mean of the logarithmic triangular distribution
 
-\end{lstlisting}\subsection{trirnd}
+\end{lstlisting}
+\subsection{logtripdf}
 ${}$
-\begin{lstlisting} random numbers of the triangular distribution
+\begin{lstlisting}
+ probability density of the logarithmic triangular distribution
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\subsection{logtrirnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{logucdf}
+${}$
+\begin{lstlisting}
+ probability density of the logarithmic uniform distribution
+
+\end{lstlisting}
+\subsection{logucm}
+${}$
+\begin{lstlisting}
+ central moments of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{loguinv}
+${}$
+\begin{lstlisting}
+ inverse of the log-uniform distribution  
+
+\end{lstlisting}
+\subsection{logumean}
+${}$
+\begin{lstlisting}
+ mean of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{logupdf}
+${}$
+\begin{lstlisting}
+ pdf of the log uniform distribution
+
+\end{lstlisting}
+\subsection{logurnd}
+${}$
+\begin{lstlisting}
+ random numbers following a log-uniform distribution
+
+\end{lstlisting}
+\subsection{loguvar}
+${}$
+\begin{lstlisting}
+ variance of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{medlogu}
+${}$
+\begin{lstlisting}
+ median of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{test\_logurnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{tricdf}
+${}$
+\begin{lstlisting}
+ cumulative distribution of the log-triangular distribution
+
+\end{lstlisting}
+\subsection{triinv}
+${}$
+\begin{lstlisting}
+ inverse of the triangular distribution
+
+\end{lstlisting}
+\subsection{trimedian}
+${}$
+\begin{lstlisting}
+ median of the triangular distribution
+
+\end{lstlisting}
+\subsection{tripdf}
+${}$
+\begin{lstlisting}
+ probability density of the triangular distribution
+
+\end{lstlisting}
+\subsection{trirnd}
+${}$
+\begin{lstlisting}
+ random numbers of the triangular distribution
+
+\end{lstlisting}
+\section{statistics}
 \subsection{maxnnormals}
 ${}$
-\begin{lstlisting} expected maximum of n normal variables
+\begin{lstlisting}
+ expected maximum of n normal variables
  c.f. Wolperts
  this is the median, not the mean of the maximum!
  see median of gumbel
 
-\end{lstlisting}\subsection{midrange}
+\end{lstlisting}
+\subsection{midrange}
 ${}$
-\begin{lstlisting} mid range of columns of X
+\begin{lstlisting}
+ mid range of columns of X
 
-\end{lstlisting}\subsection{minavg}
+\end{lstlisting}
+\subsection{minavg}
 ${}$
-\begin{lstlisting} solution of the minimum variance problem
+\begin{lstlisting}
+ solution of the minimum variance problem
  minimise the variance of the weighted sum of n-independent
  random variables with equal mean and individual variance
 
-\end{lstlisting}\subsection{mode\_man}
+\end{lstlisting}
+\subsection{mode\_man}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\section{statistics/moment-statistics}
+
+\end{lstlisting}
+\section{statistics/moment-statistics}
 \subsection{autocorr\_man3}
 ${}$
-\begin{lstlisting} autoccorrelation of the columns of X 
+\begin{lstlisting}
+ autoccorrelation of the columns of X 
 
-\end{lstlisting}\subsection{autocorr\_man4}
+\end{lstlisting}
+\subsection{autocorr\_man4}
 ${}$
-\begin{lstlisting} autocorrelation for x if x is a vector, or indivvidually for the 
+\begin{lstlisting}
+ autocorrelation for x if x is a vector, or indivvidually for the 
  columns of x if x is a matrix
 
  c.f. box jenkins 2008 eq. 2.1.12
@@ -3187,21 +4460,27 @@ ${}$
  Note that it is faster to compute the acf in frequency space
  as done in the matlab internal function
 
-\end{lstlisting}\subsection{autocorr\_man5}
+\end{lstlisting}
+\subsection{autocorr\_man5}
 ${}$
-\begin{lstlisting} autocorrellation of the columns of X
+\begin{lstlisting}
+ autocorrellation of the columns of X
 
-\end{lstlisting}\subsection{blockserr}
+\end{lstlisting}
+\subsection{blockserr}
 ${}$
-\begin{lstlisting} estimate the standard error of potetially sequentilly correlated data
+\begin{lstlisting}
+ estimate the standard error of potetially sequentilly correlated data
  by blocking
  block length should be sufficiently larger than correlation length
  and sufficiently smaller than data length
  this uses a sliding block approach, which reduces the variation of the error estimate
 
-\end{lstlisting}\subsection{comoment}
+\end{lstlisting}
+\subsection{comoment}
 ${}$
-\begin{lstlisting} non-central higher order moments of the multivariate normal distribution
+\begin{lstlisting}
+ non-central higher order moments of the multivariate normal distribution
 
  c.f. Moments and cumulants of the multivariate real and complex Gaussian distributions
  
@@ -3211,176 +4490,254 @@ ${}$
  C  : nxn covariance matrix
  k  : nx1 powers of variables in moments
 
-\end{lstlisting}\subsection{corr\_man}
+\end{lstlisting}
+\subsection{corr\_man}
 ${}$
-\begin{lstlisting} correlation of two vectors
+\begin{lstlisting}
+ correlation of two vectors
 
-\end{lstlisting}\subsection{cov\_man}
+\end{lstlisting}
+\subsection{cov\_man}
 ${}$
-\begin{lstlisting} covariance matrix of two vectors
+\begin{lstlisting}
+ covariance matrix of two vectors
 
-\end{lstlisting}\subsection{dof}
+\end{lstlisting}
+\subsection{dof}
 ${}$
-\begin{lstlisting} mininum number of support points
+\begin{lstlisting}
+ mininum number of support points
  for a polynomial of degree order in dim dimensions
 
-\end{lstlisting}\subsection{edgeworth\_quantile}
+\end{lstlisting}
+\subsection{edgeworth\_quantile}
 ${}$
-\begin{lstlisting} inverse edgeworth expansion
+\begin{lstlisting}
+ inverse edgeworth expansion
  c.f. cornis fisher 1937
  c.f. Rao 2010
  c.f. 2.50 in hall
  CHERNOZHUKOV 3.3
 
-\end{lstlisting}\subsection{effective\_sample\_size}
-${}$
-\begin{lstlisting} effective sample size of the weighted mean of uncorrelated data
- c.f. Kish
-
-\end{lstlisting}\subsection{f\_correlation}
-${}$
-\begin{lstlisting} correction factor for standard error of the mean of n ar1-correlated iid samples
-
-\end{lstlisting}\subsection{f\_finite}
-${}$
-\begin{lstlisting} reduction factor of standard error for sampling from a finite distribution
- without replacement
-
-\end{lstlisting}\subsection{lmean}
-${}$
-\begin{lstlisting} mean of x.^l, not of abs
-
-\end{lstlisting}\subsection{lmoment}
-${}$
-\begin{lstlisting} l-moment of vector x
-
-\end{lstlisting}\subsection{maskmean}
-${}$
-\begin{lstlisting} mean of the masked values of X
-
-\end{lstlisting}\subsection{masknanmean}
+\end{lstlisting}
+\subsection{effective\_sample\_size}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{mean1}
-${}$
-\begin{lstlisting} mean of x
+ effective sample size of the weighted mean of uncorrelated data
+ c.f. Kish
 
-\end{lstlisting}\subsection{mean\_man}
+\end{lstlisting}
+\subsection{f\_correlation}
 ${}$
-\begin{lstlisting} mean and standard error of X
+\begin{lstlisting}
+ correction factor for standard error of the mean of n ar1-correlated iid samples
 
-\end{lstlisting}\subsection{mse}
+\end{lstlisting}
+\subsection{f\_finite}
 ${}$
-\begin{lstlisting} mean squared error of residual vector res
+\begin{lstlisting}
+ reduction factor of standard error for sampling from a finite distribution
+ without replacement
+
+\end{lstlisting}
+\subsection{lmean}
+${}$
+\begin{lstlisting}
+ mean of x.^l, not of abs
+
+\end{lstlisting}
+\subsection{lmoment}
+${}$
+\begin{lstlisting}
+ l-moment of vector x
+
+\end{lstlisting}
+\subsection{maskmean}
+${}$
+\begin{lstlisting}
+ mean of the masked values of X
+
+\end{lstlisting}
+\subsection{masknanmean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mean1}
+${}$
+\begin{lstlisting}
+ mean of x
+
+\end{lstlisting}
+\subsection{mean\_man}
+${}$
+\begin{lstlisting}
+ mean and standard error of X
+
+\end{lstlisting}
+\subsection{mse}
+${}$
+\begin{lstlisting}
+ mean squared error of residual vector res
  this is de-facto the std for an unbiased residual
 
-\end{lstlisting}\subsection{nanautocorr\_man1}
+\end{lstlisting}
+\subsection{nanautocorr\_man1}
 ${}$
-\begin{lstlisting} autocorrelation of a vector with nan-values
+\begin{lstlisting}
+ autocorrelation of a vector with nan-values
 
-\end{lstlisting}\subsection{nanautocorr\_man2}
+\end{lstlisting}
+\subsection{nanautocorr\_man2}
 ${}$
-\begin{lstlisting} autocorrelation of a vector with nan-values
+\begin{lstlisting}
+ autocorrelation of a vector with nan-values
 
-\end{lstlisting}\subsection{nanautocorr\_man4}
+\end{lstlisting}
+\subsection{nanautocorr\_man4}
 ${}$
-\begin{lstlisting} compute autocorrelation for x if x is a vector, or indivvidually for the 
+\begin{lstlisting}
+ compute autocorrelation for x if x is a vector, or indivvidually for the 
  columns of x if x is a matrix
  box jenkins 2008 eq. 2.1.12
  TODO nan is problematic!
  Note that it is faster to compute the acf in frequency space
  as done in the matlab internal function
 
-\end{lstlisting}\subsection{nancorr}
+\end{lstlisting}
+\subsection{nancorr}
 ${}$
-\begin{lstlisting} (co)-correlation matrix when samples a NaN
+\begin{lstlisting}
+ (co)-correlation matrix when samples a NaN
 
-\end{lstlisting}\subsection{nancumsum}
+\end{lstlisting}
+\subsection{nancumsum}
 ${}$
-\begin{lstlisting} cumulative sum, setting nan values to zero
+\begin{lstlisting}
+ cumulative sum, setting nan values to zero
 
-\end{lstlisting}\subsection{nanlmean}
+\end{lstlisting}
+\subsection{nanlmean}
 ${}$
-\begin{lstlisting} mean of the l-th power of the absolute value of x
+\begin{lstlisting}
+ mean of the l-th power of the absolute value of x
 
-\end{lstlisting}\subsection{nanr2}
+\end{lstlisting}
+\subsection{nanr2}
 ${}$
-\begin{lstlisting} coefficient of determination when samples are invalid
+\begin{lstlisting}
+ coefficient of determination when samples are invalid
 
-\end{lstlisting}\subsection{nanrms}
+\end{lstlisting}
+\subsection{nanrms}
 ${}$
-\begin{lstlisting} root mean square value when sample contains nan-values
+\begin{lstlisting}
+ root mean square value when sample contains nan-values
 
-\end{lstlisting}\subsection{nanrmse}
+\end{lstlisting}
+\subsection{nanrmse}
 ${}$
-\begin{lstlisting} root mean square error from vector of residuals
+\begin{lstlisting}
+ root mean square error from vector of residuals
  this is de-facto the std for an unbiased residual
 
-\end{lstlisting}\subsection{nanserr}
+\end{lstlisting}
+\subsection{nanserr}
 ${}$
-\begin{lstlisting} standard error of x with respect to mean when x contains nan values
+\begin{lstlisting}
+ standard error of x with respect to mean when x contains nan values
 
-\end{lstlisting}\subsection{nanwmean}
+\end{lstlisting}
+\subsection{nanwmean}
 ${}$
-\begin{lstlisting} weighted mean
+\begin{lstlisting}
+ weighted mean
  min_x sum w (x-mu)^2 => mu = sum(wx)/sum(w)
  varargin can be dim
  function [mu serr] = nanwmean(w,x)
 
-\end{lstlisting}\subsection{nanwstd}
+\end{lstlisting}
+\subsection{nanwstd}
 ${}$
-\begin{lstlisting} weighed standard deviation
+\begin{lstlisting}
+ weighed standard deviation
 
-\end{lstlisting}\subsection{nanwvar}
+\end{lstlisting}
+\subsection{nanwvar}
 ${}$
-\begin{lstlisting} weighted variance of columns, corrected for degrees of freedom (bessel)
+\begin{lstlisting}
+ weighted variance of columns, corrected for degrees of freedom (bessel)
 
  s^2 = sum(w*(x-sum(wx)/sum(w))^2)/sum(w)
 
-\end{lstlisting}\subsection{nanxcorr}
+\end{lstlisting}
+\subsection{nanxcorr}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{pearson}
-${}$
-\begin{lstlisting} pearson correlation coefficient
 
-\end{lstlisting}\subsection{pearson\_to\_kendall}
+\end{lstlisting}
+\subsection{pearson}
 ${}$
-\begin{lstlisting} conversion of pearson to kendall correlation coefficient
+\begin{lstlisting}
+ pearson correlation coefficient
+
+\end{lstlisting}
+\subsection{pearson\_to\_kendall}
+${}$
+\begin{lstlisting}
+ conversion of pearson to kendall correlation coefficient
  c.f. Kruskal 1958
 
-\end{lstlisting}\subsection{pool\_samples}
-${}$
-\begin{lstlisting} pooled mean and standard deviation of several groups of different size, mean and standard deviation
-
-\end{lstlisting}\subsection{qmean}
-${}$
-\begin{lstlisting} trimmed mean
-
-\end{lstlisting}\subsection{range\_mean}
+\end{lstlisting}
+\subsection{pool\_samples}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{rmse}
+ pooled mean and standard deviation of several groups of different size, mean and standard deviation
+
+\end{lstlisting}
+\subsection{qmean}
 ${}$
-\begin{lstlisting} root mean square error computed from a residual vector
+\begin{lstlisting}
+ trimmed mean
+
+\end{lstlisting}
+\subsection{range\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{rmse}
+${}$
+\begin{lstlisting}
+ root mean square error computed from a residual vector
  this is de-facto the std for an unbiased residual
 
-\end{lstlisting}\subsection{serr}
+\end{lstlisting}
+\subsection{serr}
 ${}$
-\begin{lstlisting} standard error of the mean of a set of uncorrelated samples
+\begin{lstlisting}
+ standard error of the mean of a set of uncorrelated samples
 
-\end{lstlisting}\subsection{serr1}
+\end{lstlisting}
+\subsection{serr1}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_qskew}
+
+\end{lstlisting}
+\subsection{test\_qskew}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_qstd\_qskew\_optimal\_p}
+
+\end{lstlisting}
+\subsection{test\_qstd\_qskew\_optimal\_p}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{wautocorr}
+
+\end{lstlisting}
+\subsection{wautocorr}
 ${}$
-\begin{lstlisting} autocorrelation for x if x is a vector, or indivvidually for the 
+\begin{lstlisting}
+ autocorrelation for x if x is a vector, or indivvidually for the 
  columns of x if x is a matrix
  samples can be weighted
 
@@ -3391,288 +4748,408 @@ ${}$
  Note that it is faster to compute the acf in frequency space
  as done in the matlab internal function
 
-\end{lstlisting}\subsection{wcorr}
+\end{lstlisting}
+\subsection{wcorr}
 ${}$
-\begin{lstlisting} correlation of two vectors when samples are weighted
+\begin{lstlisting}
+ correlation of two vectors when samples are weighted
 
-\end{lstlisting}\subsection{wcov}
+\end{lstlisting}
+\subsection{wcov}
 ${}$
-\begin{lstlisting} covariance of two vectors when samples are weighted
+\begin{lstlisting}
+ covariance of two vectors when samples are weighted
 
-\end{lstlisting}\subsection{wdof}
+\end{lstlisting}
+\subsection{wdof}
 ${}$
-\begin{lstlisting} effective degrees of freedom for weighted samples
+\begin{lstlisting}
+ effective degrees of freedom for weighted samples
 
-\end{lstlisting}\subsection{wkurt}
+\end{lstlisting}
+\subsection{wkurt}
 ${}$
-\begin{lstlisting} kurtosis with weighted samples
+\begin{lstlisting}
+ kurtosis with weighted samples
 
-\end{lstlisting}\subsection{wmean}
+\end{lstlisting}
+\subsection{wmean}
 ${}$
-\begin{lstlisting} weighted mean
+\begin{lstlisting}
+ weighted mean
 
  min_x sum w (x-mu)^2 => mu = sum(wx)/sum(w)
 
  varargin can be dim
  function [mu serr] = wmean(w,x)
 
-\end{lstlisting}\subsection{wrms}
+\end{lstlisting}
+\subsection{wrms}
 ${}$
-\begin{lstlisting} weighted root mean square error
+\begin{lstlisting}
+ weighted root mean square error
 
-\end{lstlisting}\subsection{wserr}
+\end{lstlisting}
+\subsection{wserr}
 ${}$
-\begin{lstlisting} weighted root mean square error
+\begin{lstlisting}
+ weighted root mean square error
 
-\end{lstlisting}\subsection{wskew}
+\end{lstlisting}
+\subsection{wskew}
 ${}$
-\begin{lstlisting} skewness of a weighted set of samples
+\begin{lstlisting}
+ skewness of a weighted set of samples
 
-\end{lstlisting}\subsection{wstd}
+\end{lstlisting}
+\subsection{wstd}
 ${}$
-\begin{lstlisting} weighed standard deviation
+\begin{lstlisting}
+ weighed standard deviation
 
-\end{lstlisting}\subsection{wvar}
+\end{lstlisting}
+\subsection{wvar}
 ${}$
-\begin{lstlisting} weighted variance of columns, corrected for degrees of freedom (bessel)
+\begin{lstlisting}
+ weighted variance of columns, corrected for degrees of freedom (bessel)
  variance of the weighted sample mean of samples with same mean (but not necessarily same variance)
  s^2 = sum (w^2(x-sum(wx)^2))
 
  s2_mu : error of mean, s2_mu : sd of prediction
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
 \subsection{nangeomean}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{nangeostd}
-${}$
-\begin{lstlisting} geometric standard deviation ignoring nan-values
 
-\end{lstlisting}\section{statistics/nonparametric-statistics}
+\end{lstlisting}
+\subsection{nangeostd}
+${}$
+\begin{lstlisting}
+ geometric standard deviation ignoring nan-values
+
+\end{lstlisting}
+\section{statistics/nonparametric-statistics}
 \subsection{kernel1d}
 ${}$
-\begin{lstlisting} X   : ouput x axis bins
+\begin{lstlisting}
+ X   : ouput x axis bins
  xi  : samples along x
  m   : number of bins in X
  fun : kernel function
  pdf : propability density of xi
 
-\end{lstlisting}\subsection{kernel2d}
+\end{lstlisting}
+\subsection{kernel2d}
 ${}$
-\begin{lstlisting} kernel density estimate in two dimensions
+\begin{lstlisting}
+ kernel density estimate in two dimensions
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
 \subsection{normmoment}
 ${}$
-\begin{lstlisting} expected norm of x.^n, when values x in x are iid normal with mu and sigma
+\begin{lstlisting}
+ expected norm of x.^n, when values x in x are iid normal with mu and sigma
 
-\end{lstlisting}\subsection{normpdf2}
+\end{lstlisting}
+\subsection{normpdf2}
 ${}$
-\begin{lstlisting} pdf of the bivariate normal distribution
+\begin{lstlisting}
+ pdf of the bivariate normal distribution
 
-\end{lstlisting}\section{statistics/order-statistics}
+\end{lstlisting}
+\section{statistics/order-statistics}
 \subsection{hodges\_lehmann\_location}
 ${}$
-\begin{lstlisting} hodges lehman location estimator
+\begin{lstlisting}
+ hodges lehman location estimator
 
  Asymptotic rms efficency of location estimte:
       mean:          1 s/sqrt(n)
       hodges lehman: sqrt(pi/3)*s ~ 1.0233 s/sqrt(n)
       median:        pi/2 s/sqrt(n) ~ 1.25 s / sqrt(n)
 
-\end{lstlisting}\subsection{kendall}
+\end{lstlisting}
+\subsection{kendall}
 ${}$
-\begin{lstlisting} kendall correlation coefficient
+\begin{lstlisting}
+ kendall correlation coefficient
 
-\end{lstlisting}\subsection{kendall\_to\_pearson}
+\end{lstlisting}
+\subsection{kendall\_to\_pearson}
 ${}$
-\begin{lstlisting} convert kendall rank correlation coefficient to the person product moment
+\begin{lstlisting}
+ convert kendall rank correlation coefficient to the person product moment
  correlation coefficient
 
  c.f. Kruska, 1985
 
-\end{lstlisting}\subsection{mad2sd}
-${}$
-\begin{lstlisting} transform median absolute deviation to standard deviation
- for normal distributed values
-
-\end{lstlisting}\subsection{madcorr}
-${}$
-\begin{lstlisting} proxy correlation by median absolute deviation
-
-\end{lstlisting}\subsection{median2\_holder}
+\end{lstlisting}
+\subsection{mad2sd}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{median\_ci}
+ transform median absolute deviation to standard deviation
+ for normal distributed values
+
+\end{lstlisting}
+\subsection{madcorr}
 ${}$
-\begin{lstlisting} median and its confidence intervals under assumption of normality
+\begin{lstlisting}
+ proxy correlation by median absolute deviation
+
+\end{lstlisting}
+\subsection{median2\_holder}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{median\_ci}
+${}$
+\begin{lstlisting}
+ median and its confidence intervals under assumption of normality
  se_me = sqrt(1/2 pi) 1.25331 * sd/sqrt(n)
 
-\end{lstlisting}\subsection{median\_man}
+\end{lstlisting}
+\subsection{median\_man}
 ${}$
-\begin{lstlisting} median and confidence intervals
+\begin{lstlisting}
+ median and confidence intervals
  c is a P value for the confidence interval,
  default is 0.95 (2-sigma)
  median of the colums of X
 
-\end{lstlisting}\subsection{mediani}
+\end{lstlisting}
+\subsection{mediani}
 ${}$
-\begin{lstlisting} index of median, if median is not unique, any of the values is chosen
+\begin{lstlisting}
+ index of median, if median is not unique, any of the values is chosen
 
-\end{lstlisting}\subsection{nanmadcorr}
+\end{lstlisting}
+\subsection{nanmadcorr}
 ${}$
-\begin{lstlisting} proxy correlation by median absolute deviation
+\begin{lstlisting}
+ proxy correlation by median absolute deviation
 
-\end{lstlisting}\subsection{nanwmedian}
+\end{lstlisting}
+\subsection{nanwmedian}
 ${}$
-\begin{lstlisting} weighted median, skips nan-values
+\begin{lstlisting}
+ weighted median, skips nan-values
 
-\end{lstlisting}\subsection{nanwquantile}
+\end{lstlisting}
+\subsection{nanwquantile}
 ${}$
-\begin{lstlisting} weighted quantile, skips nan values 
+\begin{lstlisting}
+ weighted quantile, skips nan values 
 
-\end{lstlisting}\subsection{oja\_median}
+\end{lstlisting}
+\subsection{oja\_median}
 ${}$
-\begin{lstlisting} two dimensional oja median
+\begin{lstlisting}
+ two dimensional oja median
  note: the multivariate median is not unique
 
  oja 1983, for extension to multivariate function, see chaudhri
 
-\end{lstlisting}\subsection{qkurtosis}
+\end{lstlisting}
+\subsection{qkurtosis}
 ${}$
-\begin{lstlisting} kurosis computed for quantiles
+\begin{lstlisting}
+ kurosis computed for quantiles
 
  Note : this is a measurement of shape-tailedness and yields the same value for the
         normal distribution as "kurtosis"
         However, this is a separate statistic and hence requires different
         methods for calculating P-values and hypothesis testing
 
-\end{lstlisting}\subsection{qmoments}
+\end{lstlisting}
+\subsection{qmoments}
 ${}$
-\begin{lstlisting} moments estimated from quantiles
+\begin{lstlisting}
+ moments estimated from quantiles
 
-\end{lstlisting}\subsection{qskew}
+\end{lstlisting}
+\subsection{qskew}
 ${}$
-\begin{lstlisting} skewness estimated from quantiles
+\begin{lstlisting}
+ skewness estimated from quantiles
 
  Note : this is a measurement of shape-symmetry and yields the same value for the
         skew-normal distribution as "skewness"
         However, this is an own statistic and hence requires different
         methods for calculating P-values and hypothesis testing
 
-\end{lstlisting}\subsection{qskewq}
-${}$
-\begin{lstlisting} skewness estimated by quantiles
-
-\end{lstlisting}\subsection{qstdq}
-${}$
-\begin{lstlisting} proxy standard deviation determined by quantiles
-
-\end{lstlisting}\subsection{quantile1\_optimisation}
+\end{lstlisting}
+\subsection{qskewq}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{quantile2\_breckling}
-${}$
-\begin{lstlisting} qunatile regression
+ skewness estimated by quantiles
 
-\end{lstlisting}\subsection{quantile2\_chaudhuri}
-${}$
-\begin{lstlisting} quantile regression
-
-\end{lstlisting}\subsection{quantile2\_projected}
-${}$
-\begin{lstlisting} quantile in two dimensions
-
-\end{lstlisting}\subsection{quantile2\_projected2}
-${}$
-\begin{lstlisting} spatial qunatile for chosen direction
-
-\end{lstlisting}\subsection{quantile\_envelope}
+\end{lstlisting}
+\subsection{qstdq}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{quantile\_regression\_simple}
-${}$
-\begin{lstlisting} simple quantile regression
+ proxy standard deviation determined by quantiles
 
-\end{lstlisting}\subsection{ranking}
+\end{lstlisting}
+\subsection{quantile1\_optimisation}
 ${}$
-\begin{lstlisting} ranking for spearman statistics
+\begin{lstlisting}
 
-\end{lstlisting}\subsection{spatial\_median}
+\end{lstlisting}
+\subsection{quantile2\_breckling}
 ${}$
-\begin{lstlisting} c.f. Oja 2008
+\begin{lstlisting}
+ qunatile regression
+
+\end{lstlisting}
+\subsection{quantile2\_chaudhuri}
+${}$
+\begin{lstlisting}
+ quantile regression
+
+\end{lstlisting}
+\subsection{quantile2\_projected}
+${}$
+\begin{lstlisting}
+ quantile in two dimensions
+
+\end{lstlisting}
+\subsection{quantile2\_projected2}
+${}$
+\begin{lstlisting}
+ spatial qunatile for chosen direction
+
+\end{lstlisting}
+\subsection{quantile\_envelope}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{quantile\_regression\_simple}
+${}$
+\begin{lstlisting}
+ simple quantile regression
+
+\end{lstlisting}
+\subsection{ranking}
+${}$
+\begin{lstlisting}
+ ranking for spearman statistics
+
+\end{lstlisting}
+\subsection{spatial\_median}
+${}$
+\begin{lstlisting}
+ c.f. Oja 2008
  is this the same as the oja simplex median (c.f. small 1990)?
 
-\end{lstlisting}\subsection{spatial\_quantile}
-${}$
-\begin{lstlisting} spatial quantile
-
-\end{lstlisting}\subsection{spatial\_quantile2}
-${}$
-\begin{lstlisting} spatial quantile
-
-\end{lstlisting}\subsection{spatial\_quantile3}
-${}$
-\begin{lstlisting} spatial quantile
-
-\end{lstlisting}\subsection{spatial\_rank}
-${}$
-\begin{lstlisting} unsigned rank
-
-\end{lstlisting}\subsection{spatial\_sign}
-${}$
-\begin{lstlisting} spatial sign
-
-\end{lstlisting}\subsection{spatial\_signed\_rank}
-${}$
-\begin{lstlisting} signed rank
- Note: this is only a true rank if X is normal with zero mean, abitrary variance
-
-\end{lstlisting}\subsection{spearman}
-${}$
-\begin{lstlisting} spearman's product moment coefficient
-
-\end{lstlisting}\subsection{spearman\_rank}
+\end{lstlisting}
+\subsection{spatial\_quantile}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{spearman\_to\_pearson}
-${}$
-\begin{lstlisting} conversion of spearman rank to person product moment correlation coefficient
+ spatial quantile
 
-\end{lstlisting}\subsection{wmedian}
+\end{lstlisting}
+\subsection{spatial\_quantile2}
 ${}$
-\begin{lstlisting} weighted median
+\begin{lstlisting}
+ spatial quantile
 
-\end{lstlisting}\subsection{wquantile}
+\end{lstlisting}
+\subsection{spatial\_quantile3}
 ${}$
-\begin{lstlisting} weighted quantile
+\begin{lstlisting}
+ spatial quantile
 
-\end{lstlisting}\section{statistics/random-number-generation}
+\end{lstlisting}
+\subsection{spatial\_rank}
+${}$
+\begin{lstlisting}
+ unsigned rank
+
+\end{lstlisting}
+\subsection{spatial\_sign}
+${}$
+\begin{lstlisting}
+ spatial sign
+
+\end{lstlisting}
+\subsection{spatial\_signed\_rank}
+${}$
+\begin{lstlisting}
+ signed rank
+ Note: this is only a true rank if X is normal with zero mean, abitrary variance
+
+\end{lstlisting}
+\subsection{spearman}
+${}$
+\begin{lstlisting}
+ spearman's product moment coefficient
+
+\end{lstlisting}
+\subsection{spearman\_rank}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spearman\_to\_pearson}
+${}$
+\begin{lstlisting}
+ conversion of spearman rank to person product moment correlation coefficient
+
+\end{lstlisting}
+\subsection{wmedian}
+${}$
+\begin{lstlisting}
+ weighted median
+
+\end{lstlisting}
+\subsection{wquantile}
+${}$
+\begin{lstlisting}
+ weighted quantile
+
+\end{lstlisting}
+\section{statistics/random-number-generation}
 \subsection{laplacernd}
 ${}$
-\begin{lstlisting} random number of laplace distribution
+\begin{lstlisting}
+ random number of laplace distribution
 
-\end{lstlisting}\subsection{randc}
+\end{lstlisting}
+\subsection{randc}
 ${}$
-\begin{lstlisting} correlate to correlated standard normally distributed vectors
+\begin{lstlisting}
+ correlate to correlated standard normally distributed vectors
 
-\end{lstlisting}\subsection{skewrnd}
+\end{lstlisting}
+\subsection{skewrnd}
 ${}$
-\begin{lstlisting} random numbers of the skew normal distribution
+\begin{lstlisting}
+ random numbers of the skew normal distribution
 
-\end{lstlisting}\subsection{skewrnd2}
+\end{lstlisting}
+\subsection{skewrnd2}
 ${}$
-\begin{lstlisting} random numbers of the skew normal distribution
+\begin{lstlisting}
+ random numbers of the skew normal distribution
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
 \subsection{range}
 ${}$
-\begin{lstlisting} mid range
+\begin{lstlisting}
+ mid range
 
-\end{lstlisting}\section{statistics/resampling-statistics/@Jackknife}
+\end{lstlisting}
+\section{statistics/resampling-statistics/@Jackknife}
 \subsection{Jackknife}
 ${}$
-\begin{lstlisting} class for leave out 1 (delete 1) Jackknife estimates
+\begin{lstlisting}
+ class for leave out 1 (delete 1) Jackknife estimates
 
  note 1 : the 1-delete jackknife does not yield consistend estimates for all functions,
         in particular it will perform poorly on robust estimation functions
@@ -3685,28 +5162,38 @@ ${}$
  note 3 : studentisation and the leave out 1 jackknife are related
  note 4 : the double 1 sample jacknife performs iferior to the d1 jacknife
 
-\end{lstlisting}\subsection{estimated\_STATIC}
+\end{lstlisting}
+\subsection{estimated\_STATIC}
 ${}$
-\begin{lstlisting} jacknife estimate of mean, bias and standard error
+\begin{lstlisting}
+ jacknife estimate of mean, bias and standard error
  theta0 : estimate from all samples
  thetad : set of estimates obtained by leaving out one data point each
           last dimension of theta is assumed to be the jackknife dimension
 
-\end{lstlisting}\subsection{matrix1\_STATIC}
+\end{lstlisting}
+\subsection{matrix1\_STATIC}
 ${}$
-\begin{lstlisting} matrix of estimation for leaving out two samples at a time
+\begin{lstlisting}
+ matrix of estimation for leaving out two samples at a time
 
-\end{lstlisting}\subsection{matrix2}
+\end{lstlisting}
+\subsection{matrix2}
 ${}$
-\begin{lstlisting} matrix of estimations for jacknive with two samples left out
+\begin{lstlisting}
+ matrix of estimations for jacknive with two samples left out
 
-\end{lstlisting}\section{statistics/resampling-statistics}
+\end{lstlisting}
+\section{statistics/resampling-statistics}
 \subsection{block\_jacknife}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{jackknife\_moments}
+
+\end{lstlisting}
+\subsection{jackknife\_moments}
 ${}$
-\begin{lstlisting} moments determined by the jacknife
+\begin{lstlisting}
+ moments determined by the jacknife
 
  func : function of interest on the samples (e.g. mean)
  A    : parameter matrix
@@ -3714,24 +5201,30 @@ ${}$
         rows    : samples of the parameter sets
  d   : number of samples left out
 
-\end{lstlisting}\subsection{moving\_block\_jacknife}
+\end{lstlisting}
+\subsection{moving\_block\_jacknife}
 ${}$
 \begin{lstlisting}
+
  blocked Jacknfife for autocorrelated data
  sliding block, statistically more efficient but computationally expensive
  note, number of blocks must be sufficiently large h ~ sqrt(n)? << n
 
-\end{lstlisting}\subsection{randblockserr}
+\end{lstlisting}
+\subsection{randblockserr}
 ${}$
-\begin{lstlisting} standard error of sequentilly correlated data by blocking
+\begin{lstlisting}
+ standard error of sequentilly correlated data by blocking
  block length should be sufficiently larger than correlation length
  and sufficiently smaller than data length
  this uses a sliding block approach, which reduces the variation of the error estimate
  TODO this does not work, randomly picking samples does not reveal the correlation
 
-\end{lstlisting}\subsection{resample}
+\end{lstlisting}
+\subsection{resample}
 ${}$
-\begin{lstlisting} resample a vector and apply function to it
+\begin{lstlisting}
+ resample a vector and apply function to it
 
  TODO, should be with replacement
 
@@ -3739,101 +5232,150 @@ ${}$
  m  : number of subsamples
  cx : maximum number of combinations
 
-\end{lstlisting}\section{statistics}
+\end{lstlisting}
+\section{statistics}
 \subsection{scale\_quantile\_sd}
 ${}$
-\begin{lstlisting} scale factor for the standard deviation
+\begin{lstlisting}
+ scale factor for the standard deviation
  of the asymtpotic distibution of sample quantiles
  (for normal distribution)
  see cadwell, 1952
 
-\end{lstlisting}\subsection{skewpdf}
+\end{lstlisting}
+\subsection{skewpdf}
 ${}$
-\begin{lstlisting} skew-normal distribution
+\begin{lstlisting}
+ skew-normal distribution
  c.f. Azzalini 1985
 
-\end{lstlisting}\subsection{trimmed\_mean}
+\end{lstlisting}
+\subsection{trimmed\_mean}
 ${}$
-\begin{lstlisting} trimmed mean
+\begin{lstlisting}
+ trimmed mean
 
-\end{lstlisting}\subsection{ttest2\_man}
+\end{lstlisting}
+\subsection{ttest2\_man}
 ${}$
-\begin{lstlisting} two-sample t-test
+\begin{lstlisting}
+ two-sample t-test
  here posix return value standard: h = 0 accepted, h = 1 failed
  note: the matlab logic is inverse : h = 1 accepted, h = 0 failed
  two sided univariate t-test
 
-\end{lstlisting}\subsection{ttest\_man}
+\end{lstlisting}
+\subsection{ttest\_man}
 ${}$
-\begin{lstlisting} two-sample t-test
+\begin{lstlisting}
+ two-sample t-test
  unequal sample size
  equal variance
 
-\end{lstlisting}\subsection{ttest\_paired}
+\end{lstlisting}
+\subsection{ttest\_paired}
 ${}$
-\begin{lstlisting} paired t-test
+\begin{lstlisting}
+ paired t-test
  unequal sample size
  equal variance
  more powerfull than unpaired test, as long as correlation between x1 and x2 > 0
 
-\end{lstlisting}\subsection{wharmean}
+\end{lstlisting}
+\subsection{wharmean}
 ${}$
-\begin{lstlisting} weighted harmonic mean
+\begin{lstlisting}
+ weighted harmonic mean
 
-\end{lstlisting}\section{wavelet}
+\end{lstlisting}
+\section{wavelet}
 \subsection{contiuous\_wavelet\_transform}
 ${}$
-\begin{lstlisting} continuous wavelet transform 
+\begin{lstlisting}
+ continuous wavelet transform 
  follows "The Illustrated Wavelet Transform Handbook: Introductory Theory and ..."
 
-\end{lstlisting}\subsection{cwt\_man}
+\end{lstlisting}
+\subsection{cwt\_man}
 ${}$
-\begin{lstlisting} continuous fourier transform
+\begin{lstlisting}
+ continuous fourier transform
  as of time of implmentation, the matlab interal cwt is affected by
  serious round-off errors and has issues with the scaling,
  which is not the case here
 
-\end{lstlisting}\subsection{example\_wavelets}
+\end{lstlisting}
+\subsection{example\_wavelets}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{phasewrap}
-${}$
-\begin{lstlisting} wrap the phase to +/- pi
 
-\end{lstlisting}\subsection{test\_cwt\_man}
+\end{lstlisting}
+\subsection{phasewrap}
 ${}$
 \begin{lstlisting}
-\end{lstlisting}\subsection{test\_phasewrap}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wavelet}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wavelet2}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wavelet\_analysis}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wavelet\_reconstruct}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{test\_wtc}
-${}$
-\begin{lstlisting}
-\end{lstlisting}\subsection{wavelet}
-${}$
-\begin{lstlisting} wavelet windows
+ wrap the phase to +/- pi
 
-\end{lstlisting}\subsection{wavelet\_reconstruct}
+\end{lstlisting}
+\subsection{test\_cwt\_man}
 ${}$
-\begin{lstlisting} iverses wavelet transform for single frequency
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phasewrap}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet\_analysis}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet\_reconstruct}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wtc}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{wavelet}
+${}$
+\begin{lstlisting}
+ wavelet windows
+
+\end{lstlisting}
+\subsection{wavelet\_reconstruct}
+${}$
+\begin{lstlisting}
+ iverses wavelet transform for single frequency
  (reconstruction of time series)
  n : window lengths in multiples of filter period 1/f0
 
-\end{lstlisting}\subsection{wavelet\_transform}
+\end{lstlisting}
+\subsection{wavelet\_transform}
 ${}$
-\begin{lstlisting} wavelet transform for single frequency
+\begin{lstlisting}
+ wavelet transform for single frequency
  n : window lengths in multiples of filter period 1/f0
 
-\end{lstlisting}\end{document}
+\end{lstlisting}
+\section{}
+\subsection{wrapphase}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\end{document}

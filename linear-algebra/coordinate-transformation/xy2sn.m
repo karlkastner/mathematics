@@ -3,6 +3,7 @@
 %
 %% convert cartesian to streamwise coordiantes
 %
+% function [S N] = xy2sn2(cX,cY,cS,X,Y)
 function [S N] = xy2sn2(cX,cY,cS,X,Y)
 
 	% for each point in X, find closest centreline point and distance to it

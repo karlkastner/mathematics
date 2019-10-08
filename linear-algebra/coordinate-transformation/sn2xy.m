@@ -2,6 +2,8 @@
 % Karl Kastner, Berlin
 %
 %% convert sn to xy coordinates
+%
+%function [X, Y, sobj] = sn2xy(cX,cY,cS,S,N,sobj)
 function [X, Y, sobj] = sn2xy(cX,cY,cS,S,N,sobj)
 	k = length(S);
 	X = zeros(k,1);
