@@ -18,59 +18,33 @@
 %
 % TODO inhomogeneous case
 % TODO flexible mesh - this solver can be much easier extended than the fdm
-function [x, y, ypm_, cflag, dydx, l, cc, AA, bb, yr] = bvp2c(odefun,bcfun,X,opt)
-	if (nargin()<4)
-		opt = struct();
-	end
-	% number of grid points
-	if (~isfield(opt,'nx'))
-		nx = 100;
-	else
-		nx = opt.nx;
-	end
-	if (~isfield(opt,'xs'))
-		xs = 1;
-	else
-		xs = opt.xs;
-	end
-	% options for solver
-	if (~isfield(opt,'sopt'))
-		sopt=struct();
-	else
-		sopt = opt.sopt;
-	end
-	% maximum number of iterations
-	if (~isfield(sopt,'maxiter'))
-		sopt.maxiter = nx;
-	end
-	% relaxation constant
-	if (~isfield(sopt,'relaxation'))
-		sopt.relaxation = 0.5;
-	end
-
-	% minimum number of grid points
-	nx = max(2,nx);
+function [x, y, out] = bvp2c(odefun,bcfun,xi,varargin)
+%ypm_, cflag, dydx, l, cc, AA, rr, yr] = bvp2c(odefun,bcfun,xi,opt)
+	opt = bvp2_check_arguments(varargin{:});
+	nx = opt.nx;
 
 	% reach end points
 	% TODO option for automatic mesh adaptation
-	x = mesh1(X,nx,xs);
+	x = mesh1(xi,opt.nx,opt.xs);
 
 	% reach mid points
 	xc = mid(x);
 
 	% reach lengths
-	dx = diff(x);
+	dx  = diff(x);
 
 	% number of segments
 	nxc = nx-1;
 
-	% number of dimensions	
-	% TODO get from input
+	% number of equations per segment
 	m = 3;
 
-	% allocate memory
-	b  = zeros(m*nxc,1);
+	out = struct();
+	
+	% allocate memory for differential operator
 	A  = sparse([],[],[],m*nxc,m*nxc,18*nxc);
+	% allocate memory for inhomogeneous part
+	b  = zeros(m*nxc,1);
 
 	% get number of coupled odes
 	cc  = feval(odefun);
@@ -82,26 +56,13 @@ function [x, y, ypm_, cflag, dydx, l, cc, AA, bb, yr] = bvp2c(odefun,bcfun,X,opt
 	ll     = [];
 
 	% solve non-linear system by picard iteration
-	[ypm, cflag] = picard(@bvp2c_,ypm,sopt);
-	ypm_ = reshape(ypm,3,[]).';
-%	ll	
-%	bb
+	[ypm, out.cflag] = picard(@bvp2c_,ypm,opt.sopt);
+	%ypm_ = reshape(ypm,3,[]).';
 
-	% value at section end points from ypm at section centres
-	y = zeros(nx*neq,1);
-	for ne=1:neq
-	     n0 = m*nxc*(ne-1);
-	     l = ll(:,:,ne);
-	y(n0+1:n0+nx) = [(  ypm(n0+1:m:n0+m*nxc-m+1).*exp(-0.5*l(:,1).*dx(1:nxc)) ...
-		     + ypm(n0+2:m:n0+m*nxc-m+2) ...
-                     + ypm(n0+3:m:n0+m*nxc).*exp(-0.5*l(:,2).*dx(1:nxc)) );
-	            (  ypm(n0+m*nxc-m+1)*exp(0.5*l(nxc,1)*dx(nxc)) ...
-		     + ypm(n0+m*nxc-m+2) ...
-                     + ypm(n0+m*nxc)*exp(0.5*l(nxc,2)*dx(nxc))) ...
-		];
-	end
+	% interpolate solution to segment end points (grid points)
+	y = inner2out(ypm);
+
 %	y_ = reshape(ypm,3,[]).'
-%pause
 
 	% derivative of solution
 	if (nargout > 3)
@@ -143,7 +104,7 @@ function ypm = bvp2c_(ypm)
 	cc = feval(odefun,xc,yc);
 
 	AA = [];
-	bb = zeros(neq*m*nxc,1);
+	rr = zeros(neq*m*nxc,1);
 
 	% for each dimension
 	for ccdx=1:neq
@@ -166,10 +127,10 @@ function ypm = bvp2c_(ypm)
 	% TODO check sign of imaginary part to decide which root is the left going
 	nout = 3;
 	if (nout < 3)
-		[v, p] = bcfun(X(1),[],ccdx);
+		[v, p] = bcfun(xi(1),[],ccdx);
 		q = [1, 1];
 	else
-		[v, p, q] = bcfun(X(1),[],ccdx);
+		[v, p, q] = bcfun(xi(1),[],ccdx);
 	end
 	if ( 0 == sum(abs(p(1:2))) )
 		error('weights must be non-zero');
@@ -188,12 +149,6 @@ function ypm = bvp2c_(ypm)
 
 	% ode in interior sections
 	% at each interior section end point
-%k=1;
-%[exp( l(k,1)*dx(k)/2)
-% exp( l(k,2)*dx(k)/2)]
-%l(k,:)
-%dx(1)
-%pause
 	for k=1:nxc-1
 		% continuity of value
 		% f_k(k dl) = f_k+1(-k dl)
@@ -239,10 +194,10 @@ function ypm = bvp2c_(ypm)
 	% boundary condition at right end
 	% fn(L)  = 0 (or better asymptotic y' = r y)
 	if (nout < 3)
-		[v, p] = bcfun(X(2),[],ccdx);
+		[v, p] = bcfun(xi(2),[],ccdx);
 		q      = [1, 1];
 	else
-		[v, p, q] = bcfun(X(2),[],ccdx);
+		[v, p, q] = bcfun(xi(2),[],ccdx);
 	end
 	if ( 0 == sum(abs(p(1:2))) )
 		error('weights must be non-zero');
@@ -257,18 +212,37 @@ function ypm = bvp2c_(ypm)
 	b(m*nxc) = v;
 
 	% stack system of odes
+	% TODO, the equations are weekly non-linear,
+	% so they can be solved individually
 	AA(1+(ccdx-1)*m*nxc:ccdx*m*nxc, ...
 	   1+(ccdx-1)*m*nxc:ccdx*m*nxc) = A;
-	bb((ccdx-1)*m*nxc+1:ccdx*m*nxc) = b;
+	rr((ccdx-1)*m*nxc+1:ccdx*m*nxc) = b;
 	end % for ccdx
 
 	% balance
 	s  = 1; %1./abs(diag(AA));
 	AA = diag(s)*AA;
-	bb = s.*bb;
+	rr = s.*rr;
 
 	% solve
-	ypm    = AA \ bb;
+	ypm    = AA \ rr;
     end % bvp2c_
+
+	function y = inner2out(ypm)
+		y = zeros(nx*neq,1);
+		for ne=1:neq
+		     n0  = m*nxc*(ne-1);
+		     n0_ = nx*(ne-1);
+		     l = ll(:,:,ne);
+		y(n0_+1:n0_+nx) = [(  ypm(n0+1:m:n0+m*nxc-m+1).*exp(-0.5*l(:,1).*dx(1:nxc)) ...
+			     + ypm(n0+2:m:n0+m*nxc-m+2) ...
+	                     + ypm(n0+3:m:n0+m*nxc).*exp(-0.5*l(:,2).*dx(1:nxc)) );
+		            (  ypm(n0+m*nxc-m+1)*exp(0.5*l(nxc,1)*dx(nxc)) ...
+			     + ypm(n0+m*nxc-m+2) ...
+	                     + ypm(n0+m*nxc)*exp(0.5*l(nxc,2)*dx(nxc))) ...
+			];
+		end
+	end
+	
 end % bvp2c
 

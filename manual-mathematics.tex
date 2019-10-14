@@ -16,8 +16,9 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics}
-\author{Karl Kastner}
+mathematics\protect\\Revision 2:3M
+}
+\author{Karl K\"astner}
 %\date{}
 
 \begin{document}
@@ -1152,10 +1153,20 @@ ${}$
  transform coodinates into unit triangle
 
 \end{lstlisting}
+\subsection{example\_approximate\_utm\_conversion}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{latlon2utm}
 ${}$
 \begin{lstlisting}
  transform latitude and longitude to WGS84 UTM
+
+\end{lstlisting}
+\subsection{latlon2utm\_simple}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{lowrance\_mercator\_to\_wgs84}
@@ -2192,6 +2203,12 @@ ${}$
  this normalization prevents this
 
 \end{lstlisting}
+\subsection{interp1\_slope}
+${}$
+\begin{lstlisting}
+ quadratic interpolation returning value and derivative(s)
+
+\end{lstlisting}
 \subsection{interp1\_smooth}
 ${}$
 \begin{lstlisting}
@@ -2292,6 +2309,11 @@ ${}$
 
 \end{lstlisting}
 \section{numerical-methods/ode}
+\subsection{bvp2\_check\_arguments}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{bvp2c}
 ${}$
 \begin{lstlisting}
@@ -2321,7 +2343,7 @@ ${}$
 
  x   : [nx1] discretized domain
        n : number of vertices
-      ns = n-1 : number of segments
+      nxc = n-1 : number of segments
 
  bc  : struct : boundary condition
        bc.p(1)*y(0) + bc.pd(2)*y'(0) = bc.val(1)
@@ -2329,8 +2351,8 @@ ${}$
 
  output:
 
- A   : [2*ns x 2*ns] disrcretisation matrix
- rhs : [2*ns x 1] right hand size
+ A   : [2*nxc x 2*ns] disrcretisation matrix
+ rhs : [2*nxc x 1] right hand size
 
  y = A^-1 rhs
 
@@ -2403,6 +2425,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  single trapezoidal step
+
+\end{lstlisting}
+\subsection{test\_bvp2}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{numerical-methods/optimisation}
@@ -3990,6 +4017,11 @@ ${}$
  weighed order filter
 
 \end{lstlisting}
+\subsection{xar1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{xcorr\_man}
 ${}$
 \begin{lstlisting}
@@ -5113,6 +5145,12 @@ ${}$
  weighted quantile
 
 \end{lstlisting}
+\section{statistics}
+\subsection{qstd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{statistics/random-number-generation}
 \subsection{laplacernd}
 ${}$
@@ -5372,7 +5410,11 @@ ${}$
  n : window lengths in multiples of filter period 1/f0
 
 \end{lstlisting}
-\section{}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
 \subsection{wrapphase}
 ${}$
 \begin{lstlisting}
