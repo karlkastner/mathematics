@@ -1,6 +1,19 @@
 % Sun 23 Jul 12:22:37 CEST 2017
 %% class for regularized interpolation (Tikhonov) on a triangulation
 %% (unstructured mesh)
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <https://www.gnu.org/licenses/>.
 classdef RegularizedInterpolator3 < handle
 	properties
 		% do not initialize the object here, matlab bug
@@ -27,14 +40,14 @@ classdef RegularizedInterpolator3 < handle
 			for idx=1:2:length(varargin)
 				obj.(varargin{idx}) = varargin{idx+1};
 			end
-			obj.mesh = MMesh();
+			obj.mesh = UnstructuredMesh();
 		end
 
 		function obj = remesh(obj,xlim,ylim,zlim,n)
 			% set up the mesh
 			L   = [xlim(2)-xlim(1), ylim(2)-ylim(1), zlim(2)-zlim(1)];
 			xy0 = [xlim(1),ylim(1),zlim(1)];
-			obj.mesh = MMesh.generate_uniform_tetra(n,L,xy0);
+			obj.mesh = UnstructuredMesh.generate_uniform_tetra(n,L,xy0);
 			obj.n = n;
 		end % remesh
 

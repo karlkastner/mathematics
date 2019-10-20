@@ -9,6 +9,19 @@
 % conservation law -> balance law -> sink term, 19.5 splitting for 2d, 17.14
 % TODO: for stationary flow solver:
 %	build highres as matrix then solve
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <https://www.gnu.org/licenses/>.
 classdef Finite_Volume < handle
 	properties
 		step
