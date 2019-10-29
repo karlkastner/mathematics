@@ -1,0 +1,4 @@
+function equalise(A)
+	
+end
+

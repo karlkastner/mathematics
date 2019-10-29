@@ -1,0 +1,79 @@
+Error writing to output stream.
+
+
+------------------------------------------------------------------------
+          std::terminate() detected at Wed Aug  1 16:37:38 2012
+------------------------------------------------------------------------
+
+Configuration:
+  Crash Decoding  : Disabled
+  Current Visual  : 0x21 (class 4, depth 24)
+  Default Encoding: UTF-8
+  GNU C Library   : 2.11.3 stable
+  MATLAB License  : 348659
+  MATLAB Root     : /opt/matlab/r2011a
+  MATLAB Version  : 7.12.0.635 (R2011a)
+  Operating System: Linux 3.2.0-3-amd64 #1 SMP Thu Jun 28 09:07:26 UTC 2012 x86_64
+  Processor ID    : x86 Family 6 Model 7 Stepping 10, GenuineIntel
+  Virtual Machine : Java 1.6.0_17-b04 with Sun Microsystems Inc. Java HotSpot(TM) 64-Bit Server VM mixed mode
+  Window System   : The X.Org Foundation (11004000), display :0.0
+
+Fault Count: 1
+
+
+
+Abnormal termination:
+std::terminate()
+
+Register State (captured):
+  RAX = 0000000000000000  RBX = 00007fd4d883a8c8
+  RCX = 0000000000000a0a  RDX = 0000000000000060
+  RSP = 00007fd4d8839c90  RBP = 00007fd4d883a050
+  RSI = 00007fd4ef1176fc  RDI = 00007fd4d8839ca0
+
+   R8 = 00007fd4ef1176fa   R9 = 0000000000000001
+  R10 = 0000000000000000  R11 = 0000000003813620
+  R12 = 0000000000000001  R13 = 00007fd4d883a900
+  R14 = 0000000000000000  R15 = 0000000000000000
+
+  RIP = 00007fd4ef11134e  EFL = 0000000000000000
+
+   CS = 700a   FS = ef64   GS = 7fd4
+
+
+Stack Trace (captured):
+[  0] 0x00007fd4ef110f49 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwfl.so+00474953 fl::sysdep::linux::unwind_stack(void const**, unsigned long, unsigned long, fl::diag::thread_context const&)+000009
+[  1] 0x00007fd4ef0c6dc1 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwfl.so+00171457 fl::diag::stacktrace_base::capture(fl::diag::thread_context const&, unsigned long)+000161
+[  2] 0x00007fd4ef0d00dd /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwfl.so+00209117
+[  3] 0x00007fd4ef0d0364 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwfl.so+00209764 fl::diag::terminate_log(char const*, fl::diag::thread_context const&, bool)+000100
+[  4] 0x00007fd4ee13cbe5 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00420837 fl::diag::terminate_log(char const*, ucontext const*, bool)+000085
+[  5] 0x00007fd4ee139b54 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00408404
+[  6] 0x00007fd4ee13b03d /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00413757
+[  7] 0x00007fd4ee13b197 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00414103
+[  8] 0x00007fd4ee13b7e6 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00415718
+[  9] 0x00007fd4ee13c24e /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwmcr.so+00418382
+[ 10] 0x00007fd4ed3fc486 /opt/matlab/r2011a/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6+00787590
+[ 11] 0x00007fd4ed3fc4b3 /opt/matlab/r2011a/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6+00787635
+[ 12] 0x00007fd4ed3fc59a /opt/matlab/r2011a/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6+00787866
+[ 13] 0x00007fd4ee37478c /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwbridge.so+00079756
+[ 14] 0x00007fd4ee374a26 /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/libmwbridge.so+00080422
+[ 15] 0x00007fd4442c54f3 /opt/matlab/r2011a/bin/glnxa64/libnativejmi.so+00214259 DoStdOut(long)+000035
+[ 16] 0x00007fd4442c10c7 /opt/matlab/r2011a/bin/glnxa64/libnativejmi.so+00196807 PostMatlabMessageOnMainThread(_jobject*, long)+000583
+[ 17] 0x00007fd4e8bc728e /opt/matlab/r2011a/bin/glnxa64/../../bin/glnxa64/../../bin/glnxa64/libmwmlutil.so+00688782 mlutil::eventmgr::ToDoAdapter::runOnceOnMainThreadImpl(boost::function0<void> const&)+000126
+[ 18] 0x00007fd4442c0e1d /opt/matlab/r2011a/bin/glnxa64/libnativejmi.so+00196125 PostMatlabMessage(JNIEnv_*, _jobject*, _jobject*, long)+000061
+[ 19] 0x00007fd4cd0b64e6 /opt/matlab/r2011a/bin/glnxa64/libnativejmi.so+2296534246
+
+
+
+If this problem is reproducible, please submit a Service Request via:
+    http://www.mathworks.com/support/contact_us/
+
+A technical support engineer might contact you with further information.
+
+Thank you for your help.** This crash report has been saved to disk as /home/pia/matlab_crash_dump.9749-1 **
+
+
+
+MATLAB is exiting because of fatal error
+Killed
+

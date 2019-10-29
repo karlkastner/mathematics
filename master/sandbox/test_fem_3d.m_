@@ -1,0 +1,99 @@
+% Wed Jul 11 21:50:26 MSK 2012
+% Karl Kästner, Berlin
+
+function test_fem_3d()
+	N = round(2.^(0:2)+2);
+%	N = 3:10;
+	E = [];
+
+	e_true = -3*pi^2;
+
+	for idx=1:length(N)
+	n = N(idx);
+	L0=  1; 
+
+	% generate mesh
+	[P T BC] = mesh_3d_uniform(n, L0);
+	[v_sum a_sum h_eff_max volume area h_eff] = regularity_3d(P,T,BC);
+	v_sum
+	h_eff_max
+
+	int = @int_3d_nc_4; % trapezoidal
+	A = assemble_3d_dphi_dphi(P, T, [], int);
+	B = assemble_3d_phi_phi(P, T, [], int);
+	[A B] = boundary_3d(A, B, BC,1);	
+	if (1 == size(A,1))
+		E(idx,1) = eig(full(A),full(B))
+	else
+		E(idx,1) = eigs(A, B, 1, 'SM')
+	end
+	M(idx,1) = size(A,1);
+	L{1} = 'linear, trapezoidal';
+
+	int = @int_3d_gauss_1;
+	% requires p=1
+	A = assemble_3d_dphi_dphi(P, T, [], int);
+	B = assemble_3d_phi_phi(P, T, [], int);
+	[A B] = boundary_3d(A, B, BC,1);	
+	if (1 == size(A,1))
+		E(idx,2) = eig(full(A),full(B))
+	else
+		E(idx,2) = eigs(A, B, 1, 'SM')
+	end
+	M(idx,2) = size(A,1);
+	L{2} = 'linear, gauss';
+
+	int = @int_3d_nc_20;
+	% requires p=3
+	[P_ T_ BC_] = promote_3d_4_10(P, T, BC);
+	A = assemble_3d_dphi_dphi(P_, T_, [], int);
+	B = assemble_3d_phi_phi(P_, T_, [], int);
+	[A B] = boundary_3d(A, B, BC_,1);	
+	E(idx,3) = eigs(A, B, 1, 'SM')
+	M(idx,3) = size(A,1);
+	L{3} = 'quadratic, newton-cotes';
+%%	full(diag(B))
+%	full(B)
+%	pause
+
+	int = @int_3d_gauss_14;
+	% requires p=3
+	[P_ T_ BC_] = promote_3d_4_10(P, T, BC);
+	A = assemble_3d_dphi_dphi(P_, T_, [], int);
+	B = assemble_3d_phi_phi(P_, T_, [], int);
+	[A B] = boundary_3d(A, B, BC_,1);	
+	E(idx,4) = eigs(A, B, 1, 'SM')
+	M(idx,4) = size(A,1);
+	L{4} = 'quadratic, gauss';
+
+	int = @int_3d_gauss_15;
+	int = @int_3d_nc_20;
+	% requires p=5
+size(P,1)
+n
+	[P_ T_ BC_] = promote_3d_4_20(P, T, BC);
+	A = assemble_3d_dphi_dphi(P_, T_, [], int);
+	B = assemble_3d_phi_phi(P_, T_, [], int);
+	[A B] = boundary_3d(A, B, BC_,1);	
+	E(idx,5) = eigs(A, B, 1, 'SM')
+	M(idx,5) = size(A,1);
+	L{5} = 'cubic, gauss';
+pause
+
+	int = @int_3d_gauss_45;
+	% requires 7
+	[P_ T_ BC_] = promote_3d_4_35(P, T, BC);
+	A = assemble_3d_dphi_dphi(P_, T_, [], int);
+	B = assemble_3d_phi_phi(P_, T_, [], int);
+	[A B] = boundary_3d(A, B, BC_,1);	
+	E(idx,6) = eigs(A, B, 1, 'SM')
+	M(idx,6) = size(A,1);
+	L{6} = 'quartic, gauss';
+
+	end % for idx
+	E/e_true
+	Err = E-e_true
+	loglog(M.^(1/3),abs(Err));
+	legend(L)
+end % test_fem_3d
+
