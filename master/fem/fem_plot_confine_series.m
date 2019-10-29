@@ -2,7 +2,7 @@
 % Karl Kästner, Berlin
 
 
-function fem_plot_confine_series(folder,mode, printflag)
+function fem_plot_confine_series(folder, mode, printflag)
 	bw = 0;
 	name_c=regexp(ls(folder,'-1'),'\n','split')
 	folder_c = regexprep(folder, '/$', '');
@@ -10,7 +10,7 @@ function fem_plot_confine_series(folder,mode, printflag)
 	ms = 12;
 	lw = 2;
 	%folder_c=regexp(folder,'/','split')
-	if (nargin() < 2 || isempty(mode)) mode = 1; end
+	if (nargin() < 2 || isempty(mode) || 0 == mode) mode = 1; end
 
 	idx_ = 1; 
 	for idx=1:length(name_c)
@@ -82,7 +82,24 @@ function fem_plot_confine_series(folder,mode, printflag)
 		grid on;
 		%set(gca,'minorgrid','none');
 
+		figure(4)
+		[ax h1 h2] = plotyy(L0,N,L0,Tr,@loglog);
+		xlabel('L [a_0]');
+		set(get(ax(1),'Ylabel'),'String','n : number of gridpoints');
+		set(h1,'linewidth',lw/2,'color','k');
+		%set(h1,'linestyle','none');
+		set(h1,'Marker','o','markersize',ms*0.5);
+		set(get(ax(2),'Ylabel'),'String','run time [s]');
+		set(h2,'linewidth',lw/2,'color','k');
+		%set(h2,'linestyle','--');
+		%set(h2,'linestyle','none');
+		set(h2,'Marker','^','markersize',ms*0.5);
+		set(ax(1),'ycolor','k') 
+		set(ax(2),'ycolor','k') 
+		grid on
+
 		case{2}
+		% sort for increasing shift
 		[x0 idx] = sort(x0);
 		E = E(:,idx);
 		Tr = Tr(:,idx);
@@ -96,6 +113,7 @@ function fem_plot_confine_series(folder,mode, printflag)
 		xlabel('x_0 [a_0]');
 		ylabel('\lambda')
 		ylim([-0.3 0.1])
+		xlim([x0(1)/1.1 1.1*x0(end)]);
 		grid on
 		
 
@@ -118,21 +136,30 @@ function fem_plot_confine_series(folder,mode, printflag)
 		figure(1)
 		preparePrint();
 		name_ = ['../img/' folder_c '-eigenvalues.eps'];
-		name_
 		print('-deps', name_);
-		system(['epstopdf ' name_]);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]);
+		system(['rm ' name_]);
 
 		figure(2)
 		preparePrint();
 		name_ = ['../img/' folder_c '-convergence.eps'];
 		print('-deps', name_);
-		system(['epstopdf ' name_]);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]);
+		system(['rm ' name_]);
 
 		figure(3)
 		preparePrint();
 		name_ = ['../img/' folder_c '-run-time.eps'];
 		print('-deps', name_);
-		system(['epstopdf ' name_]);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]);
+		system(['rm ' name_]);
+
+		figure(4)
+		preparePrint();
+		name_ = ['../img/' folder_c '-convergence-and-run-time.eps']
+		print('-deps', name_);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]);
+		system(['rm ' name_]);
 	end
 
 	% generate a table

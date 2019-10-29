@@ -2,29 +2,32 @@
 // Karl Kästner, Berlin
 import Jama.*;
 import java.util.Hashtable;
+import java.util.*;
+import java.lang.*;
 
 // TODO doxygen comments
 // TODO counters np, nt, nb
+// TODO naming convention, this is just for triangles
 
-public final class Mesh_2d
+public final class Mesh_2d extends Mesh
 {
 	// point coordinates
-	public double [][] P;
-	public int np;
+	// TODO either split this up to X Y Z or make first dimension the smaller one
+//	public double [][] P;
+//	public int np;
 	// elements (triangles)
-	public int [][] T;
-	public int nt;
+//	public int [][] T;
+//	public int nt;
 	// alternative triagulation with basis function p/2 for error estimation
 	public int [][] S;
 	public int ns;
 	// boundary sides
-	public int [][] Bc;
-	public int nb;
+//	public int [][] Bc;
+//	public int nb;
 	// neighbour indices
-	public int [][] N;
+//	public int [][] N;
 	// dimension
-	final int DIM = 2;
-
+//	final int DIM = 2;
 	// properties derived from primery properties
 	// test function coefficients
 	public double [][][] Phi;
@@ -41,21 +44,79 @@ public final class Mesh_2d
 
 	public double l_boundary[];
 
+	// tree of bubbles to assign random points to the containing triangle
+	// in logarithmic time (for interpolation)
+	Qtree qtree;
+
 	// default constructor
-	public Mesh_2d() {};
+	public Mesh_2d()
+	{
+		DIM = 2;
+	};
+
+	public Mesh_2d(final int np, final int nt, final int nbc)
+	{
+		P  = new double [np][2];
+		T  = new int [nt][3];
+		Bc = new int [nbc][2];
+	}
 
 	public Mesh_2d(double [][] P, int [][] T, int [][] Bc)
 	{
+		DIM = 2;
 		this.P = P;
-		this.np = P.length;
+		if (null == P)
+		{
+			np = 0;
+		} else {
+			np = P.length;
+		}
 		this.T = T;
-		this.nt = T.length;
+		if (null == T)
+		{
+			nt = 0;
+		} else {
+			nt = T.length;
+		}
 		this.Bc = Bc;
-		this.nb = Bc.length;
+		if (null == Bc)
+		{
+			this.nb = 0;
+		} else {
+			this.nb = Bc.length;
+		}
 		// TODO, null other arrays
 		this.P_local = null;
-		this.Phi = null;
+		this.Phi     = null;
 	} // constructor
+
+	Mesh_2d(final double [][] P)
+	{
+		this.P = P; // legal ?
+		// initial delaunay
+		delaunay();
+		// improvement
+	}
+
+	public final int add_T(final int p0, final int p1, final int p2)
+	{
+		if (p0 == p1 || p0 == p2 || p1 == p2) throw new RuntimeException("Error identical point indices");
+		T = AArray.resizeI(T,nt+1);
+		T[nt][0] = p0;
+		T[nt][1] = p1;
+		T[nt][2] = p2;
+		nt++;
+		return nt;
+	} // add_T()
+
+	public final void add_Bc(final int p0, final int p1)
+	{
+		if (p0 == p1) throw new RuntimeException();
+		Bc = AArray.resizeI(Bc,nb+1);
+		Bc[nb][0] = p0;
+		Bc[nb][1] = p1;
+		nb++;
+	} // add_Bc()
 
 	// TODO make N and element_neighbours part of the Mesh_2d class
 	// compute neighbouring elements
@@ -277,7 +338,7 @@ public final class Mesh_2d
 		// each boundary element has p+1 points
 		Bc = FEM.realloc2dInt(Bc, nb, p+1);
 
-		// there are exactly p(p-1)/2 new points for each triangle
+		// there is exactly p(p-1)/2 new points for each triangle
 		// and p-1 new points for each boundary segment minus 1
 		P = FEM.realloc2dDouble(P, ((p*p-1)*nt + (p-1)*nb)/2 + np, DIM); //P[0].length);
 //		P = FEM.realloc2dDouble(P, np + nt*p*(p+1)/2 + nb*(p-1) - 1, P[0].length);
@@ -441,6 +502,7 @@ public final class Mesh_2d
 	} // demote
 
 	// computes the highest (d-th) derivative
+	// TODO, check for prefetch here
 	public final double [][] dV(final double [] V, final int d)
 	{
 		int lt1 = nt; //T.length;
@@ -480,7 +542,34 @@ public final class Mesh_2d
 				V_local[jdx][0] = V[T[idx][jdx]-1];
 			}
 			// test/trial function coefficients
-			Matrix mC = new Matrix(Phi[idx]);
+			Matrix mC;
+			if (null != Phi)
+			{
+				mC = new Matrix(Phi[idx]);
+			} else {
+				
+				int nt2 = T[0].length; //TODO dangerous if T is empty
+				int nv = (int) Math.round(-1.5 + Math.sqrt(2*nt2 + 0.25));
+				double[][] A_   = new double[nt2][2];
+				double[][] Va   = new double[nt2][(nv+1)*(nv+2)/2];
+				Matrix mVa   = new Matrix(Va);
+				// fetch all point coordinates, not just corner point coordinates
+				// TODO, these coordinates can be computed on the fly (except on curved boundaries)
+				for (int j=0; j<nt2; j++)
+				{
+					A_[j][0] = P[T[idx][j]-1][0];
+					A_[j][1] = P[T[idx][j]-1][1];
+				}
+				// construct the triangle point Vandermonde matrix spanning the test function polynomials
+				// structure: 1 x y xy x^2 y^2 x^2y xy^2 x^3 y^3
+				FEM.vander_2d(Va, A_, nv);
+				//FEM.vander_2d(Va, mA.getMatrix(0, lt2-1, 1, 2).getArray(), nv);
+	
+				// compute test functions
+				// C(i,:) * A(:,i) = 1; C(i,:) * A(:,j) = 0, i<>j
+				mC = mVa.inverse();
+				//C = mC.getArray();
+			}
 			
 			Matrix mD = mC.times(mV_local);
 			double [][] D = mD.getArray();
@@ -562,6 +651,19 @@ public final class Mesh_2d
 		//double [] C_ = { 1.0/9, 1.0/(3*13), 1.0/(3*87), 1.0/(3*908), 1.0/(3*12360) }; // % for Schrödinger mode 1
 		double [] C_ = { 1.0/3.0, 1.0/13.0, 1.0/87.0, 1.0/908.0, 1.0/12360.0 }; // % for Schrödinger mode 1
 
+		// prefetch
+		if (null == C)
+		{
+			C = new double[lt1][2];
+			for (int tdx=0; tdx<lt1; tdx++)
+			{
+				int [] T_tdx = T[tdx];
+				// calculate element centre coordinate
+				C[tdx][0] = 1.0/3.0*(P[T_tdx[0]-1][0] + P[T_tdx[1]-1][0] + P[T_tdx[2]-1][0]);
+				C[tdx][1] = 1.0/3.0*(P[T_tdx[0]-1][1] + P[T_tdx[1]-1][1] + P[T_tdx[2]-1][1]);
+			}
+		}
+
 		// calculate estimated norm of the second derivative per element
 		for (int idx=0; idx<lt1; idx++)
 		{
@@ -608,5 +710,218 @@ public final class Mesh_2d
 
 		return obj;
 	} // estimate_error
+
+	// delaunay triangulation in O(log(n)n) time
+	private void delaunay()
+	{
+		int flipmode = 0;
+		int insmode = 0;
+
+		// TODO neighbourhood relations
+
+		// check that there are at least three points
+		if (P.length < 3)
+		{
+			throw new RuntimeException("Set of input points must contain at least of size three.");
+		}
+	
+		// form the first triangle out of the first three points
+		add_T(1,2,3);
+	
+		// prepare point indices
+		int Q[] = new int[P.length-3];
+		for (int idx=0; idx<P.length; idx++)
+		{
+			Q[idx] = idx+3;
+		} // for idx
+	
+		// assign all points to the first triangle
+		// TODO, check, that all points are contained
+		// one could do that by forming a triangle around the circumcircle first
+		// push first parent triangle containing all points
+		java.util.Stack<int[]> T_stack = new java.util.Stack<int[]>();
+		if (P.length-3 > 0)
+		{
+			int [] T_top = new int[3];
+			T_top[0] = 0; // index of first triangle in triangle array
+			T_top[1] = 3; // index of first contained point in point array
+			T_top[2] = P.length; // index of last+1 contained point in point array
+			T_stack.push(T_top);
+		}
+	
+		if (1 == insmode)
+		{
+			// TODO find point closest to centre of mother triangle
+		}
+	
+		// while there are unsplit triangles containing unconnected points
+		while (!T_stack.empty())
+		{
+			// get next triangle index
+			int [] T_top = T_stack.pop();
+			int tdx = T_top[0];
+			int p_top = T_top[1];
+	
+			// split triangle into three subtriangles
+			// TODO, add children pointer or remove parent triangle
+			int c0 = add_T(T[tdx][0], T[tdx][1],  Q[p_top]);
+			int c1 = add_T(T[tdx][0],   Q[p_top], T[tdx][2]);
+			int c2 = add_T( Q[p_top], T[tdx][1], T[tdx][2]);
+	
+			// find points contained in the first child triangle
+			int np = 0;
+			for (int pdx=p_top; pdx<T_top[2]; pdx++)
+			{
+				if (contains(c0, P[pdx])); //Contains.contains2D(P,T,c0,pdx))
+				{
+					AArray.swapI(Q,pdx,p_top+np);
+					np++;
+				}
+			}
+	
+			// push the first triangle onto the stack if it contains2D any points 
+			if (np != 0)
+			{
+				int [] T_next = new int[3];
+				T_next[0] = c0;
+				T_next[1] = p_top;
+				T_next[2] = p_top+np;
+				T_stack.push(T_next);
+			}
+			
+			// find points contained in second child triagnle
+			p_top += np;
+			np = 0;
+			for (int pdx=p_top; pdx<T_top[2]; pdx++)
+			{
+				if (contains(c1,P[pdx])) // Contains.contains2D(P,T,c1,pdx))
+				{
+					AArray.swapI(Q, pdx, p_top+np);
+					np++;
+				}
+			}
+	
+			if (np != 0)
+			{
+				int [] T_next = new int[3];
+				T_next[0] = c1;
+				T_next[1] = p_top;
+				T_next[2] = p_top+np;
+				T_stack.push(T_next);
+			}
+	
+			// remaining points are contained in the third triangle
+			p_top += np;
+			if (p_top != T_top[2])
+			{
+				int [] T_next = new int[3];
+				T_next[0] = c2;
+				T_next[1] = p_top;
+				T_next[2] = T_top[2];
+				T_stack.push(T_next);
+			}
+		
+			// flip sides of this triangle	
+			if (0 == flipmode)
+			{
+				flip_recursively(P,T,N,c0);
+				flip_recursively(P,T,N,c1);
+				flip_recursively(P,T,N,c2);
+			}
+	
+		} // triangle splitting recursion
+				
+		// flip triangles afterwards
+		if (1 == flipmode)
+		{
+			// for each triangle
+			for (int tdx = 0; tdx < nt; tdx++)
+			{
+				// flip recursively
+				flip_recursively(P, T, N, tdx);
+			}	
+		} // if 1 == flipmode
+	} // void delaunay
+
+	void flip_recursively(final double [][] P, int [][] T, int [][] N, final int tdx)
+	{
+		// try to flip edge 1
+		if (false)
+		{
+			// flip the connecting side
+			// update neighbourhood relations
+			// recursively flip both triangles
+		/*	flip_recursively(P,T,N,n0);
+			flip_recursively(P,T,N,n1);
+			flip_recursively(P,T,N,n2);
+			flip_recursively(P,T,N,m0);
+			flip_recursively(P,T,N,m1);
+			flip_recursively(P,T,N,m2);
+		*/
+		} else if (false) { // why else ?
+			// try to flip edge 2
+			// TODO
+		} else if (false) {
+		// try to flip with neighbour 3
+			// TODO
+		}
+	} // void flip()
+	
+	// Sat Mar 15 14:55:01 WIB 2014
+	// TODO this could be optimised by splitting the domain recursively in form of a bounding box tree
+	// current run time nt*np
+	// tree run time log(n)*n
+	public ArrayList [] assign_points(double [] X, double [] Y)
+	{
+		ArrayList [] assoc = new ArrayList[nt];
+		for (int idx=0; idx<nt; idx++)
+		{
+			assoc[idx] = new ArrayList<Integer>();
+		}
+		qtree = new Qtree(this);
+		//qtree.plot();
+
+		// for each point
+		int m = 0;
+		for (int idx=0; idx<X.length; idx++)
+		{
+			double [] p = { X[idx], Y[idx] };
+			int tdx = qtree.contains(p);
+			if (tdx > 0)
+			{
+				assoc[tdx].add(new Integer(idx+1));
+				m++;
+			}
+		}
+		return assoc;
+	} // assign_points
+
+	public int contains(final double [] p)
+	{
+		if (null == qtree)
+		{
+			qtree = new Qtree(this);
+		}
+		int retval = qtree.contains(p)+1;
+		return retval;
+	}
+
+	public boolean contains(final int tdx, final double [] p)
+	{
+		double A[][] = { { 1.0, 1.0, 1.0 },
+       	                         { P[T[tdx][0]-1][0], P[T[tdx][1]-1][0], P[T[tdx][2]-1][0] },
+       	                         { P[T[tdx][0]-1][1], P[T[tdx][1]-1][1], P[T[tdx][2]-1][1] } };
+		double [][] b = {{1.0}, {p[0]}, {p[1]}};
+		Matrix mA      = new Matrix(A);
+		Matrix mP      = new Matrix(b);
+		Matrix mC      = mA.solve(mP);
+		double [][] c  = mC.getArray();	
+
+		boolean retval = (c[0][0] >= 0.0) && (c[1][0] >= 0.0) && (c[2][0] >= 0.0)
+		                 && (c[0][0] <= 1.0) && (c[1][0] <= 1.0) && (c[2][0] <= 1.0);
+//		System.out.println(c[0][0] + " " + c[1][0] + " " + c[2][0] + " " + retval );
+
+		return retval;	
+	} // contains2D
 } // class Mesh
 

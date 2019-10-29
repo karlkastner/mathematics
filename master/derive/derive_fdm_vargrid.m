@@ -1,3 +1,8 @@
+% 2012-05-29 06:25:55 UTC
+% Karl Kästner
+
+% derive finite difference coefficients for a variably spaced grid
+
 clear
 
 syms hk hs hl hr xk xl xc xr xs hrs hkl

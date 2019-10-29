@@ -2,9 +2,9 @@
 % Karl Kastner, Berlin
 %% predict polynomial function values
 % TODO, weighing
-function [Y Sc Sp obj] = predict(obj,X)
+function [Y, Sc, Sp, obj] = predict(obj,X)
 	X = (X - obj.x0)/obj.s;
-	[Y A] = obj.predict_(obj.param,X);
+	[Y, A] = obj.predict_(obj.param,X);
 %	S2 = diag((A*obj.C)*A');
 	% most listerature only treats the trivial case of slope and intercept (SLS)
 	% Prediciton error of OLS can be found in bingman

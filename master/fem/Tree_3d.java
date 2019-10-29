@@ -5,48 +5,26 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Iterator;
 
-// tree with non-conforming "red"-tetrahedra leaves and parents
+// tree with non-conforming "red"-tetrahedra leafs and parents
 class Tree_3d implements Tree
 {
-	public static final class INDEX
-	{
-		public final static int VERTEX = 0;
-		public final static int EDGE = 4;
-		public final static int NEIGHBOUR = 10;
-		public final static int CHILD = 14;
-		public final static int PARENT = 22;
-		public final static int LEN = 23;
-	}
-/*	public static enum INDEX
-	{
-		VERTEX(0),
-		EDGE(4),
-		NEIGHBOUR(10),
-		CHILD(14),
-		PARENT(22),
-		LEN(23);
-		INDEX(int i)
-		{
-			index = i;
-		};
-		int index;
-	}
-*/
-
-/*
 	// data is stored in one array for efficiency reason
 	// rows : triangle entries
 	// col  0.. 3 : corner point indices
-	private static final int VERTEX = 0; 
 	// col  4.. 9 : edge indices
-	private static final int EDGE   = 4;
         // col 10..13 : neighbours
-	private static final int NEIGHBOUR = 10; 
 	// col 14..21 : children
-	private static final int CHILD  = 14;
-	private static final int PARENT = 22;
-	private final int LEN = 23;
-*/
+	// why not enum?
+	public static final class INDEX
+	{
+		public final static int VERTEX    = 0;	// 0..3
+		public final static int EDGE      = 4;  // 4..10
+		public final static int NEIGHBOUR = 10; // 10..
+		public final static int CHILD     = 14;
+		public final static int PARENT    = 22;
+		public final static int LEN       = 23;
+	}
+	// data, rows are elements, columns as given by by INDEX
 	private int [][] data;
 	// number of elements including parents
 	private int n;
@@ -104,6 +82,11 @@ class Tree_3d implements Tree
 			throw new RuntimeException("Tree_3d::Constructor: Inconsistent Mesh");
 		} */
 	} // constructor
+
+	public final int [][] get_data()
+	{
+		return data;
+	}
 
 	public final int get_vertex(final int i, final int j)
 	{
@@ -165,10 +148,10 @@ class Tree_3d implements Tree
 		data[i][INDEX.PARENT+0] = val;
 	} // set_parent
 
-	public final boolean is_leave(final int i)
+	public final boolean is_leaf(final int i)
 	{
 		return (0 == data[i][INDEX.CHILD+0]);
-	} // is_leave
+	} // is_leaf
 
 	private final int add_child(final int p1, final int p2, final int p3, final int p4,
 				final int n1, final int n2, final int n3, final int n4, final int parent)
@@ -258,7 +241,7 @@ class Tree_3d implements Tree
 		return n;
 	} // add_child
 
-	// gets all conforming leaves and green children of non-conforming leaves
+	// gets all conforming leafs and green children of non-conforming leafs
 	// generates the tetrahedron matrix P, T and Bc
 	// to be used by the assembly routines
 	// from the tetrahedron tree
@@ -273,14 +256,14 @@ class Tree_3d implements Tree
 		R = new int[2*n];
 
 		// copy point coordinates
-		mesh.P = E_tree.get_all_points();
+		mesh.P  = E_tree.get_all_points();
 		mesh.np = E_tree.np;
 		
 		// for all nodes in the tetra tree
 		for (int i=0; i<n; i++)
 		{
-			// if this is a leave
-			if (is_leave(i))
+			// if this is a leaf
+			if (is_leaf(i))
 			{
 				// edge midpoint array
 				int [] mp = new int[6];
@@ -290,7 +273,7 @@ class Tree_3d implements Tree
 				for (int j=0; j<6; j++)
 				{
 					int e = get_edge(i,j);
-					if (!E_tree.is_leave(e-1))
+					if (!E_tree.is_leaf(e-1))
 					{
 						s += (1<<j);
 						mp[j] = E_tree.get_vertex(E_tree.get_child(e-1,0)-1,0);
@@ -414,10 +397,10 @@ class Tree_3d implements Tree
 						// more than three should not happpen, as there are only three edges
 						throw new RuntimeException(i + " " + s + " " +Integer.toBinaryString(s));
 				} // if no edge split yet
-			} // if not a leave
+			} // if not a leaf
 		} // for int i (tetrahedra)
 		return mesh;
-	} // get_all_leves
+	} // generate_mesh
 
 
 	// splits a tetrahedron into 8 children
@@ -427,12 +410,13 @@ class Tree_3d implements Tree
 	    int retval = 0;
 
 	    // check if child is zero
-	    if (is_leave(i))
+	    if (is_leaf(i))
 	    {
-		// mark this element as split
+		// mark this element temporarily as split to avoid infinite recursion
 		set_child(i, 0, Integer.MAX_VALUE);
 		
 		// conformity rule 1: make sure, that the neighbours of the parent are split as well
+		// test level of neighbour and recursively split the neighbours if necessary
 		int parent_ = get_parent(i);
 		if (parent_ > 0)
 		{
@@ -444,60 +428,6 @@ class Tree_3d implements Tree
 					split(nj-1);
 			}
 		} // parent > 0
-/*
-		for (int j=0; j<4; j++)
-		{ 
-			// check if there is not yet a neighbour assigned to that side
-
-			if (DEBUG.level > 0)
-			{
-				final int [][] q = {
-					{ 1, 2, 3},
-					{ 0, 2, 3},
-					{ 0, 1, 3},
-					{ 0, 1, 2} };
-				int p0 = get_vertex(i,q[j][0]);
-				int p1 = get_vertex(i,q[j][1]);
-				int p2 = get_vertex(i,q[j][2]);
-				Key3 key3 = new Key3(p0, p1, p2);
-				int [] val = N_hash.get(key3);
-				if ( ( null == val ) && ( 0 == get_neighbour(i,j) ) )
-				{
-					// does never happen
-					throw new RuntimeException();
-				}
-				if ( ( 0 == get_neighbour(i,j) ) )
-				{
-					if (0 == get_parent(i))
-					{
-						// does never happen
-						throw new RuntimeException();
-					}
-					int nj = get_neighbour(get_parent(i)-1,j);
-					if (nj != val[2])
-					{
-						throw new RuntimeException(nj + " " + val[2]);
-					}
-				}
-			} // DEBUG checks
-
-			if (0 == get_neighbour(i,j))
-			{
-				// there is not yet a neighbour, so recursively split its parent
-				int parent = get_parent(i);
-				if (parent > 0)
-				{
-					// to be neighbour is a tetrahedron
-					int nj = get_neighbour(parent-1,j);
-					split(nj - 1);
-				} else {
-					// to be neighbour is a boundary - that should never happen
-					// as neighbouring boundaries are split emmideately
-					throw new RuntimeException();
-				}
-			} // null != val
-		} // for j (conformity rule 1)
-*/
 
 		// conformity rule 2:
 		// at first split the unsplit elements adjacent to the edge to be split
@@ -591,7 +521,7 @@ class Tree_3d implements Tree
 		    set_child(i, 7, add_child(p12, p13, p23, p24,  0,  0,  0, n4, i+1)); // 4
 		} // shortest edge
 
-		// test level of neighbour and recursively split the neighbours if necessary
+		// split boundaries
 		for (int j=0; j<4; j++)
 		{
 			// get neighbour
@@ -635,13 +565,13 @@ class Tree_3d implements Tree
 				int nj = (int)it.next();
 				// check if the neighbour has to be splitted
 				// only split the neighbour if it was not yet split
-				if (is_leave(nj-1))
+				if (is_leaf(nj-1))
 				{
 					// count number of split edges
 					int s = 0;
 					for (int k=0; k<6; k++)
 					{
-						if (!E_tree.is_leave(get_edge(nj-1,k)-1)) s += (1<<k);
+						if (!E_tree.is_leaf(get_edge(nj-1,k)-1)) s += (1<<k);
 					} // for k
 					// tetrahedra with more than three split edges are split as well
 					// neigbours differ at most by 1 level
@@ -694,7 +624,7 @@ class Tree_3d implements Tree
 
 		// successfully split, return 1
                 retval = 1;
-	    } // is a leave
+	    } // is a leaf
  	    // TODO, make this a void function
 	    return retval;
 	} // split
@@ -783,13 +713,13 @@ class Tree_3d implements Tree
 			change = false;
 		for (int i=0; i<n; i++)
 		{
-			if (is_leave(i))
+			if (is_leaf(i))
 			{
 			// count number of split edges
 			int s = 0;
 			for (int k=0; k<6; k++)
 			{
-				if (!E_tree.is_leave(get_edge(i,k)-1)) s += (1<<k);
+				if (!E_tree.is_leaf(get_edge(i,k)-1)) s += (1<<k);
 			} // for k
 			// tetrahedra with more than three split edges are split as well
 			// neigbours differ at most by 1 level

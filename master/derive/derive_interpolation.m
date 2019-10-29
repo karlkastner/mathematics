@@ -1,4 +1,5 @@
 % Tue Nov  1 00:50:04 MSK 2011
+% Karl Kästner, Berlin
 
 % derivation of end-point interpolation
 % n = 1 : linear, f(x) = a1 x + a0

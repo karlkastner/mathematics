@@ -75,7 +75,7 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 		opt.h_tol = Inf;
 	end
 	if (nargin() < 5 || ~isfield(opt,'n_max'))
-		opt.n_max = 6e5;
+		opt.n_max = 6e5; % 8GB, 5e5 is safer
 	end
 	if (nargin() < 5 || ~isfield(opt,'poly'))
 		opt.poly = 3;
@@ -128,13 +128,16 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 	%
 	% initial mesh setup
 	%
-	
+
 	[void timestr] = system('date +%s'); timestr = regexprep(timestr, '\n', '');
 
 	tid = tic();
 	% generate initial mesh
 	[P T Bc X] = mesh_2d_uniform(opt.n0, L0, x0);
-	mesh = Mesh_2d(P, T, Bc);
+	% if object creation fails and the class path exists,
+	% than verify that the object was compiled with the same java version
+	% and recompile with "javac -source 1.6 -target 1.6 Mesh_2d.java"
+	mesh = javaObject('Mesh_2d', P, T, Bc);
 	[a_sum0 l_sum0 area l_bounday h_side s_angle C] = regularity_2d(P,T,Bc);
 	convflag = 0;
 	% inverse mapping : boundary -> triangle
@@ -159,27 +162,50 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 		int = @int_2d_gauss_25; % 10th order
 	otherwise
 		st = dbstack();
-		error(st.name,'Order of accuracy has to be an integer between 2 and 6');
+		error(st.name,'Order of accuracy has to be an integer between 1 and 5');
 	end % switch poly
 	end
 
 	%
-	% main loop
-	% 
+	% variables
+	%
+
+	% computed eigenvalues, rows: sorted eigenvalues (ascending)
+	%                       coulmns: refinement iterations
 	E = zeros(k,length(1));
+	% measured run-time
+	%  rows: refinement iterations
+        %  columns: mesh-generation+promotion, assembly, eigensolve, refinement
 	Tr = zeros(1,4);
+	% target eigenvalue of each refinement iteration
 	K = [];
+	% number of mesh points in the mesh of each refinement iteration
 	N = [];
+	% computed eigenvectors of the last iteration
 	v = [];
+	% estimated error of the target eigenvector of the last iteration
 	v_err = [];
-	err_est = [];
-	MM = [];
-	h_min = [];
+	% estimated derivative norm of the targed eigenvector of the last iteration
 	nH = [];
+	% error norm of the target eigenvector of each refinement iteration
+	err_est = [];
+	% number of elements to be refined in each refinement iteration
+	MM = [];
+	% smallest element of the mesh of each refinement iteration
+	h_min = [];
+	% smallest measured value of the mesh degeneration of each refinement iteration
 	degen = [];
+
+	%
+	% main loop
+	%
+	mesh = [];
 	idx = 1;
 	kdx = 1;
 	k_arpack = min(2*k,k+5);
+
+	try
+
 	% for each eigenvalue
 	while (kdx <= k)
 		K(idx,1) = kdx;
@@ -197,7 +223,9 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 			pdx = [Bc(:,1); Bc(:,2)];
 			P(pdx,:) = project_circle(P(pdx,:),L0(1)/2,-(x0-L0/2));
 		end
-		mesh = Mesh_2d(P, T, Bc);
+		oldmesh = mesh;
+		%mesh = Mesh_2d(P, T, Bc);
+		mesh = javaObject('Mesh_2d', P, T, Bc);
 		mesh.N = Nm;
 
 		% select the integration rule and refinement routine
@@ -224,8 +252,12 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 		% stop if number of unknowns exceeds the limit
 		if (N(idx,1) > opt.n_max)
 			idx = idx-1;
+			fprintf(1,'Iteration was terminated before accuracy tolerance was met as the number of unknown exceeded the limit\n');
 			break;
 		end
+			%if (N(idx,1) > opt.n_max)
+			%	break;
+			%end
 
 		% assemble the Laplacian matrix
 		if (isscalar(afunc))
@@ -248,8 +280,9 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 		B = assemble_2d_phi_phi_java(mesh, [], int);
 
 		% apply boundary conditions
-		[P T Bc Nm] = get_mesh_arrays(mesh);
-		[A B P__] = boundary_2d(A, B, Bc, opt.bcflag);
+		% do not overwrite the unpromoted P,T,Bc,Nm
+		[P_ T_ Bc_ Nm_] = get_mesh_arrays(mesh);
+		[A B P__] = boundary_2d(A, B, Bc_, opt.bcflag);
 
 		% record run time of assembly routines
 		Tr(idx,2) = toc(tid);
@@ -316,7 +349,7 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 		E(1:k_,idx) = e;
 		% do not update the shift - may converge to wrong eigenvalue
 		%s = 1.1*e(1);
-		
+
 		% undo stripping of boundary points when boundary conditions where imposed strongly
 		if (0 ~= opt.bcflag)
 			v_ = zeros(size(P,1), k_);
@@ -374,16 +407,6 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 			convflag = 1;
 			break;
 		end
- 		% stop if grid became to large
-		if (N(idx,1) > opt.n_max)
-			fprintf(1,'Iteration was terminated before accuracy tolerance was met as the number of unknown exceeded the limit\n');
-			break;
-		end
-		% stop if run time exceeded limit
-		if (idx > 1 && sum(Tr(idx,1:3))+Tr(idx-1,4) > opt.t_max )
-			fprintf(1,'Iteration was terminated before accuracy tolerance was met as the run time of the last iteration exceeded the limit\n');
-			break;
-		end
 
 		% stop if sufficiently many eigenvalues where found or grid became to large
 %		if (kdx > k || N(idx,1) > opt.n_max || sum(Tr(max(1,idx-1),:)) > opt.t_max)
@@ -402,15 +425,19 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 %		end
 
 		% refine the mesh
+		oldmesh = mesh();
 		switch (opt.mflag)
 			case {0} % adaptive refinement
 				[P T Bc Nm] = refine_2d_21(P, T, Bc, Nm, M);
-				mesh = Mesh_2d(P,T,Bc);
+				%mesh = Mesh_2d(P,T,Bc);
+				mesh = javaObject('Mesh_2d', P, T, Bc);
+				% TODO update constructor
 				mesh.N = Nm;
 			case {1} % uniform refinement
 				M=(1:size(T,1));
 				[P T Bc Nm] = refine_2d_21(P, T, Bc, Nm, M);
-				mesh = Mesh_2d(P,T,Bc);
+				%mesh = Mesh_2d(P,T,Bc);
+				mesh = javaObject('Mesh_2d', P, T, Bc);
 				mesh.N = Nm;
 			otherwise % TODO: structured refinement with constant edge length
 				error('pdeeig_2d','unknown refinement option');
@@ -421,6 +448,12 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 
 		fprintf(1,'\tmesh generation time: %f assembly time: %f solver time: %f refinement time: %f\n', ...
 				Tr(idx,1), Tr(idx,2)-Tr(idx,1), Tr(idx,3)-Tr(idx,2), Tr(idx,4)-Tr(idx,3));
+
+		% stop if run time exceeded limit
+		if (idx > 1 && sum(Tr(idx,1:4)) > opt.t_max )
+			fprintf(1,'Iteration was terminated before accuracy tolerance was met as the run time of the last iteration exceeded the limit\n');
+			break;
+		end
 	
 		% verify the refined mesh
 		if (opt.check)
@@ -430,12 +463,13 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 			da = (a_sum - a_sum0)/a_sum0;
 			dl = (l_sum - l_sum0)/l_sum0;
 			if ( abs(da) + abs(dl) > 1e-7)
-				fprintf('Warning: Loss of accuracy volume: % e surface area %e \n', da, dl);
+				fprintf('Warning: Loss of accuracy domain area: % e boundary length %e \n', da, dl);
 				%error('pdeeig_3d','here');
 			end
 
 			% verify element neighbours
-			mesh = Mesh_2d(P, T, Bc);
+			%mesh = Mesh_2d(P, T, Bc);
+			mesh = javaObject('Mesh_2d', P, T, Bc);
 			mesh.element_neighbours();
 			Nm_ = double(mesh.N);
 			if (norm(Nm - Nm_) > 0)
@@ -452,6 +486,10 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 
 		idx = idx+1;
 	end % while k <= kdx
+
+	catch e
+		disp(e.message);
+	end
 
 	% record run time of last error estimation and refinement
 	Tr(idx,4) = toc(tid);
@@ -481,13 +519,18 @@ function name = pdeeig_2d(afunc, vfunc, k, L0, x0, opt)
 	end
 
 	function save_data(idx)
+		if (0 == convflag)
+			mesh=oldmesh;
+		end
 		[P T Bc Nm] = get_mesh_arrays(mesh);
 		name = [opt.folder '/fem-2d-' timestr '-' num2str(idx,'%02d') '.mat'];
 		tag = 'fem_adaptive';
+		idx_refinement = idx;
+		kdx_eigenvalue = kdx;
 		save(name, '-mat', 'tag', 'd', 'k', 'L0', 'x0', ...
 				'N', 'K', 'P', 'T', 'Bc', 'Nm', 'v', 'v_err', ...
 				'E', 'E_true', 'err_est', 'Tr', 'MM', 'h_min', 'nH', ...
-				'degen', 'opt', 'convflag');
+				'degen', 'opt', 'convflag', 'idx_refinement', 'kdx_eigenvalue');
 	end
 end % function pdeeig_2d
 

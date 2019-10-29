@@ -1,0 +1,40 @@
+% Thu Aug  9 16:22:44 MSK 2012
+% Karl Kästner, Berlin
+
+function V = vander_3d(X,Y,Z,p)
+	siz = size(X);
+	Xp = ones(siz(1),siz(2),p+1);
+	Yp = ones(siz(1),siz(2),p+1);
+	Zp = ones(siz(1),siz(2),p+1);
+	if (issym(X))
+		Xp = sym(Xp);
+		Yp = sym(Yp);
+		Zp = sym(Zp);
+	end
+	% powers of x,y and z
+	for jdx=2:p+1
+		Xp(:,:,jdx) = X.*Xp(:,:,jdx-1);
+		Yp(:,:,jdx) = Y.*Yp(:,:,jdx-1);
+		Zp(:,:,jdx) = Z.*Zp(:,:,jdx-1);
+	end % for jdx
+
+	% preallocate memory
+	n = p*(p+1)*(p+2)/6;
+	V = zeros(siz(1),n,siz(2));
+	if (issym(X))
+		V = sym(V);
+	end
+	
+	k = 0;
+	for pdx=0:p
+		for xp=pdx:-1:0
+			for yp=pdx-xp:-1:0
+				% power of z
+				zp=pdx-xp-yp;
+				k = k+1;
+				V(:,k,:) = Xp(:,:,xp+1).*Yp(:,:,yp+1).*Zp(:,:,zp+1);
+			end % for yp
+		end % for xp
+	end % for pdx
+end % function vander_3d
+

@@ -148,7 +148,19 @@ public final class FEM
 		} // for i
 	}
 
-	public static int [][] realloc2dInt(int [][] A, int l1, int l2)
+	public static int [] realloc1dInt(final int [] A, final int l1)
+	{
+		int [] B = new int[l1];
+		// copy old values
+		for (int i=0; i<Math.min(A.length,l1); i++)
+		{
+			//System.arraycopy(A[i], 0, B[i], 0, A.length);
+			B[i] = A[i];
+		}
+		return B;
+	}
+
+	public static int [][] realloc2dInt(final int [][] A, final int l1, final int l2)
 	{
 		int [][] B = new int[l1][l2];
 		for (int i=0; i<Math.min(A[0].length,l2); i++)

@@ -25,6 +25,8 @@
 %  opt.folder   : output folder
 %  opt.h_tol    : threshold for pregrading the grid at x0
 %  opt.mflag    : 
+%  opt.mode     : 0 : refine mesh such that lowest eigenvalue converges first and keep the refined mesh for the computation of subsequent eigenvalues
+%                 1 : restart with a coarse mesh for each new eigenvalue
 %  opt.n0       : number of grid points per axis in initial mesh
 %  opt.n_max    : mximum number of mesh points
 %  opt.poly     : degree of basis function polynomial
@@ -117,6 +119,9 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 	if (nargin() < 5 || ~isfield(opt,'checkpoint'))
 		opt.checkpoint = 0;
 	end
+	if (nargin() < 5 || ~isfield(opt,'mode'))
+		opt.mode = 0;
+	end
 
 	if (nargin() > 4 && isfield(opt,'E_true') && ~isempty(opt.E_true) && length(opt.E_true) >= k)
 		E_true = opt.E_true(:);
@@ -124,14 +129,16 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 	else
 		E_true = [];
 	end
-	
+
+	%
 	% initial mesh setup
+	%
 
 	[void timestr] = system('date +%s'); timestr = regexprep(timestr, '\n', '');
 
 	tid = tic();
+	% create mesh-tree and generate the mesh
 	[P T Bc] = mesh_3d_uniform(opt.n0, L0, x0);
-	% create tree from mesh
 	tree = Tree_3d(P, T, Bc);
 	[v_sum0 a_sum0 h_eff_max volume area h_eff] = regularity_3d(P, T, Bc);
 	convflag = 0;
@@ -171,19 +178,35 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 	end
 
 	%
-	% main loop
-	% 
+	% variables
+	%
+
+	% computed eigenvalues, rows: sorted eigenvalues (ascending), coulmns: refinement iterations
 	E = zeros(k,length(1));
+	% measured run-time, rows: refinement iterations, columns: mesh-generation+promotion, assembly, eigensolve, refinement
 	Tr = zeros(1,4);
+	% target eigenvalue of each refinement iteration
 	K = [];
+	% number of mesh points in the mesh of each refinement iteration
 	N = [];
+	% computed eigenvectors of the last iteration
 	v = [];
+	% estimated error of the target eigenvector of the last iteration
 	v_err = [];
-	err_est = [];
-	MM = [];
-	h_min = [];
+	% estimated derivative norm of the targed eigenvector of the last iteration
 	nH = [];
+	% error norm of the target eigenvector of each refinement iteration
+	err_est = [];
+	% number of elements to be refined in each refinement iteration
+	M_refine = [];
+	% smallest element of the mesh of each refinement iteration
+	h_min = [];
+	% smallest measured value of the mesh degeneration of each refinement iteration
 	degen = [];
+
+	%
+	% main loop
+	%
 	idx = 1;
 	kdx = 1;
 	k_arpack = min(2*k,k+5);
@@ -199,9 +222,9 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 		mesh = tree.generate_mesh();
 		mesh.element_neighbours();
 
-		if (opt.checkpoint)
-			save_data(idx);
-		end
+%		if (opt.checkpoint)
+%			save_data(idx);
+%		end
 
 		% promote the basis function to higher order (add points)
 		if (opt.poly > 1)
@@ -321,7 +344,7 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 			% rate of convergence
 			% rate = FEM.get_rate(1, opt.poly+1, 0);
 			% rate = 2*opt.poly;
-			 rate = opt.poly+1;
+			rate = opt.poly+1;
 			% calculate the error
 			obj = mesh.estimate_error(dV, opt.poly+1, rate);
 			% extract return values
@@ -355,7 +378,7 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 				M = mark(v_err, thresh);
 			end
 			% display status
-			fprintf(1,'points: %d triangles %d value: %f estimated error: %f\n', N(idx,1), N(idx,2), E(kdx,idx), err_est(idx));
+			fprintf(1,'number: %d points: %d triangles %d value: %f estimated error: %f\n', k, N(idx,1), N(idx,2), E(kdx,idx), err_est(idx));
 			fprintf(1,'\tminimum edge %f mesh quality %f \n', h_min(idx), degen(idx));
 %			fprintf(1,'\terror estimate 1: %f error estimate 2: %f true error: %f\n', err_est(idx), err_est_(idx), err(idx));
 
@@ -366,11 +389,34 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 				break;
 			end
 			K(idx,1) = kdx;
+
+			if (1 == opt.mode)
+				% store the kth-eigenvalue
+				E_a(kdx) = E(idx,kdx);
+				% store the kth-eigenvector
+				v_a(kdx).v = v(:,kdx);
+				v_a(kdx).v_err = v_err;
+				% store mesh for the k-th eigenvector
+				mesh_s.P = mesh.P;
+				mesh_s.T = mesh.T;
+				mesh_s.Bc = mesh.Bc;
+				mesh_s.N  = mesh.N;
+				mesh_a(kdx) = mesh_s;
+				% re-initialise the mesh
+				[P T Bc] = mesh_3d_uniform(opt.n0, L0, x0);
+				tree = Tree_3d(P, T, Bc);
+			else
+				mesh_a = [];
+			end
 			kdx=kdx+1;
+
+		if (opt.checkpoint)
+			save_data(idx);
+		end
 		end % while kdx <= k
 
 		% record number of elements to be refined
-		MM(idx,1) = length(M);
+		M_refine(idx,1) = length(M);
 
 		% estimate number of points after refinement
 		% for each refined tetra there are 7 = 8-1 additional tetras
@@ -443,7 +489,7 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 	% store data in a file
 	%
 	save_data(idx);
-	
+
 	%
 	% plot data
 	%
@@ -454,14 +500,25 @@ function name = pdeeig_3d(afunc, vfunc, k, L0, x0, opt)
 	end
 
 	function save_data(idx)
-		[P T Bc Nm] = get_mesh_arrays(mesh);
 		name = [opt.folder '/fem-3d-' timestr '-' num2str(idx,'%02d') '.mat'];
 		tag = 'fem_adaptive'; % TODO, here uniform, pregraded, adatptive, h_tol
-		save(name, '-mat', 'tag', 'd', 'k', 'L0', 'x0', ...
-				'N', 'K', 'P', 'T', 'Bc', 'Nm', 'v', 'v_err', ...
-				'E', 'E_true', 'err_est', 'Tr', 'MM', 'h_min', 'nH', ...
-				'degen', 'opt', 'convflag');
+		% java-object to matlab-struct
+		mesh_s.P  = mesh.P;
+		mesh_s.T  = mesh.T;
+		mesh_s.Bc = mesh.Bc;
+		mesh_s.N  = mesh.N;
+
+		save(name, '-mat', ...
+				... % simulation parameters
+				'tag', 'd', 'k', 'L0', 'x0', 'opt', ...
+				... % iteration specific data
+				'N', 'K', 'err_est', 'Tr', 'M_refine', 'h_min', 'degen', ...
+				... % mesh-specific data
+				'mesh_a', 'mesh_s', ...
+				... % solution eigenvalue specific data
+				'E_a', 'E', 'E_true', 'convflag', ...
+				... % solution eigenvector specific data
+				'v_a', 'v', 'v_err', 'nH' );
 	end
 end % pdeeig_3d()
-
 

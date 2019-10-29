@@ -26,11 +26,19 @@ function fem_plot_2d(name, printflag)
 	if (isfield(s,'s_angle_min'))
 		s.degen = s.s_angle_min;
 	end
-	%end
+
+	s.K = s.K(1:size(s.E,2));
+	s.N = s.N(1:size(s.E,2),:);
+	s.Tr = s.Tr(1:size(s.E,2),:);
+
 	%disp(sprintf('%s order %d L0 %s x0 %s k %d abstol %e', name{idx}, order, mat2str(L0), mat2str(x0), k, abstol ));
 	% plot convergence
 	figure(1); clf; subplot(1.5,1.5,1);
-	Err = abs(s.E - s.E_true*ones(1,length(s.N(:,2))));
+	if (isempty(s.E_true))
+		s.E_true = s.E(:,end);
+	end
+	Err = abs(s.E - s.E_true*ones(1,size(s.E,2)));
+	% Err = abs(s.E - s.E_true*ones(1,length(s.N(:,2))));
 	 %./(s.E_true*ones(1,length(s.N(:,2)))));
 	nErr = sqrt(sum(Err.^2,1));
 	%[ nErr' s.err_est h_side [0 diff(E(1,:))]' ]'
@@ -40,6 +48,9 @@ function fem_plot_2d(name, printflag)
 		case {2}
 			loglog(s.N(:,1), [ s.err_est nErr' s.h_side [0 abs(diff(E(1,:)))]'*0.5^(1) MM],'.-');
 		otherwise
+			size(s.N,1)
+			size(nErr)
+			size(s.err_est)
 			loglog(s.N(:,1), [ s.err_est nErr' ],'.-');
 	end
 	grid on; set(gca,'minorgrid','none');
@@ -122,6 +133,23 @@ function fem_plot_2d(name, printflag)
 	display_2d(s.mesh,0,[],[],'facecolor','w');
 	axis equal; axis tight
 
+	% plot the radial wave functions for each eigenvector
+	% this is a rudimentary implementation
+	% TODO : implement by grid sampling and not by summing triangles
+	figure(9); clf
+	n_bin = 32;
+	% TODO, what if not centred
+	r_max = max(s.L0)*sqrt(0.5);
+	for vdx=1:size(s.v,2)
+		[R Vr(:,vdx)] = fem_get_2d_radial(s.P, s.T, s.v(:,vdx), n_bin, r_max);
+	end % for vdx
+	%plot(R, Vr);
+	for idx=1:n
+		subplot(rows,cols,idx);
+		plot(R, Vr(:,idx));
+		axis([0 r_max 0 1]);
+	end
+
 	% plot degenerated triangles	
 %	figure(1); clf
 %	R = regularity_2d(s.P, s.T);
@@ -129,17 +157,33 @@ function fem_plot_2d(name, printflag)
 %	axis equal; axis tight
 %	colorbar;
 %	title('Triangle Regularity and Degeneracy')
+
+	s.opt.poly
+	s.convflag
+	max(s.N(:,1))
+	fprintf(1,'L0: %f %f\n', s.L0);
+	fprintf(1,'x0: %f %f\n', s.x0);
+	fprintf(1,'reltol: %1.0e\n', s.opt.reltol);
+	fprintf(1,'abstol: %1.0e\n', s.opt.abstol);
+	fprintf(1,['%2d %+1.3e\n'],[ (1:size(s.E,1))' s.E(:,end)]');
 	
 	if ( 0 ~= printflag )
-		name_ = [ '../img/' basename '-convergence.eps'];  figure(1); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-run-time.eps'];     figure(3); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-efficency.eps'];    figure(4); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-eigenvector.eps'];  figure(5); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-errorvector.eps'];  figure(6); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-mesh.eps'];         figure(7); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		name_ = [ '../img/' basename '-mesh-quality.eps']; figure(8); preparePrint(); print('-depsc', name_); system(['epstopdf ' name_]);
-		s.L0
-		s.opt.poly
+		name_ = [ '../img/' basename '-convergence.eps'];  figure(1); preparePrint(); print('-depsc', name_);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-run-time.eps'];     figure(3); preparePrint(); print('-depsc', name_);
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-efficency.eps'];    figure(4); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-eigenvector.eps'];  figure(5); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-errorvector.eps'];  figure(6); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-mesh.eps'];         figure(7); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-mesh-quality.eps']; figure(8); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
+		name_ = [ '../img/' basename '-radial-wave-functions.eps']; figure(9); preparePrint(); print('-depsc', name_); 
+		system(['LD_LIBRARY_PATH= epstopdf ' name_]); system(['rm ' name_]);
 	end
 end % fem_plot_2d()
 

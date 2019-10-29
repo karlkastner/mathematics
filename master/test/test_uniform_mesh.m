@@ -79,7 +79,8 @@ for idx=1:length(N_)
 	% FEM with quadratic polynomials
 	if (n<512)
 	int = 'int_2d_gauss_6';
-	mesh.promote_3_6();
+%	mesh.promote_3_6();
+	mesh.promote(2);
 	mesh.prefetch();
 	A = assemble_2d_dphi_dphi_java(mesh,[],int);
 	B = assemble_2d_phi_phi_java(mesh,[],int);
@@ -146,6 +147,7 @@ subplot(2,2,2);
 loglog(N(:,1),abs(Err_est),'.-');
 legend('loation','southeast',leg_est{:})
 xlabel('total number of grid points n');
+ylabel('error estimate')
 ylim([1e-2 1e0])
 grid on
 set(gca,'minorgrid','none');
@@ -154,6 +156,7 @@ if (nargin() > 0 && printflag)
 	preparePrint();
 	print -depsc ../img/uniform-convergence.eps
 	system('epstopdf ../img/uniform-convergence.eps');
+	system('rm ../img/uniform-convergence.eps');
 end
 
 subplot(2,2,3);

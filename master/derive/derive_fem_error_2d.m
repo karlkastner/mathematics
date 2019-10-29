@@ -1,5 +1,6 @@
 % 2012 Apr 26 15:26 MCT
 % Karl Kästner, Berlin
+
 syms x1 x2 x3 y1 y2 y3 x y
 
 A = [	1 1 1;

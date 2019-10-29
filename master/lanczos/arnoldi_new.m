@@ -13,7 +13,7 @@ function [H Q W] = arnoldi(A, n, q0)
 		H = zeros(n,n-1);
 	end
 	if (nargin()<3)
-		q0     = rand(length(A),1);
+		q0     = rand(size(A,1),1);
 	end
 
 	Q     = zeros(length(A),n);

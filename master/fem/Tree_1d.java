@@ -6,33 +6,39 @@ import java.util.Vector;
 
 public final class Tree_1d implements Tree
 {
-	// column 0 : first vertex
-	// column 1 : second vertex
-	// column 2 : first child
-	// column 3 : second child
-	private static final int VERTEX = 0;
-	private static final int CHILD  = 2;
-	private static final int PARENT = 4;
-	private static final int LEN = 5;
-	private static final int DIM = 3; // TODO, what about 2D ?
+	private static final class INDEX
+	{
+		private static final int VERTEX = 0;
+		private static final int CHILD  = 2;
+		private static final int PARENT = 4;
+		private static final int LEN    = 5;
+	}
+	private static final int DIM    = 3; // TODO, what about 2D ?
+
+	// edge information
 	private int [][] data;
+
+	// number of line segment elements (edges)
 	private int n;
 	private Hashtable<Key2,int[]> hash;
 
-	// point coordinates
-	private double P[][];
 	// number of points
 	public int np; // TODO privatise
+
+	// point coordinates
+	public double P[][];
+//	private double P[][];
 	// elements being adjacent to edges
 	private Object [] adjacent_element_v;
 
 	public Tree_1d( final double [][] P )
 	{
-		np = P.length;
+		np     = P.length;
 		// allocate memory
-		hash = new Hashtable<Key2,int[]>();
+		hash   = new Hashtable<Key2,int[]>();
 		this.P = new double[np][P[0].length]; // TODO dangerous
-		data = new int[1][LEN];
+		data   = new int[1][INDEX.LEN];
+		adjacent_element_v = new Object[1];
 		
 		n = 0;
 		for (int i=0; i<np; i++)
@@ -43,27 +49,31 @@ public final class Tree_1d implements Tree
 				this.P[i][j] = P[i][j];
 			}
 		}
-		adjacent_element_v = new Object[np];
 	} // Tree_1d
+
+	public final int get_n()
+	{
+		return n;
+	}
 
 	public final int get_vertex(final int i, final int j)
 	{
-		return data[i][VERTEX+j];
+		return data[i][INDEX.VERTEX+j];
 	} // get_vertex
 
 	private final void set_vertex(final int i, final int j, final int val)
 	{
-		data[i][VERTEX+j] = val;
+		data[i][INDEX.VERTEX+j] = val;
 	} // set_vertex
 
 	private final void set_child(final int i, final int j, final int val)
 	{
-		data[i][CHILD+j] = val;
+		data[i][INDEX.CHILD+j] = val;
 	} // set_child
 
 	public final int get_child(final int i, final int j)
 	{
-		return data[i][CHILD+j];
+		return data[i][INDEX.CHILD+j];
 	} // get_child
 
 	public final Vector<Integer> get_adjacent_element_v(final int i)
@@ -78,15 +88,25 @@ public final class Tree_1d implements Tree
 
 	public final int get_parent(final int i)
 	{
-		return data[i][PARENT+0];
+		return data[i][INDEX.PARENT+0];
 	} // get_parent
 
 	private final void set_parent(final int i, final int val)
 	{
-		data[i][PARENT+0] = val;
+		data[i][INDEX.PARENT+0] = val;
 	} // set_parent
 
-	// p1, p2 and paretnt are expected 1-based
+	public final int [][] get_data()
+	{
+		return data;
+	}
+
+	public final double [][] get_P()
+	{
+		return P;
+	}
+
+	// p1, p2 and parents are expected 1-based
 	public final int add_child(final int p1, final int p2, final int parent)
 	{
 		// check if it exists (only necessary in combination with 3d)
@@ -99,7 +119,7 @@ public final class Tree_1d implements Tree
 			// reallocate memory
 			if (n+1 > data.length)
 			{
-				data = FEM.realloc2dInt(data, 2*data.length, LEN);
+				data = FEM.realloc2dInt(data, 2*data.length, INDEX.LEN);
 				Object[] ha = new Object[2*adjacent_element_v.length];
 				for (int i=0; i<n; i++)
 				{
@@ -124,6 +144,19 @@ public final class Tree_1d implements Tree
 		}
 		return retval;
 	} // add_child
+	
+	public final int add_point(final double x, final double y)
+	{
+		// reallocate memory if necessary
+		if (np+1 > P.length)
+		{
+			P = FEM.realloc2dDouble(P, 2*P.length, DIM);
+		} // if reallocation necessary
+		P[np][0] = x;
+		P[np][1] = y;
+		np++;
+		return np;
+	} // add_point double double
 
 	// adds segment midpoint
 	// expects 1-based indices
@@ -155,11 +188,11 @@ public final class Tree_1d implements Tree
 		return P;
 	} // get_all_points
 
-	public final boolean is_leave(final int i)
+	public final boolean is_leaf(final int i)
 	{
-		// element is a leave, if the children are null
-		return (0 == data[i][CHILD+0]);
-	} // is_leave
+		// element is a leaf, if the children are null
+		return (0 == data[i][INDEX.CHILD+0]);
+	} // is_leaf
 
 	// p1 and p2 are expected 1-based
 	public final int resolve_edge(final int p1, final int p2, final int element)
@@ -174,7 +207,7 @@ public final class Tree_1d implements Tree
 			// edge does already exist
  			edge = val[0];
 		} else {
-			// usually edges where allready created during splitting
+			// usually edges where already created during splitting
 			// however, this is not so at load, in this case, the parent is zero
 			// and for interior edges of the faces 
 //			System.out.println("adding edge");
@@ -188,7 +221,7 @@ public final class Tree_1d implements Tree
 	public final int split(final int i)
 	{
 		int pm;
-		if (!is_leave(i))
+		if (!is_leaf(i))
 		{
 			// edge already split, midpoint exists already
 			// midpoint is per definition vertex 0 in the children
@@ -206,7 +239,7 @@ public final class Tree_1d implements Tree
 			set_child(i, 0, e1);
 			int e2 = add_child(pm, p2, i+1);
 			set_child(i, 1, e2);
-		} // if !is_leave
+		} // if !is_leaf
 		return pm;
 	} // split_2
 } // class Tree_1d

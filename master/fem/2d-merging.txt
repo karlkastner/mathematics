@@ -1,0 +1,17 @@
+requires edge -> triangle, and point -> triangle relation (or count, relation required, when edges and points from the end are to be brought forward)
+
+for each element
+	set mergeflag to 1
+for each triangle
+	if not to be merged, reset merge flag of parent
+for each triangle
+	if has children and to be merged
+	- set neighbour flags of children neighbours to point to the parent
+	- if last on edge, remove edge and inbetween point
+	- move spaces of children to empty list
+for each merged triangle
+	remesh (necessary, if neighbours are green)
+	can be simplified by implementing blue triangles (3 2-side options in 2D, 6 2-side options in 3d, 3-side options in 3-d )
+for each triangle in the empty lisst
+	replace it from the end
+

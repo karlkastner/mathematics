@@ -3,12 +3,14 @@
 
 function list_dat(folder)
 	if (nargin() < 1 || isempty(folder))
-		folder = {'dat', 'dat-new'};
+		folder = {'../dat'};
 	end
 
 	for fdx=1:length(folder)
 
-		[flag name] = system(['ls -1 ' folder{fdx} '/fem-*.mat' ]);
+		%[flag name] = system(['ls -1 ' folder{fdx} '/fem-*.mat' ]);
+		command = ['find -L ' folder{fdx} ' | grep mat$ | grep fdm' ];
+		[flag name] = system( command );
 
 		if (0 == flag)
 			name = regexp(name, '\n', 'split');
@@ -18,7 +20,8 @@ function list_dat(folder)
 					disp(sprintf('%s order %d L0 %s x0 %s k %d abstol %e', name{idx}, s.opt.order, ...
 						mat2str(s.L0), mat2str(s.x0), s.k, s.opt.abstol ));
 					clear s;
-				catch
+				catch e
+					e
 					disp([name{idx} ' error'])
 				end
 			end
@@ -29,7 +32,9 @@ function list_dat(folder)
 	% FDM
 	for fdx=1:length(folder)
 
-		[flag name] = system(['ls -1 ' folder{fdx} '/fdm-*.mat' ]);
+		%[flag name] = system(['ls -1 ' folder{fdx} '/fdm-*.mat' ]);
+		command = ['find -L ' folder{fdx} ' | grep mat$ | grep fem' ];
+		[flag name] = system( command );
 
 		if (0 == flag)
 			name = regexp(name, '\n', 'split');
@@ -37,9 +42,10 @@ function list_dat(folder)
 				try
 					s=load(name{idx});
 					disp(sprintf('%s dimension %d L0 %s x0 %s k %d abstol %e', ...
-						name{idx}, s.d, mat2str(s.L0), mat2str(s.x0), s.k, s.abstol ));
+						name{idx}, s.d, mat2str(s.L0), mat2str(s.x0), s.k, s.opt.abstol ));
 					clear s;
-				catch
+				catch e
+					e
 					disp([name{idx} ' error'])
 				end
 			end

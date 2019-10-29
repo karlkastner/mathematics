@@ -1,3 +1,6 @@
+% 2012-03-27 14:36:11 UTC
+% Karl Kästner, Berlin
+
 path(path,'../')
  n=1e4; x=pi*sort(rand(n,1)); y=sin(x(2:end-1)); L =laplacian_non_uniform(x); z=L*y;
  w = x(2:end-1).*z;

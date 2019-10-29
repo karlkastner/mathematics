@@ -26,13 +26,22 @@
 
 % we skip the obj-stuff in matlab here to avoid the unpleasant "obj.member"
 
+%
+% TODO this class is deprecated, use Tree_2d.refine instead for iterative refinement
+%
+
  function [P T Bc N void] = refine_2d_21(P, T, Bc, N, M, varargin)
 	void = [];
 	lp = size(P,1);
 	lt = size(T,1);
 	lb = size(Bc,1);
 
+	if (size(T,2) > 3)
+		error('mesh must just include corner points, no points for higher order basis functions')
+	end
+
 	% compute side length
+	% TODO use hypot
 	L = sqrt( [(P(T(:,2),1) - P(T(:,3),1)).^2 + (P(T(:,2),2) - P(T(:,3),2)).^2, ...
 	           (P(T(:,1),1) - P(T(:,3),1)).^2 + (P(T(:,1),2) - P(T(:,3),2)).^2, ...
 	           (P(T(:,1),1) - P(T(:,2),1)).^2 + (P(T(:,1),2) - P(T(:,2),2)).^2 ]);
@@ -70,10 +79,8 @@
 
 	Ph = java.util.Hashtable(lp);
 
-
-
 	af = zeros(lt,1);
-	% for each triangle to be refined
+	% split edges of each triangle to be refined
 	for mdx=1:length(M)
 		[P lp Bc lb Ph Sh af] = split_edges(M(mdx),P,lp,T,N,Bc,lb,Ph,Sh,L,Lx,af);
 	end
@@ -86,7 +93,7 @@
 %			val = Sh.get(key)'
 %		end
 
-	% for each triangle
+	% partition triangle to new triangle for each triangle to be refined
 	% can be simplified by noting the affected elements
 	F = find(af);
 %	for tdx=1:lt
@@ -95,7 +102,6 @@
 		%[T lt] = partition(tdx,T,lt,N,Ph);
 		[T lt N Sh] = partition(tdx,T,lt,N,Ph,L,Lx,Sh);
 	end
-
 end % refine_2d
 
 function [P lp Bc lb Ph Sh af] = split_edges(tdx,P,lp,T,N,Bc,lb,Ph,Sh,L,Lx,af)

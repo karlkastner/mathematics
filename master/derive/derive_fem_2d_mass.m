@@ -1,3 +1,6 @@
+% 2012-05-22 09:25:45
+% Karl Kästner, Berlin
+
 % standard triangle
 
 syms chi psi

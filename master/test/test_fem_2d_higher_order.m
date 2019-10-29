@@ -37,7 +37,7 @@ function test_fem_2d_higher_order(printflag, N_)
 	                   
 		% get the grid
 		[P T Bc] = mesh_2d_uniform(n,L0);
-		mesh = Mesh_2d(P,T,Bc);
+		mesh = javaObject('Mesh_2d', P, T, Bc);
 	
 		for k=1:size(C,1)
 			[E(idx,k) Err_est(idx,k) Ta(idx,k) Te(idx,k) N(idx,k)] = solve(P, T, Bc, C{k,1}, C{k,2}, n_max);
@@ -127,9 +127,20 @@ function [e err_est ta te n] = solve(P,T,Bc,f_promote,f_int,n_max)
 
 	% construct 2nd order matrices
 	tic()
-	mesh = Mesh_2d(P,T,Bc);
+	if (exist ('OCTAVE_VERSION') > 0)
+		mesh = javaObject('Mesh_2d', P', T', Bc');
+	else
+		mesh = javaObject('Mesh_2d', P, T, Bc);
+	end
+
 	mesh.promote(f_promote);
-	P = mesh.P;
+
+	if (exist ('OCTAVE_VERSION') > 0)
+		% TODO FIXME
+		P = java2mat(mesh.P);
+	else
+		P = mesh.P;
+	end
 
 	if (size(P,1) > n_max)
 		e = NaN;
@@ -144,11 +155,18 @@ function [e err_est ta te n] = solve(P,T,Bc,f_promote,f_int,n_max)
 	mesh.element_neighbours();
 
 	% assemble discretisation matrices
+	% TODO FIXME octave does not accept [] as arguments
 	A = assemble_2d_dphi_dphi_java(mesh, [], f_int);
 	B = assemble_2d_phi_phi_java(mesh, [], f_int);
 
 	% apply boundary conditions
-	[A B p__] = boundary_2d(A, B, mesh.Bc, bcflag);
+	if (exist ('OCTAVE_VERSION') > 0)
+		% TODO FIXME
+		Bc_ = java2mat(mesh.Bc);
+	else
+		Bc_ = mesh.Bc;
+	end
+	[A B p__] = boundary_2d(A, B, Bc_, bcflag);
 	ta = toc();
 
 	% solve the eigenvalue problem

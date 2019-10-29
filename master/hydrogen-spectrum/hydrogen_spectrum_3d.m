@@ -44,7 +44,7 @@ return
 	opt.h_tol    = double(Inf);
 	opt.check    = 1;
 	mkdir(opt.folder);
-	series(k,L0,x0,poly,h_tol,opt);
+	confinement_series_3d(k,L0,x0,poly,h_tol,opt);
 	T(1) = toc()
 
 return
@@ -58,7 +58,7 @@ return
 	opt.E_true = -0.5./([1 4*ones(1,4) 9*ones(1,9) 16*ones(1,16) 25*ones(1,25) 36*ones(1,36) 49*ones(1,49)]).^2;
 	opt.folder = '../dat/3d-order-of-accuracy-10'
 	mkdir(opt.folder);
-	series(k,L0,x0,poly,h_tol,opt);
+	confinement_series_3d(k,L0,x0,poly,h_tol,opt);
 	T(2) = toc()
 return
 
@@ -115,13 +115,13 @@ return
 	T(6) = toc(tid)
 end
 
-function Err = series(k,L0,x0,poly,h_tol,opt)
+function Err = confinement_series_3d(k,L0,x0,poly,h_tol,opt)
 	f = Potential_3D_Coulomb;
 	Err = [];
 	for idx=1:length(L0)
-		k
-		x0(idx,:)
-		L0(idx,:)
+%		k
+		fprintf('Position %f %f %f\n',x0(idx,:));
+		fprintf('Domain size %f %f %f\n',L0(idx,:));
 		if (~isempty(poly))
 			poly(idx)
 			opt.poly = poly(idx);

@@ -1,4 +1,7 @@
-function fdm_error()
+% 2012-04-19 13:02:01 UTC
+% Karl Kästner, Berlin
+
+function derive_fdm_error()
 	n = 2;
 	m =4;	
 	syms h
@@ -22,4 +25,5 @@ function fdm_error()
 %	(B'*A) \ (B'*B)
 %	A*C
 %	A*C - B
-end
+end % derive_fdm_error()
+

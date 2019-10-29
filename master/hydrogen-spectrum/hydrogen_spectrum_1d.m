@@ -15,7 +15,7 @@ function confinement_series_1d()
 	opt.folder = '../dat/1d-confinement';
 	mkdir(opt.folder);
 	for idx=1:1:size(L0,1)
-		L0(idx)
+		fprintf('Domain size %f\n',L0(idx));
 		pdeeig_1d(afunc, bfunc, k, L0(idx), x0, opt);
 	end
 end % confinement_series_1d()

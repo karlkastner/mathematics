@@ -22,10 +22,10 @@ function [param A] = fit_(X,Y,W,order)
 		end
 	else
 		% solve by QR factorisation
-		[Q R]  = qr(A,0);
+		[Q, R]  = qr(A,0);
 		%param  = R \ (Q'*Y);
 		opts.UT = true;
-		param = linsolve(R,Q'*Y,opts);
+		param   = linsolve(R,Q'*Y,opts);
 	end
 end % fit_
 

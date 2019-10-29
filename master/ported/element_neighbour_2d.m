@@ -2,8 +2,12 @@
 % Karl Kästner, Berlin
 %
 % generate iverse mapping from triangle boundaries to triangles
-function [N] = element_neighbour_2d(P, T, B)
+function [N] = element_neighbour_2d(P, T, B, testflag)
 	import java.util.Hashtable;
+	
+	if (nargin() < 4 || isempty(testflag))
+		testflag = true;
+	end
 
 	% get length
 	lt = size(T,1);
@@ -41,7 +45,7 @@ function [N] = element_neighbour_2d(P, T, B)
 			end
 		end % for jdx
 	end % for idx
-	if (~Sh.isEmpty())
+	if (testflag && ~Sh.isEmpty())
 		K = Sh.keySet().toArray();
 		for idx=1:length(K)
 			disp( (Sh.get(K(idx)))');

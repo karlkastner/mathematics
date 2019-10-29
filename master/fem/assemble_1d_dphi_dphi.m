@@ -1,4 +1,4 @@
-% Apr 27 14:09
+% Apr 27 14:09 2012
 % Karl Kästner, Berlin 
 
 function A = assemble_1d_dphi_dphi(P, T, func, int)
@@ -26,8 +26,8 @@ function A = assemble_1d_dphi_dphi(P, T, func, int)
 		q = b*A;
 
 		% construct the element point Vandermonde matrix spanning the test function polynomials
-		% structure: 1 x x^2 x^3
-		Va = vander_1d(P(T(idx,:)),nt2);
+		% structure: 1, x, ..., x^(nt2-1)
+		Va = vander_1d(P(T(idx,:)),nt2-1);
 
 		% get test function coefficients
 		C = inv(Va);
@@ -36,7 +36,7 @@ function A = assemble_1d_dphi_dphi(P, T, func, int)
 		dC = derivative_1d(C, nt2-1);
 		
 		% evaluate test function derivative at quadrature points
-		Vq = vander_1d(q(:,2), nt2-1);
+		Vq = vander_1d(q(:,2), nt2-2);
 		dphi = (Vq*dC);
 
 		% evaluate the coefficient function at integration points

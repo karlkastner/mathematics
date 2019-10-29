@@ -1,3 +1,6 @@
+% 2012-07-05 17:14:28 UTC
+% Karl Kästner, Berlin
+
 syms h x y
 f = exp(-sqrt(x^2 + y^2))      
 df1 = diff(f,x)

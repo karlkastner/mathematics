@@ -1,0 +1,14 @@
+1)
+- cg is exact in n steps (exact arithmetic)
+- less storage than gauss
+- approximate solution with fewer steps
+2) notations
+3) algorihtm in detail
+- relation to gauss
+- computation of approximate eigenvalues (eigenvectors?)
+- variant for asymmetric systems (cgs?)
+4)
+- relation to steepest descent?
+- relation to gauss
+- minimises the error | x_* - x_i|
+

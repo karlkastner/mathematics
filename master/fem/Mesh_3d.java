@@ -6,29 +6,29 @@ import Jama.*;
 import java.util.Hashtable;
 
 // make common interface for meshes
-public final class Mesh_3d
+public final class Mesh_3d extends Mesh
 {
 	// point coordinates
 	// gets extended by refinement
-	public double [][] P;
+//	public double [][] P;
 	// number of points
-	public int np;
+//	public int np;
 	// conforming "red" and "green" tetrahedra array generated from tree
-	// columns get extended by promotion
-	public int [][] T;
+//	// columns get extended by promotion
+//	public int [][] T;
+	// number of triangles
+//	public int nt;
 	// alternative triagulation with basis function p/2 for error estimation
 	public int [][] S;
 	public int ns;
-	// number of triangles
-	public int nt;
 	// boundary faces
-	public int [][] Bc;
+//	public int [][] Bc;
 	// element neighbours
-	public int [][] N;
+//	public int [][] N;
 	// number of boundary faces
-	public int nb;
+//	public int nb;
 	// dimension
-	public static final int DIM = 3;
+//	public static final int DIM = 3;
 	// centre coordinates
 	public double [][]	C;
 	// maximum side length
@@ -43,9 +43,12 @@ public final class Mesh_3d
 	private double P_local[][][];
 	private double Phi[][][];
 
+	// TODO provide default constructor
+
 	// constructor
 	public Mesh_3d(final int np, final int nt, final int nb)
 	{
+		DIM = 3;
 		P = new double[np][DIM];
 		this.np = 0;
 		T = new int[nt][DIM+1];
@@ -56,7 +59,9 @@ public final class Mesh_3d
 
 	public Mesh_3d(double [][] P, int [][] T, int [][] Bc)
 	{
+		DIM = 3;
 		this.P = P;
+		// TODO dangerous if P is null
 		this.np = P.length;
 		this.T = T;
 		this.nt = T.length;
@@ -67,6 +72,8 @@ public final class Mesh_3d
 
 	public final void add_T(final int p0, final int p1, final int p2, final int p3)
 	{
+		if (p0 == p1 || p0 == p2 || p0 == p3 || p1 == p2 || p1 == p3 || p2 == p3) throw new RuntimeException();
+		T = AArray.resizeI(T,nt+1);
 		T[nt][0] = p0;
 		T[nt][1] = p1;
 		T[nt][2] = p2;
@@ -76,11 +83,11 @@ public final class Mesh_3d
 
 	public final void add_Bc(final int p0, final int p1, final int p2)
 	{
+		if (p0 == p1 || p0 == p2 || p1 == p2) throw new RuntimeException();
+		Bc = AArray.resizeI(Bc,nb+1);
 		Bc[nb][0] = p0;
 		Bc[nb][1] = p1;
 		Bc[nb][2] = p2;
-		if (p0 == p1 || p0 == p2 || p1 == p2) throw new RuntimeException();
-		//if (P(p0 == p1 || p0 == p2 || p1 == p2) throw new RuntimeException();
 		nb++;
 	} // add_Bc()
 
@@ -1064,5 +1071,25 @@ public final class Mesh_3d
 				throw new RuntimeException("Not yet implemented or impossible");
 		} // switch T[0].length
 	} // demote
+
+	public boolean contains(final int tdx, final double [] p)
+	{
+		double A[][] = { { 1.0, 1.0, 1.0, 1.0 },
+       	                  { P[T[tdx][0]-1][0], P[T[tdx][1]-1][0], P[T[tdx][2]-1][0], P[T[tdx][3]-1][0] },
+       	                  { P[T[tdx][0]-1][1], P[T[tdx][1]-1][1], P[T[tdx][2]-1][1], P[T[tdx][3]-1][1] },
+       	                  { P[T[tdx][0]-1][2], P[T[tdx][1]-1][2], P[T[tdx][2]-1][2], P[T[tdx][3]-1][2] } };
+		double [][] pv = {{1.0}, {p[0]}, {p[1]}, {p[2]}};
+		Matrix mA   = new Matrix(A);
+		Matrix mP   = new Matrix(pv);
+
+		Matrix mC = mA.solve(mP);
+		double [][] c = mC.getArray();	
+
+		boolean retval = (c[0][0] >= 0.0) && (c[1][0] >= 0.0) && (c[1][0] >= 0.0) && (c[2][0] >= 0.0)
+		              && (c[0][0] <= 1.0) && (c[1][0] <= 1.0) && (c[1][0] <= 1.0) && (c[2][0] <= 1.0);
+
+		return retval;	
+	} // contains3D
+
 } // class Mesh_3D
 

@@ -1,0 +1,45 @@
+
+		Multigrid
+		Jacobi
+		Gaus-Seidel
+		SOR
+		Multipole
+
+		lsqr
+		tfqr
+
+Symmetric:	
+	Steepest Descent
+	CG
+	Minres
+	(Symmql)
+
+Asymmetric short:
+	CGS/CGN
+	QMR
+	BiCG
+	BiCG-stab
+	BiCG-stab-l
+	IDR-s
+	IDR-s
+
+Asymmetric long:
+	GMRES
+
+Eigenvalue:
+	Lanczos
+	Davidson
+	Jacobi Davidson
+	Arnoldi
+	Implicitely Restarted Arnoldi
+
+convergence r, convergence e (for spd and general), original paper
+
+pgk	petrov galerkin krylov
+
+
+gcr	generalized conjugate residual
+orthodir
+fom	full orthogonilazation method
+
+

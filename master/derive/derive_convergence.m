@@ -1,3 +1,11 @@
+% 2012-05-30 09:48:55 UTC
+% Karl Kästner, Berlin
+
+% this is in support of the FDM chapter of the thesis,
+% which attempts to show, that the finite difference scheme (slowly) converges
+% at the origin of the Coulomb potential
+% the derivation (but not the finding) was challenged at the defence by Prof. 
+
 syms x y h
 
 f1 = -x/(exp((x^2 + y^2)^(1/2))*(x^2 + y^2)^(1/2))

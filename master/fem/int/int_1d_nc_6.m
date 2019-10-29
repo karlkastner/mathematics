@@ -1,6 +1,7 @@
 % Mon Jul 23 19:57:49 MSK 2012
 % Karl Kästner, Berlin
 
+% r ~ h^7
 function [w b flag] = int_1d_nc_6()
 	b = 0.2*[5 0;
                  4 1;

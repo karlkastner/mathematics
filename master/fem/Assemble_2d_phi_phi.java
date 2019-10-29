@@ -5,26 +5,36 @@ import Jama.*;
 
 public class Assemble_2d_phi_phi
 {
+	// auxilary variables for parallel matrix setup
 	int MAX_NUM_THREADS = 8;
 	int n_thread;
 	Worker[] t;
 	int n_first[];
 	int n_last[];
 	
+	// point coordinates
 	double[][] P;
 	double [][][] P_local;
+	// triangle vertices, indices into P
 	int[][] T;
+	// test function coefficients
 	double [][][] Phi;
+	// potential function
 	Potential_2D func;
+	// quadrature weights
 	double [] w;
+	// baricentric quatrature coordinates
 	double [][] b;
+	// indicates diagonal mass matrices if true
 	int flag;
+	// 
 	int mb0;
 	int nb0;
 	int nt1;
 	int nt2;
 	int nv;
 	double [][] buf;
+	// triange determinants
 	double [] determinant;
 
 	// default constructor
@@ -132,19 +142,18 @@ public class Assemble_2d_phi_phi
 	private void assemble_(int i)
 	{
 		// preallocate thread local buffers
-		double[][] A    = new double[3][3];
+		double     area;
 		double[]   wfa  = new double[w.length];
+		double[][] A    = new double[3][3];
+		double[][] A_   = new double[nt2][2];
 		double[][] Va   = new double[nt2][(nv+1)*(nv+2)/2];
 		double[][] Vq   = new double[w.length][(nv+1)*(nv+2)/2];
 		Matrix mA       = new Matrix(A);
 		Matrix mB       = new Matrix(b);
 		Matrix mVq      = new Matrix(Vq);
-
-		Matrix mVa = new Matrix(Va);
-		double[][] A_   = new double[nt2][2];
+		Matrix mVa      = new Matrix(Va);
 		Matrix mC;
 
-		double area;
 		// integrate over each triangle
 		for (int idx=n_first[i]; idx<=n_last[i]; idx++)
 		{

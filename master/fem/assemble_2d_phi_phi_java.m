@@ -12,8 +12,13 @@ function [A buf] = assemble_2d_phi_phi_java(mesh, func, int)
 	[w b flag] = feval(int);
 
 	% get matrix entries
-	asm = Assemble_2d_phi_phi;
+	asm = javaObject('Assemble_2d_phi_phi');
 	buf = asm.assemble(mesh, func, w, b, flag);
+
+	if (exist ('OCTAVE_VERSION') > 0)
+		% TODO FIXME
+		buf = java2mat(buf);
+	end
 
 	% construct the matrix from the buffer
 	A = sparse(buf(:,1), buf(:,2), buf(:,3), size(mesh.P,1), size(mesh.P,1));

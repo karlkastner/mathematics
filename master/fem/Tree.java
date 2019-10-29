@@ -6,7 +6,7 @@ public interface Tree
 	public int get_vertex(int i, int j);
 //	public int add_child(int p1, int p2); //number of arguments change in higher dimensions
 	public int get_child(int i, int j);
-	public boolean is_leave(int i);
+	public boolean is_leaf(int i);
 	// splits a boundary element uniformly into several parts
 	public int split(int i);
 } // interface Tree

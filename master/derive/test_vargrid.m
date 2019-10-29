@@ -1,3 +1,6 @@
+% 2012-03-28 00:22:15
+% Karl Kästner, Berlin
+
 N=unique([7 ceil(2.^(3:1/64:12))]);
 %N=unique([7 ceil(2.^(3:1:12))]);
 
