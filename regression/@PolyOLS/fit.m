@@ -2,7 +2,7 @@
 % Karl Kastner, Berlin
 %% fit a polynomial function
 %% like polyfit, but returns parameter error estimates
-function [param, res, A obj] = fit(obj,X,Y,W,ci)
+function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 	if (nargin() < 4)
 		W = [];
 	end
@@ -24,7 +24,7 @@ function [param, res, A obj] = fit(obj,X,Y,W,ci)
 		obj.s  = 1;
 	end
 
-	[param A] = obj.fit_(X,Y,W,obj.order);
+	[param, A] = obj.fit_(X,Y,W,obj.order);
 
 	% residual
 	Yp = A*param;

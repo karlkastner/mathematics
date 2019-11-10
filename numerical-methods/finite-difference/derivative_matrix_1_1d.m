@@ -7,7 +7,7 @@
 % h = L/(n+1) constant step with
 % TODO allow optionally for circular boundary condition
 % function [D1 d1] = derivative_matrix_1d(n,L,order)
-function [D1 d1] = derivative_matrix_1_1d(arg1,L,order)
+function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 	if (nargin()< 2 || isempty(L))
 		% choose domain [0 1]
 		L = 1;

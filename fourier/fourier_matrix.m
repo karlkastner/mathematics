@@ -12,8 +12,8 @@ function A = fourier_matrix(T,t)
 	A = zeros(length(t),no);
 	A(:,1) = 1;
 	for idx=1:length(T)
-		A(:,2*idx)   = sin(2*pi*t/T(idx));
-		A(:,2*idx+1) = cos(2*pi*t/T(idx));
+		A(:,2*idx)   = cos(2*pi*t/T(idx));
+		A(:,2*idx+1) = sin(2*pi*t/T(idx));
 	end % for
 end % fourier_matrix
 

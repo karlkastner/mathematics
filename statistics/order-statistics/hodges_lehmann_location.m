@@ -21,7 +21,10 @@ function m = hodges_lehman_location(X,dim)
 	m = zeros(1,size(X,2));
 	for idx=1:size(X,2)
 		XX = bsxfun(@plus,X(:,idx),X(:,idx)');
-		m(1,idx) = 0.5*nanmedian(nonzeros(triu(XX)));
+		fdx = triu(true(size(XX)));
+		m(1,idx) = 0.5*nanmedian(XX(fdx));
+		% nonzeros fails for zero values
+		% nonzeros(triu(XX)));
 	end
 end % hodges_lehman
 

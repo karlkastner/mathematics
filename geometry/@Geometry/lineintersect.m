@@ -4,7 +4,11 @@
 %% intersect of two lines
 % TODO normalisation, why is there just one denominator ?
 % what is s, what t?
-function [flag s t p q den] = intersect(p1,p2,q1,q2)
+% function [flag, s, t, p, q, den] = intersect(p1,p2,q1,q2)
+% flag : true if intersecting
+% s,t  : relative distance on p and q to intersection point
+% p, q : closest point to other section
+function [flag, s, t, p, q, den] = intersect(p1,p2,q1,q2)
 	np = size(p1,2);
 	nq = size(q1,2);
 	P1X = repmat(p1(1,:),nq,1);
@@ -54,11 +58,11 @@ end
 	% intersection coordinates
 	% p and q coincide only in case of intersection
 	if (nargout() > 3)
-	p(1,:,:) = bsxfun(@plus, Q1X_, bsxfun(@times, t, (q2(1,:)-q1(1,:))'));
-	p(2,:,:) = bsxfun(@plus, Q1Y_, bsxfun(@times, t, (q2(2,:)-q1(2,:))'));
+		p(1,:,:) = bsxfun(@plus, Q1X_, bsxfun(@times, t, (q2(1,:)-q1(1,:))'));
+		p(2,:,:) = bsxfun(@plus, Q1Y_, bsxfun(@times, t, (q2(2,:)-q1(2,:))'));
 	if (nargout() > 4)
-	q(1,:,:) = bsxfun(@plus, P1X, bsxfun(@times, s, (p2(1,:)-p1(1,:))));
-	q(2,:,:) = bsxfun(@plus, P1Y, bsxfun(@times, s, (p2(2,:)-p1(2,:))));
+		q(1,:,:) = bsxfun(@plus, P1X, bsxfun(@times, s, (p2(1,:)-p1(1,:))));
+		q(2,:,:) = bsxfun(@plus, P1Y, bsxfun(@times, s, (p2(2,:)-p1(2,:))));
 	end
 	end
 end % intersect

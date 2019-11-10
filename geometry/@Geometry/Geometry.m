@@ -39,6 +39,7 @@ classdef Geometry
 		in               = inPolygon(xp,yp,x,y);
 		[px, py]         = intersect(x1,y1,x2,y2);
 		[flag, c]        = inTriangle(X,Y,X0,Y0);
+		cflag 		 = quad_isconvex(X,Y);
 		[flag, s, t, p, q, den] = lineintersect(p1,p2,q1,q2);
 		[x0, y0]         = mittenpunkt(x,y);
 		[x0, y0]         = nagelpoint(x,y);
