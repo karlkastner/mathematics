@@ -9,6 +9,10 @@
 %
 % function [s2 dof] = wvar(w,x)
 %
+% f = mu_w = (1/sum w) sum w x
+% df/dxi = w_i
+% s^2 = sum (df/dxi)^2 s_xi^2 = sum wi^2 s_xi^2
+%
 function [s2 s2_mu dof] = wvar(w,x,fullpop,varargin)
 	if (isvector(x))
 		x = cvec(x);
@@ -23,8 +27,10 @@ function [s2 s2_mu dof] = wvar(w,x,fullpop,varargin)
 
 	sw     = sum(w);
 	sw2    = sum(w.^2);
+	% weighted mean
 	mu     = sum(wx)./sw;
 
+	% weighted squared residuals
 	w2dx2  = w.^2.*bsxfun(@minus,x,mu).^2;
 
 	s2_mu    = sum(w2dx2)./sw.^2;

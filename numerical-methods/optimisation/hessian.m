@@ -6,6 +6,7 @@
 %
 function [H, g, f0, X, F] = hessian(fun,x0,h)
 	parflag = false; %true;
+	x0 = cvec(x0);
 	n = length(x0);
 	if (nargin() < 3 || isempty(h))
 		% note: h < eps^0.5 for consistent hessian !!!

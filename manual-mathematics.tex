@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 2:6M
+mathematics\protect\\Revision 2:8M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -198,6 +198,16 @@ ${}$
  symbolic simplification of the arcus tangent
 
 \end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{digamma\_man}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{fourier/@STFT}
 \subsection{STFT}
 ${}$
@@ -350,6 +360,11 @@ ${}$
  N    : frequency id
 
 \end{lstlisting}
+\subsection{fourier\_cesaro\_correction}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{fourier\_coefficient\_piecewise\_linear}
 ${}$
 \begin{lstlisting}
@@ -453,6 +468,13 @@ ${}$
 \begin{lstlisting}
  transformation matrix for the continous fourier transform
  this is a matrix with (2*n+1) real columns
+
+\end{lstlisting}
+\subsection{fourier\_matrix\_exp}
+${}$
+\begin{lstlisting}
+ transformation matrix for a continuous fourier series
+ (not for the discrete dft/fft)
 
 \end{lstlisting}
 \subsection{fourier\_power}
@@ -624,6 +646,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_fourier\_filter}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_idftmtx}
 ${}$
 \begin{lstlisting}
@@ -769,6 +796,7 @@ ${}$
 ${}$
 \begin{lstlisting}
  flag points contained in triangle
+ function [flag, c] = inTriangle(P1,P2,P3,P0)
 
 \end{lstlisting}
 \subsection{intersect}
@@ -827,6 +855,7 @@ ${}$
 ${}$
 \begin{lstlisting}
  area of a polygon
+ function A = poly_area(x,y)
 
 \end{lstlisting}
 \subsection{poly\_edges}
@@ -863,6 +892,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  closest point on a curve with respect to a point at distance to the curve
+
+\end{lstlisting}
+\subsection{quad\_isconvex}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{random\_disk}
@@ -1167,6 +1201,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  transform coodinates into unit triangle
+
+\end{lstlisting}
+\subsection{ellipsoid2geoid}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{example\_approximate\_utm\_conversion}
@@ -1706,177 +1745,6 @@ ${}$
 \subsection{eig\_power\_iteration}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\section{master/eigenvalue/jacobi-davidson/JDQR}
-\subsection{Example1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{Example2}
-${}$
-\begin{lstlisting}
-% dimension of the matrix operation
-
-\end{lstlisting}
-\subsection{ILU}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{jdqr}
-${}$
-\begin{lstlisting}
-% Read/set parameters
-% Initiate global variables
-% Return if eigenvalueproblem is trivial
-% Initialize V, W:
-%   V,W orthonormal, A*V=W*R+Qschur*E, R upper triangular
-% The JD loop (Standard)
-%    V orthogonal, V orthogonal to Qschur
-%    V*V=eye(j), Qschur'*V=0, 
-%    W=A*V, M=V'*W
-%
-% Compute approximate eigenpair and residual
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Check for convergence
-% Expand the partial Schur form
- Rschur=[[Rschur;zeros(1,k)],Qschur'*MV(u)]; k=k+1; 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Expand preconditioned Schur matrix PinvQ
-% Check for shrinking the search subspace
-% Solve correction equation
-% Expand the subspaces of the interaction matrix  
-% The JD loop (Harmonic Ritz values)
-%    Both V and W orthonormal and orthogonal w.r.t. Qschur
-%    V*V=eye(j), Qschur'*V=0, W'*W=eye(j), Qschur'*W=0
-%    (A*V-tau*V)=W*R+Qschur*E, E=Qschur'*(A*V-tau*V), M=W'*V
-%
-% Compute approximate eigenpair and residual
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Check for convergence
-% Expand the partial Schur form
- Rschur=[[Rschur;zeros(1,k)],Qschur'*MV(u)]; k=k+1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Expand preconditioned Schur matrix PinvQ
-% Check for shrinking the search subspace
-% Solve correction equation
-% Expand the subspaces of the interaction matrix  
-% The JD loop (Harmonic Ritz values)
-%    V W AV.
-%    Both V and W orthonormal and orthogonal w.r.t. Qschur, AV=A*V-tau*V
-%    V*V=eye(j),  W'*W=eye(j), Qschur'*V=0, Qschur'*W=0, 
-%    (I-Qschur*Qschur')*AV=W*R, M=W'*V; R=W'*AV;
-%
-% Compute approximate eigenpair and residual
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Check for convergence
-% Expand the partial Schur form
- Rschur=[[Rschur;zeros(1,k)],Qschur'*MV(u)]; k=k+1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Expand preconditioned Schur matrix PinvQ
-% Check for shrinking the search subspace
-% Solve correction equation
-% Expand the subspaces of the interaction matrix  
-% The JD loop (Harmonic Ritz values)
-%    W orthonormal, V and W orthogonal to Qschur, 
-%    W'*W=eye(j), Qschur'*V=0, Qschur'*W=0
-%    W=(A*V-tau*V)-Qschur*E, E=Qschur'*(A*V-tau*V), 
-%    M=W'*V
-% Compute approximate eigenpair and residual
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Check for convergence
-% Expand the partial Schur form
- Rschur=[[Rschur;zeros(1,k)],Qschur'*MV(u)]; k=k+1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Expand preconditioned Schur matrix PinvQ
-% Check for shrinking the search subspace
-% Solve correction equation
-% Expand the subspaces of the interaction matrix  
- W=V*Q; V=V(:,1:j)/R; E=E/R; R=eye(j); M=Q(1:j,:)'/R;
- W=V*H; V(:,j+1)=[];R=R'*R;   M=H(1:j,:)';
-%======== ARNOLDI (for initializing spaces) ===============================
-%=========== END ARNOLDI ============================================  
-% not accurate enough M=Rw'\(M/Rv);
-%=========== COMPUTE SORTED JORDAN FORM ==================================
-% accepted separation between eigenvalues:
-% no preconditioning
-% solve left preconditioned system
-% compute vectors and matrices for skew projection
-% precondion and project r
-% solve preconditioned system
-% no preconditioning
-% solve two-sided expl. precond. system
-% compute vectors and matrices for skew projection
-% precondion and project r
-% solve preconditioned system
-% "unprecondition" solution
-%%%% u(:,j+1)=Atilde*u(:,j)
-%%%% r(:,j+1)=Atilde*r(:,j)
-%------ compute schur form -------------
- A*Q=Q*S, Q'*Q=eye(size(A));
-% transform real schur form to complex schur form
-%------ find order eigenvalues ---------------
-%------ reorder schur form ----------------
-%------ compute qz form ----------------
-%------ sort eigenvalues ---------------
-%------ sort qz form -------------------
-% i>j, move ith eigenvalue to position j 
-% determine dimension
-% defaults
-
-\end{lstlisting}
-\subsection{testA}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{testB}
-${}$
-\begin{lstlisting}
- 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
- 10
 
 \end{lstlisting}
 \section{master/eigenvalue/jacobi-davidson}
@@ -5484,6 +5352,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fzero\_bisect}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fzero\_newton}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{grad}
 ${}$
 \begin{lstlisting}
@@ -5683,6 +5561,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_dud}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fzero\_newton}
 ${}$
 \begin{lstlisting}
 
@@ -5982,6 +5865,21 @@ ${}$
 \begin{lstlisting}
  weighted median regression 
  c.f. Scholz, 1978
+
+\end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{root4}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{rotR}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{set-theory}
@@ -6570,6 +6468,11 @@ ${}$
  this has the limit s^2 for rho->1 
 
 \end{lstlisting}
+\subsection{mysmooth}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{nanautocorr}
 ${}$
 \begin{lstlisting}
@@ -6985,6 +6888,16 @@ ${}$
  cross correlation of two sampled ar1 processes
 
 \end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{smooth\_with\_splines}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{sorting}
 \subsection{sort2}
 ${}$
@@ -7052,6 +6965,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  transform modes (mean and sd) to paramets of the beta function
+
+\end{lstlisting}
+\subsection{coefficient\_of\_determination}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{correlation\_confidence\_pearson}
@@ -7162,6 +7080,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  transform modes (mu,sd) to parameters of the gamma distribution
+
+\end{lstlisting}
+\subsection{gaussfit3}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{hodges\_lehmann\_correlation}
@@ -7695,7 +7618,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{rmse}
+\subsection{rmse\_}
 ${}$
 \begin{lstlisting}
  root mean square error computed from a residual vector
@@ -8126,6 +8049,16 @@ ${}$
  correlate to correlated standard normally distributed vectors
 
 \end{lstlisting}
+\subsection{skewness2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skewpdf\_central\_moments}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{skewrnd}
 ${}$
 \begin{lstlisting}
@@ -8248,6 +8181,11 @@ ${}$
  see cadwell, 1952
 
 \end{lstlisting}
+\subsection{sd\_sample\_quantiles}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{skewpdf}
 ${}$
 \begin{lstlisting}
@@ -8287,10 +8225,64 @@ ${}$
  more powerfull than unpaired test, as long as correlation between x1 and x2 > 0
 
 \end{lstlisting}
+\subsection{wgeomean}
+${}$
+\begin{lstlisting}
+ weighted geometric mean
+ function mu = wgeomean(w,x)
+
+\end{lstlisting}
+\subsection{wgeovar}
+${}$
+\begin{lstlisting}
+ variance of the weighted geometric mean
+
+\end{lstlisting}
 \subsection{wharmean}
 ${}$
 \begin{lstlisting}
  weighted harmonic mean
+
+\end{lstlisting}
+\subsection{wharstd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{wharvar}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{ternary\_diagram}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test}
+\subsection{test\_mtimes3x3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{test\_gaussfit3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{transform\_minmax}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{wavelet}

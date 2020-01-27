@@ -1,0 +1,10 @@
+zone  = '49';
+shp   = Shp.read(file)
+lon   = cvec([shp.X]);
+lat   = cvec([shp.Y]);
+[X,Y] = latlon2utm(lat,lon,zone);
+S = [0;cumsum(hypot(diff(X),diff(Y)))];
+Z=struct();
+Z.tdm = cvec([shp.tdm]);
+Z.nasadem = cvec([shp.nasadem]);
+dz = cvec(geoidheight(lat, lon, 'EGM96'));

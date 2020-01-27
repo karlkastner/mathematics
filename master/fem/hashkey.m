@@ -1,8 +1,9 @@
 % Wed May  2 14:17:13 MSK 2012
 % Karl Kästner, Berlin
+%
+% function key = hashkey(a,b,c)
 
 % TODO use int array with 2 or 3 elements, as this scheme overflows in 3d
-
 function key = hashkey(a,b,c)
 %	base = 8388607;
 %	if (a > base || b > base)

@@ -15,9 +15,10 @@
 % TODO no need for two step approach with max,
 %      just compute extremum for each double-interval
 % TODO automatic switch between uniformly and not-uniformly sampled data
+% function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
 function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
-		val = rvec(val);
-		t   = rvec(t);
+		val = cvec(val);
+		t   = cvec(t);
 		nt  = length(t);
 		dt  = t(2)-t(1);
 

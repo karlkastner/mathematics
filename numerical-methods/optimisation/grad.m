@@ -3,7 +3,8 @@
 %
 %% numerical gradient
 %
-function [g f0] = grad(func,x,h,mode,parallel)
+% function [g, f0] = grad(func,x,h,mode,parallel)
+function [g, f0] = grad(func,x,h,mode,parallel)
     if (nargin()<3 || isempty(h))
 		h = abs(x).'*sqrt(eps); % class(x);
 		h = max(h,sqrt(eps));
