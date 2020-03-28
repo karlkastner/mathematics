@@ -58,7 +58,7 @@ classdef Jackknife < handle
 			val0 = feval(obj.func,varargin{:});
 			% parameters with leave out 1
 			val1 = obj.matrix1(varargin{:});
-			[val bias serr2 C] = obj.estimated_STATIC(val0,val1,1,obj.hat0);
+			[val, bias, serr2 C] = obj.estimated_STATIC(val0,val1,1,obj.hat0);
 			obj.val  = val;
 			obj.bias = bias;
 			obj.serr = sqrt(serr2);
@@ -68,15 +68,15 @@ classdef Jackknife < handle
 %			obj.R2 = 1 - serr.*serr/
 		end % estimate
 
-		function [val bias res2 C obj] = apply(obj,func,varargin)
+		function [val, bias, res2, C, obj] = apply(obj,func,varargin)
 			val0 = feval(func,obj.val0,varargin{:});
 			for idx=1:size(obj.val1,3)
 				val1(:,idx) = feval(func,obj.val1(:,:,idx),varargin{:});
 			end
 			if (nargout() > 3)
-				[val bias res2 C] = obj.estimated_STATIC(val0, val1, 1, obj.hat0);
+				[val, bias, res2 C] = obj.estimated_STATIC(val0, val1, 1, obj.hat0);
 			else
-				[val bias res2] = obj.estimated_STATIC(val0, val1, 1, obj.hat0);
+				[val, bias, res2] = obj.estimated_STATIC(val0, val1, 1, obj.hat0);
 			end
 		end
 

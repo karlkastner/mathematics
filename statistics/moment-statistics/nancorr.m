@@ -2,13 +2,14 @@
 % Karl Kastner, Berlin
 %
 %% (co)-correlation matrix when samples a NaN
-function [R, p] = nancorr(A,B,varargin)
-	if (nargin() < 2)
+function [R, p] = nancorr(A,varargin)
+	C = nancov(A,varargin{:});
+%	if (nargin() < 2)
 %		B = A;
-		C = nancov(A);
-	else
-		C = nancov(A,B);
-	end
+%		C = nancov(A);
+%	else
+%		C = nancov(A,B,varargin{:});
+%	end
 	if (all(isfinite(C(:))))
 		R = corrcov(C);
 	else

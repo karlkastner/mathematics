@@ -8,13 +8,23 @@
 %% degree  = 1 : central first order differences
 %% degreee = 2 : central second order differences
 % TODO use difference matrix function for simplicity
-function d = cdiff(X,degree,order)
-	if (nargin() < 2 || isempty(degree))
+function d = cdiff(X,dim,degree,order)
+	if (nargin() < 2 || isempty(dim))
+		dim = 1;
+	end
+	if (nargin() < 3 || isempty(degree))
 		degree = 1;
 	end
-	if (nargin() < 3 || isempty(order))
+	if (nargin() < 4 || isempty(order))
 		order = 2;
 	end
+	if (2 == dim)
+		flip = true;
+		X = X';
+	else
+		flip = false;
+	end
+
 	if (isvector(X) && isrow(X))
 		X = X.';
 		ir = true;
@@ -46,8 +56,12 @@ function d = cdiff(X,degree,order)
 	otherwise
 		error('not yet implemented');
 	end % switch
+
 	if (ir)
-		X = X';
+		d = d';
 	end % of else if isvector
+	if (flip)
+		d = d';
+	end
 end % cdiff
 

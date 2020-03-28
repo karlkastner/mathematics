@@ -1,10 +1,7 @@
-zone  = '49';
-shp   = Shp.read(file)
-lon   = cvec([shp.X]);
-lat   = cvec([shp.Y]);
-[X,Y] = latlon2utm(lat,lon,zone);
-S = [0;cumsum(hypot(diff(X),diff(Y)))];
-Z=struct();
-Z.tdm = cvec([shp.tdm]);
-Z.nasadem = cvec([shp.nasadem]);
-dz = cvec(geoidheight(lat, lon, 'EGM96'));
+% 2020-01-02 17:10:08.033102880 +0800
+
+function [Z_egm96,dz] = ellipsoid2geoid(lat,lon,Z_wgs84)
+	dz = cvec(geoidheight(lat, lon, 'EGM96'));
+	Z_egm96 = Z_wgs84-dz;
+end
+

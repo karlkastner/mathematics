@@ -52,7 +52,8 @@ function [x, y, out] = bvp2c(odefun,bcfun,xi,varargin)
 
 	% initial value of ypm
 	% complex amplitude of the left and right going wave at segment mid points
-	ypm    = zeros(m*nxc*neq,1);
+	%ypm    = zeros(m*nxc*neq,1);
+	ypm    = 0.*randn(m*nxc*neq,1);
 	ll     = [];
 
 	% solve non-linear system by picard iteration
@@ -226,6 +227,32 @@ function ypm = bvp2c_(ypm)
 
 	% solve
 	ypm    = AA \ rr;
+if (0)
+%size(ypm)
+%pause
+figure(1)
+clf
+%size(AA)
+size(x)
+subplot(2,2,1)
+ypm_ = reshape(ypm,3,[]).';
+ypm_ = reshape(ypm_(:,1),[],4);
+%ypm_ = ypm(1:2:end);
+semilogy(abs(ypm_));
+%pmabs(reshape(ypm_,[],3)));
+subplot(2,2,2)
+ypm_ = reshape(ypm,3,[]).';
+ypm_ = reshape(ypm_(:,3),[],4);
+%ypm_ = ypm(3:2:end);
+semilogy(abs(ypm_));
+subplot(2,2,3)
+ypm_ = reshape(ypm,3,[]).';
+ypm_ = reshape(ypm_(:,2),[],4);
+%ypm_ = ypm(3:2:end);
+semilogy(abs(ypm_));
+%abs(reshape(ypm_,[],3)));
+pause(1)
+end
     end % bvp2c_
 
 	function y = inner2out(ypm)

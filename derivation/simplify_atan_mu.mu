@@ -5,7 +5,7 @@ begin
 	_rewrite := proc(y)
 	local r;
 	begin
-		r := Rule(atan(`#X`) + atan(`#Y`), atan2( (#X+#Y),(1 -#X*#Y) ) );
+		r := Rule(atan(`#X`) + atan(`#Y`), atan2( (#X + #Y),(1 - #X*#Y) ) );
 		tmp := Rule::apply(r,y);
 		if tmp <> FAIL then
        		     y:= tmp;

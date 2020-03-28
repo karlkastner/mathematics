@@ -1,3 +1,4 @@
+% 2020-01-04 21:26:09.849753320 +0800
 function c_ = fourier_cesaro_correction(c,nf)
 	c_(1,:) = c(1,:);
 	for k=1:(length(c)-1)/2

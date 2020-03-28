@@ -2,6 +2,7 @@
 % Karl Kastner, Berlin
 %% fit a polynomial function
 %% like polyfit, but returns parameter error estimates
+%% TODO automatically activate scaleflag
 function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 	if (nargin() < 4)
 		W = [];
@@ -14,6 +15,7 @@ function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 	end
 
 	% shift to avoind round off error (actually 0.5*(min+max))
+	% better x-mid(minmax)/range
 	if (obj.scaleflag)
 		obj.x0 = mean(X);
 		X      = X - obj.x0;
@@ -86,9 +88,9 @@ function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 		r2_ = spearman_to_pearson(corr(Y,Yp,'type','Spearman'))^2;
 		r2.spearman = (ne-1)/(ne-np)*(1-r2_);
 		r2_ = kendall_to_pearson(corr(Y,Yp,'type','Kendall'))^2;
-		r2.kendall  = (ne-1)/(ne-np)*(1-r2_);
-		r2_ = hodges_lehmann_correlation(Y,Yp);
-		r2.hodges_lehmann  = (ne-1)/(ne-np)*(1-r2_);
+		%r2.kendall  = (ne-1)/(ne-np)*(1-r2_);
+		%r2_ = hodges_lehmann_correlation(Y,Yp);
+		%r2.hodges_lehmann  = (ne-1)/(ne-np)*(1-r2_);
 		obj.mad = median(abs(res));
 	end
 

@@ -57,8 +57,9 @@ function [mu, bias, serr2, C, N] = estimated_STATIC(theta0,thetad,d,hat)
 		thetaj = mean(P,2);
 		% deviation of pseudo variables from their mean
 		D = squeeze(P - repmat(thetaj,1,n));
-		% variance
-		serr2 = 1/(n*(n-1))*sum(D.^2,2);
+		% error variance
+		% serr2 = 1/(n*(n-1))*sum(D.^2,2);
+		serr2 = (n-1)./n*sum(D.^2,2);
 	end
 	% covariance matrix
 	if (nargout() > 3)
