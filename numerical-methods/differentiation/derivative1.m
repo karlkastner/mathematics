@@ -24,7 +24,7 @@ function dy_dx = derivative1(x,y,order)
 %	end % for idx
 
 	if (istransposed)
-		dy = dy.';
+		dy_dx = dy_dx.';
 	end
 end
 

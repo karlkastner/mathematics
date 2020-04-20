@@ -16,7 +16,9 @@ function [w, b, flag] = int_gauss_1d(order)
 		case {6}
 			[w, b, flag] = int_1d_gauss_6();
 		otherwise
-			error('int_gauss_1d');
+			[w, b] = int_1d_gauss_n(order);
+			flag = NaN;
+			%error('int_gauss_1d');
 	end
 end % int_gauss_1d
 

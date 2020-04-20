@@ -29,7 +29,7 @@ function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 	[param, A] = obj.fit_(X,Y,W,obj.order);
 
 	% residual
-	Yp = A*param;
+	Yp     = A*param;
 	res    = Yp-Y;
 	np     = size(param,1);
 
@@ -48,8 +48,8 @@ function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 			%ne     = sum(sqrt(W))/sum(W)
 
 			% effective sample size
-			%ne      = sum(W).^2/sum(W.^2);
-			ne      = sum(sqrt(W)).^2/sum(W);
+			%ne      = sum(sqrt(W)).^2/sum(W);
+			ne      = sum(W).^2/sum(W.^2); this is identical
 			n       = ne;
 			ny      = size(Y,1);
 
@@ -88,7 +88,7 @@ function [param, res, A, obj] = fit(obj,X,Y,W,ci)
 		r2_ = spearman_to_pearson(corr(Y,Yp,'type','Spearman'))^2;
 		r2.spearman = (ne-1)/(ne-np)*(1-r2_);
 		r2_ = kendall_to_pearson(corr(Y,Yp,'type','Kendall'))^2;
-		%r2.kendall  = (ne-1)/(ne-np)*(1-r2_);
+		r2.kendall  = (ne-1)/(ne-np)*(1-r2_);
 		%r2_ = hodges_lehmann_correlation(Y,Yp);
 		%r2.hodges_lehmann  = (ne-1)/(ne-np)*(1-r2_);
 		obj.mad = median(abs(res));
