@@ -5,11 +5,13 @@
 %
 % when cflag == true, then foot-point is made convex, in this case the
 % plumb line is not necessarily any more a plumb line, but shortest connection to a line segment
+%
+% function [xp, yp, p, d] =  plumb_line(x1,y1,x2,y2,x0,y0,cflag)
 function [xp, yp, p, d] =  plumb_line(x1,y1,x2,y2,x0,y0,cflag)
 	p =    ( (x0-x2).*(x1-x2) + (y0 - y2).*(y1 - y2)) ...
 	    ./ ( (x1-x2).^2 + (y1 - y2).^2 );
 	if (nargin()> 6 && cflag)
-		p = max(1,max(0,p))
+		p = min(1,max(0,p));
 	end
 	xp = p.*x1 + (1-p).*x2;
 	yp = p.*y1 + (1-p).*y2;

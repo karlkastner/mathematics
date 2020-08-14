@@ -1,7 +1,7 @@
 % Sun May 20 22:06:06 MSK 2012
 % Karl Kästner, Berlin
-
-% weigts for 4th order accurate gauss quadrature
+%
+% baricentric coordinates and weigts for 4th order accurate gauss quadrature
 function [w p flag] = int_2d_gauss_9()
 %	warning('does not work in combinatiion with 15-point scheme');	
 

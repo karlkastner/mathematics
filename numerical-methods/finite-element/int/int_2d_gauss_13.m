@@ -1,8 +1,9 @@
 % Sun May 20 22:51:38 MSK 2012
 % Karl Kästner, Berlin
-
-% weigts for 7th order accurate gauss quadrature
-function [w p flag] = int_2d_gauss_13()
+% c.f. Dunavant
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 13 points, 7th order accurate
+function [w, p, flag] = int_2d_gauss_13()
 
 % !!! attention, this scheme is not SPD !!!
 % there is a type in strang & fix as well as in flaherty: 0.486903154253160 has to be 0.048690315425316

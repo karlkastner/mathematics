@@ -1,7 +1,8 @@
 % Sun May 20 21:36:34 MSK 2012
 % Karl Kästner, Berlin
-
-% weigts for 6th order accurate gauss quadrature
+% c.f. Dunavant
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 12 points, 6th order accurate
 function [w, p, flag] = int_2d_gauss_12()
 		% integration weights
 	w = [   0.050844906370207; 0.050844906370207; 0.050844906370207;

@@ -1,6 +1,10 @@
 % Sat  4 Jan 23:43:10 +08 2020
 % leaving out n-samples
 function [yi,si] = smooth_with_spline(y,d,wrap,imethod)
+	if (~all(isfinite(y)))
+		yi = NaN(size(y));
+		si = NaN(size(y));
+	else
 	if (isvector(y))
 		y = cvec(y);
 	end
@@ -37,5 +41,6 @@ function [yi,si] = smooth_with_spline(y,d,wrap,imethod)
 	end
 	yi = yi/d;
 	si = sqrt((yi2/d - yi.^2)/(d-1));
+	end
 end
 

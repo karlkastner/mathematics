@@ -4,7 +4,7 @@
 %% convert wgs84 utm to latitute and longitude
 % Kapuas is zone 49M
 %
-function [lat lon zone] = utm2latlon(east, north, zone)
+function [lat, lon, zone] = utm2latlon(east, north, zone)
 	if(0 == length(east))
 		lat  = [];
 		lon  = [];
@@ -24,8 +24,8 @@ function [lat lon zone] = utm2latlon(east, north, zone)
 %diffeast2=619393.56-eastutm2
 	% Perform inverse mapping to verify lat and lon
 	%[lat, lon] = minvtran(mUtm, eastutm2,northutm2)
-	[lat lon] = minvtran(mUtm, east, north);
-	[a b] = minvtran(mUtm, lon, lat)
+	[lat, lon] = minvtran(mUtm, east, north);
+	[a, b] = minvtran(mUtm, lon, lat)
 	end
 end % utm2latlon
 

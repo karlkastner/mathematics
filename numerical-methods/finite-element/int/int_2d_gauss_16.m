@@ -1,8 +1,9 @@
 % Mon May 21 15:06:01 MSK 2012
 % Karl Kästner, Berlin
-
-% weigts for 8th order accurate gauss quadrature useable until quartic polynomials with second order pdes
-function [w p flag] = int_2d_gauss_16()
+% c.f. Dunavant
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 16 points, 8th order accurate
+function [w, p, flag] = int_2d_gauss_16()
 		% integration weights
 		w = [	0.144315607677787;
 			0.095091634267285; 0.095091634267285; 0.095091634267285;

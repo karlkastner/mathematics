@@ -1,10 +1,11 @@
 % Mon Jun 25 20:09:48 MSK 2012
 % Karl Kästner, Berlin
-
-% source: dunavant
-
-% 10th-order accurate, useable up to quintic polinomials for 2nd-order pdes
-
+%
+% c.f. Dunavant
+%
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 25 points, 10nd order accurate
+% useable up to quintic polinomials for 2nd-order pdes
 function [w b flag] = int_2d_gauss_25()
 
 	w = [

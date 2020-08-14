@@ -1,7 +1,10 @@
 % Wed Aug  8 23:35:35 MSK 2012
 % Karl Kästner, Berlin
-
-% 12-th order accurate
+%
+% c.f. Dunavant
+%
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 33 points, 12th order accurate
 function [w b flag] = int_2d_gauss_33()
 		% integration weights
 		w = [

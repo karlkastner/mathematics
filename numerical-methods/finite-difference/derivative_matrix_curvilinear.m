@@ -6,8 +6,8 @@
 % for higher order see KWOK 1985
 % Wiesenberger 2017 for metric tensor G elements
 % BERNARD 1991 for simplest explanation of derivatives
-% Thompson 1980 for simplest explanation of second derivatives
-% awa Tensors and the Equations of Fluid Motion (chap5_3.pdf)
+% Thompson 1980 for simplest explanation of second derivatives (laplacian only)
+% awa Tensors and the Equations of Fluid Motion, Ramakrishna
 
 % on a circle (polar):
 %grad phi e_theta = 1/r dphi/dtheta
@@ -77,7 +77,7 @@ function [D1x, D1y, D2x, Dxy, D2y, L] = derivative_curvilinear(x,y,isorthogonal)
 	% page 244 in Numerical Solution of the Incompressible Navier-Stokes Equations, Quartapelle
 	% r : position of point on curve
 	% hs = dr/ds
-	% A-6.2 in 3A978-94-009-8352-6%2F1
+	% A-6.2 in low-reynolds-number-hydrodynamics, brenner
 	hs = flat(1./abs(hypot(cdiff(x),cdiff(y))));
 	% hn = dr/dn
 	hn = flat(1./abs(hypot(cdiff(x'),cdiff(y'))'));
@@ -93,7 +93,7 @@ function [D1x, D1y, D2x, Dxy, D2y, L] = derivative_curvilinear(x,y,isorthogonal)
 
 	if (1) % ~isorthogonal)
 		
-		% c.f. A-5.1 3A978-94-009-8352-6
+		% c.f. A-5.1 low-reynolds-number-hydrodynamics, brenner
 		% without orthongonality ch15p11
 			% D1x = diag(sparse(dy_dn./j))*Ds + diag(sparse(-dy_ds./j))*Dn;
 			% D1y = diag(sparse(dx_ds./j))*Dn + diag(sparse(-dx_dn./j))*Ds;
@@ -110,7 +110,8 @@ function [D1x, D1y, D2x, Dxy, D2y, L] = derivative_curvilinear(x,y,isorthogonal)
 		D1y = diag(sparse(ds_dy))*Ds + diag(sparse(dn_dy))*Dn;
 
 		if (0)
-			% A-6.3, this seems not correct, as the working eq above,
+			% A-6.3, low-reynolds-number-hydrodynamics, brenner
+			% this seems not correct, as the working eq above,
 			%        dx is formed by dy
 			hs = squeeze(Ji(1,1,:));
 			hn = squeeze(Ji(2,2,:));

@@ -3,10 +3,10 @@
 % Karl Kästner, Berlin
 %
 %% finite difference matrix of first derivative in one dimensions
-% n : number of grid points
-% h = L/(n+1) constant step with
+%% n : number of grid points
+%% h = L/(n+1) constant step with
+%% function [D1, d1] = derivative_matrix_1d(n,L,order)
 % TODO allow optionally for circular boundary condition
-% function [D1 d1] = derivative_matrix_1d(n,L,order)
 function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 	if (nargin()< 2 || isempty(L))
 		% choose domain [0 1]
@@ -61,20 +61,14 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 		d1(end,2)   =   1/h;
 		d1(end-1,1) =  -1/h;
 		D1 = spdiags(d1,-1:1,n,n);
-	%full(D1)
-	%pause
 	case {+1,'+1'}
 		d1(1,2) = -1/h;
 		d1(2,3) =  1/h;
 		D1 = spdiags(d1,-1:1,n,n);
-	%	full(D1)
-	%pause
 	case {'+2'}
 		D1 = spdiags(d1,-2:0,n,n);
 		D1(1,1:2) = 1/h*[-1, 1];
 		D1(2,1:2) = 1/h*[-1, 1];
-	%full(D1)
-	%pause
 	case {2,'2'}
 		d1(1,2)     = -1/h;
 		d1(2,3)     =  1/h;
@@ -88,8 +82,6 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 		D1 = spdiags(d1,0:2,n,n);
 		D1(end-1,end-1:end) = 1/h*[-1, 1];
 		D1(end,end-1:end)   = 1/h*[-1, 1];
-	%full(D1)
-	%pause
 	case {3,'3'}
 		D1 = spdiags(d1,-2:2,n,n);
 	otherwise

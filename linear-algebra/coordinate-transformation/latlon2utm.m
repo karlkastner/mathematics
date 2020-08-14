@@ -16,9 +16,12 @@ function [easting, northing, zone] = latlon2utm(lat, lon, zone)
 			% I missing, therefore no numeric conversion
 			z = ['A','B','C','D','E','F','G','H','J','K','L',...
 			     'M','N','P','Q','R','S','T','U','V','W','X'];
-			id = find(isfinite(lon) & isfinite(lat),1,'first');
-			zone_lon = floor((lon(id)+186)/6);
-			zone_lat = ceil((lat(id)+98) / 8);
+			% use centre of bounding box as reference
+			%id = find(isfinite(lon) & isfinite(lat),1,'first');
+			lon_ = midrange(lon);
+			lat_ = midrange(lat);
+			zone_lon = floor((lon_+186)/6);
+			zone_lat = ceil((lat_+98) / 8);
 			zone = [num2str(zone_lon), z(zone_lat)];
 		end
 		mUtm.zone = zone;

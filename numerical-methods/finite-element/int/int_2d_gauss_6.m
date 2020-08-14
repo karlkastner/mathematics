@@ -1,8 +1,11 @@
 % Thu May 17 13:34:57 MSK 2012
 % Karl Kästner, Berlin
-
-% weigts for 4th order accurate gauss quadrature
-function [w b flag] = int_2d_gauss_6()
+%
+% c.f. Dunavant
+%
+% baricentric coordinates and weights for gauss quadrature on the triangle
+% 6 points, 4th order accurate
+function [w, b, flag] = int_2d_gauss_6()
 		% integration weights
 		w = [	0.109951743655322 0.109951743655322 0.109951743655322 ...
 			0.223381589678011 0.223381589678011 0.223381589678011 ]';

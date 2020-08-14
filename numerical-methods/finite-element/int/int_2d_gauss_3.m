@@ -1,8 +1,9 @@
 % Fri Feb 24 18:41:11 MSK 2012
 % Karl Kästner, Berlin
-
-% weights for 3rd order accurate gauss quadrature
-function [w b flag] = int_2d_gauss_3()
+% Dunavant
+% baricentric coordinates for gauss quadrature
+% 3 points, 2nd order
+function [w, b, flag] = int_2d_gauss_3()
 		% integration weights
 		w = 1/3*[ 1 1 1]';
 

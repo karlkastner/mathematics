@@ -45,9 +45,9 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 
 	% boundary condition at left
 	% only one boundary has to be specified for first order odes
-	[v, p] = bcfun(xi(1),[],ccdx);
+	[v, p, ~, set] = bcfun(xi(1),[],ccdx);
 	nb = 0;
-	if (~isempty(v))
+	if (set) %~isempty(v))
 		% p*f(0) + (1-p)*f(0)'' = v
 		if (0~=c(1,2))
 			A(2*nxc-1,1) = p*exp(-0.5*r(1)*dx(1)) + (1-p)*r(1)*exp(-0.5*r(1)*dx(1));
@@ -62,9 +62,9 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 		nb           = 1;
 	end
 
-	[v, p] = bcfun(xi(2),[],ccdx);
-	if (~isempty(v))
-		if (0~=c(ndx,2))
+	[v, p, ~, set] = bcfun(xi(2),[],ccdx);
+	if (set) %~isempty(v))
+		if (0~=c(end,2))
 			A(2*nxc-1,nxc-1) = (       p*exp(+0.5*r(nxc)*dx(nxc)) ...
 					     + (1-p)*r(nxc)*exp(+0.5*r(nxc)*dx(nxc)) ...
 					   );
@@ -88,11 +88,5 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 	if (1 ~= nb)
 		error('need boundary condition at exactly one end');
 	end
-%	full(A)
-%	eig(full(A))
-%AA = A(2:2:end,2:2:end);
-%	full(AA)
-%	eig(full(AA))
-%pause
 end % bvp1c_assemble
 

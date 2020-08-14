@@ -4,8 +4,9 @@
 % triangulate a two dimensional square domain
 % n+1 : number of elements pre row and column
 % L0 : width and height of domain
-
-function [P T B X] = triangulation_uniform(arg1, arg2, x0)
+% 
+% function [P, T, B, X] = triangulation_uniform(arg1, arg2, x0)
+function [P, T, B, X] = triangulation_uniform(arg1, arg2, x0)
 	if (nargin() < 3)
 		x0 = [0 0];
 	end
