@@ -5,15 +5,49 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 	m  = 2;
 
 	% root for homogeneous part
-	%r = -c(:,2)/c(:,1);
 	r  = ll(:,1,ccdx);
-
-	% inhomogeneous part signed for rhs
-	%ih = c(:,3)./c(:,2);
-	ih = [];
 
 	% match at rightend at segment i with right end at segment i+1
 	nxc = size(c,1);
+if (1)
+	nbuf = 0;
+	Abuf = zeros(5*(nxc-1),3);
+	b    = zeros(m*nxc,1);
+
+	id = (1:nxc-1)';
+	fdx = (c(id,2) ~= 0);
+	Abuf(id,1) = 2*id-1;
+	Abuf(id,2) = 2*id-1;
+	% continuity between right end of segment i
+	% and left end of segment j
+	% degenerated, without damping,
+	% the piecewise solution is a linear function
+	% match left with right
+	Abuf(id(fdx),3) = -exp(+0.5*r(id(fdx)).*dx(id(fdx)));
+	Abuf(id(~fdx),3)  = -0.5.*dx(id(~fdx));
+	nbuf = nbuf+nxc-1;
+	Abuf(nbuf+id,1) = 2*id-1;
+	Abuf(nbuf+id,2) = 2*id;
+	Abuf(nbuf+id,3) = -1;
+	nbuf = nbuf+nxc-1;
+	Abuf(nbuf+id,1) = 2*id-1;
+	Abuf(nbuf+id,2) = 2*id+1;
+	Abuf(nbuf+id(fdx),3) = +exp(-0.5*r(id(fdx)+1).*dx(id(fdx)+1));
+	Abuf(nbuf+id(~fdx),3) = -0.5.*dx(id(~fdx)+1);
+	nbuf = nbuf+nxc-1;
+	Abuf(nbuf+id,1) = 2*id-1;
+	Abuf(nbuf+id,2) = 2*id+2;
+	Abuf(nbuf+id,3) = +1;
+	nbuf = nbuf+nxc-1;
+	% inhomogeneous part
+	Abuf(nbuf+id,1) = 2*id;
+	Abuf(nbuf+id,2) = 2*id + (fdx-1);
+	Abuf(nbuf+id,3) = 1;
+	nbuf = nbuf+nxc-1;
+	b(2*id(fdx))  = -c(id(fdx),3)./c(id(fdx),2);
+	b(2*id(~fdx)) = +c(id(~fdx),3)./c(id(~fdx),1);
+	A = sparse(Abuf(:,1),Abuf(:,2),Abuf(:,3),m*nxc,m*nxc);
+else
 	A   = sparse([],[],[],m*nxc,m*nxc,2*m*nxc);
 	b   = zeros(m*nxc,1);
 	for id=1:nxc-1
@@ -36,12 +70,12 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 			A(2*id-1,2*id+1)   = -0.5*dx(id+1);
 			A(2*id-1,2*id+2)   = +1;
 			% slope
-			A(2*id,2*id-1)       = 1;
-			b(2*id)              = c(id,3)/c(id,1);
+			A(2*id,2*id-1)     = 1;
+			b(2*id)            = c(id,3)/c(id,1);
 		end
 		% rhs
-		%b(id)      = (ih(id+1)-ih(id));
 	end
+end
 
 	% boundary condition at left
 	% only one boundary has to be specified for first order odes
@@ -58,7 +92,6 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 			A(2*nxc-1,2) = p;
 			b(2*nxc-1)   = v;
 		end
-		%b(2*nxc-1)   = p*ih(1) + v;
 		nb           = 1;
 	end
 
@@ -85,6 +118,7 @@ function [A,b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun)
 		A(2*nxc,2*nxc-1) = 1;
 		b(2*nxc)       = c(nxc,3)./c(nxc,1);
 	end
+
 	if (1 ~= nb)
 		error('need boundary condition at exactly one end');
 	end

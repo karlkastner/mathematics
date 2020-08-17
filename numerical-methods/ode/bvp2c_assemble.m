@@ -1,78 +1,236 @@
 % Sat 28 Oct 14:43:06 CEST 2017
-function [AA,rr,ll] = bvp2c_assemble(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,mm,mi)
-myexp=@(x) 1 + x;
-	% ode-coefficients at section mid-points
-	cc = feval(odefun,xc(1),0);
+%
+% function [AA,bb,ll] = bvp2c_assemble(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,npi)
+%
+%
+% output :
+%	AA : left hand side discretization matrix
+%	bb : right hand side vector
+%	ll : eingevalues of the characteristic functions
+%
+% TODO, treatment of degenerated second order equations a y'' + by' + cy = 0, with c = 0
+function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nci,npi,npii)
 
-	% function values at section mid-points
-	yc = zeros(neq*nxc,1);
+	nc = length(odefun);
+
+	% allocate memory for differential operator
+	AAA  = sparse([],[],[],npii(end,end)-1,npii(end,end)-1,6*npii(end,end)-1);
+
+	% allocate memory for inhomogeneous part
+	bbb  = zeros(npii(end,end)-1,1);
+
+	% for each edge in graph (channel in network)
+	for cdx_=1:nc
+		% set up discretisation matrix for coupled odes along edge (channel)
+		[AA,bb,ll] = bvp2c_assemble_AA(      ypm(npii(1,cdx_):npii(end,cdx_)-1) ...
+						, odefun{cdx_} ...
+					        , bcfun{cdx_} ...
+						, xi(cdx_,:) ...
+						, out(cdx_).xc ...
+						, out(cdx_).dx ...
+						, neq ...
+						, nxc(cdx_) ...
+						, oo ...
+						, ni(:,cdx_) ...
+						, nci(:,cdx_) ...
+						, npi(:,cdx_) ...
+					   );
+		% write to global discretization matrix
+		% TODO global buffers
+		AAA(npii(1,cdx_):npii(end,cdx_)-1,npii(1,cdx_):npii(end,cdx_)-1) = AA;
+		bbb(npii(1,cdx_):npii(end,cdx_)-1,1)     = bb;
+		out(cdx_).ll = ll;
+		%.lll(npii(1,cdx_):npii(end,cdx_)-1,1:2,:) = ll;
+	end % for cdx_
+
+function apply_coupling_condition()
+% coupling condition : 
+% mean flow :
+%	Qup == Qdown
+%	sign(x-xmid)*Q_i = 0
+
+% first connecting channels :
+%	sign(x-xmid)*Q_i = 0
+% remaining connecting channels :
+%	1/(i*o*w)*dQ/dx == 1/(i*o*w)*dQ/dx
+
+% TODO, make general, this is customized for river tide computation
+for cdx=1:length(ccon)
+	ximid = 0.5*(xi(:,1)+xi(:,2));
+
+	% channel ids
+	cid = ccon(cdx).cid;
+	% endpoint ids
+	eid = ccon(cdx).eid;
+
+	%
+	p = ccon(cdx).eid;
+
+	% for each parallel equation (frequency component)
 	for idx=1:neq
-		% yc = ypm(1:m:end-m+1) + ypm(3:m:end);
-		if (2 == mm(idx))
-			% first order ode
-			c = cc(1,end-2:end,idx);
-			if (0 ~= c(1,2)) 
-			% not degenerated
-			yc((idx-1)*nxc+1:idx*nxc) = ( ...
-				  ypm(mi(idx)*nxc+1:mm(idx):mi(idx+1)*nxc) ...
-				+ ypm(mi(idx)*nxc+2:mm(idx):mi(idx+1)*nxc) );
-			else
-			yc((idx-1)*nxc+1:idx*nxc) = ... 
-			   		ypm(mi(idx)*nxc+2:2:mi(idx+1)*nxc);
-				
+		% row indices
+	%	rid = ei(cdx,eid)+mi(idx) + TODO start/end
+		% directions of channel with respect to bifurcation
+		sig = sing(xi(cdx,eid) - ximid(cid));
+	
+		if (1 == idx)
+			% mean flow
+			% TODO
+%-> coupling for z0
+%-> coupling bc of z0_i == z0_j (n-1 conditions)
+%		  sum Q = 0	(nth-condition)
+%-> equations for unknown Q0 (nxc+1) :
+%-> replace this row by inflow, where Q0 is given
+%-> watch out in iteration, initial value of Q0 has to be non-zero
+
+
+
+			% mean discharge for each channel, TODO, this has to go into bvp2c_assemble
+			for cdx=1:nc
+			end
+			% coupling condition
+			A(rid(1),:) = 0;
+			b(rid(1))   = 0;
+
+			% eq 1 : sum Q0_i = 0
+			for rdx=1:length(rid)
+				A(rid(1),rid(rdx)) = 1;
+			end
+			b(rid(1)) = 0;
+
+			% eq 2..nc : z0_i = z0_1
+			for rdx=2:length(rid)
+				A(rid(rdx),:)   = 0;
+				A(rid(rdx)+1,:) = 0;
+				b(rid(rdx),:)   = 0;
+				b(rid(rdx)+1,:) = 0;
+				A(rid(rdx),rid(1))       =  1;
+				A(rid(rdx),rid(rdx))     = -1;
+				A(rid(rdx)+1,rid(1)+1)   =  1;
+				A(rid(rdx)+1,rid(rdx)+1) = -1;
 			end
 		else
+			% tides
+		% first row, equal discharge
+		A(rid(1)+(1:3),:) = 0;
+		b(rid(1)+(1:3))   = 0; % no external inflow/outflow at bi
+		for rdx=1:length(rid)
+			% f consits of 3 elements (columns) and is shifted
+			% Q-, Q+ and constant part
+			A(rid(rdx),rid(rdx))     = sig(rdx);
+			A(rid(rdx)+1,rid(rdx)+1) = sig(rdx);
+			A(rid(rdx)+2,rid(rdx)+2) = sig(rdx);
+		end
+		% reamining, : z_i == z_1
+		for rdx=2:length(rid)
+			A(rid(rdx),:)   = 0;
+			A(rid(rdx)+1,:) = 0;
+			A(rid(rdx)+2,:) = 0;
+			b(rid(rdx))     = 0;
+			b(rid(rdx)+2)   = 0;
+			b(rid(rdx)+3)   = 0;
+			% z- = 1/(iow) dQ/dx = 1/(iow) l Q
+		%	A(rid(rdx),rid(1))     =  dQm/dx TODO
+		%	A(rid(rdx),rid(rdx)) = -dQm/dx TODO
+			% TODO, what about constant?
+			% z+
+		%	A(rid(rdx)+2,rid(1)+2) =  dQp/dx TODO
+		%	A(rid(rdx)+2,rid(1)+2) = -dQp/dx TODO
+		end % rdx
+		end % if
+	end % for idx
+    end % for cdx
+end % function coupling_condition
+
+function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,nci,npi)
+
+	% ode-coefficients at section mid-points
+%	cc = feval(odefun);
+
+	% construct function values at section mid-points from separated parts
+	yc = zeros(nci(end)-1,1);
+	for cdx=1:neq
+		switch (oo(cdx))
+		case {-1}
+			yc(nci(cdx)) =ypm(npi(cdx));
+		case {1}
+			% first order ode
+			%c = cc(1,end-2:end,cdx);
+			% TODO this condition has to be checked for each row (!)
+			if (true) %0 ~= c(1,2)) 
+			yc(nci(cdx):nci(cdx+1)-1) = ( ...
+			   		  ypm(npi(cdx)  :2:npi(cdx+1)-2) ...
+			   		+ ypm(npi(cdx)+1:2:npi(cdx+1)-1) ...
+					);
+			else
+			yc(nci(cdx):nci(cdx+1)-1) = ... 
+			   		ypm(npi(cdx)+1:2:npi(cdx+1)-1);
+				
+			end
+
+		case {2}
 			% 2nd order ode
 			% sum of left and right going wave as well as inhomogeneous part
-			yc((idx-1)*nxc+1:idx*nxc) = ( ...
-				  ypm(mi(idx)*nxc+1:mm(idx):mi(idx+1)*nxc) ...
-				+ ypm(mi(idx)*nxc+2:mm(idx):mi(idx+1)*nxc) ...
-				+ ypm(mi(idx)*nxc+3:mm(idx):mi(idx+1)*nxc) );
-		end
-	end
+			yc(nci(cdx):nci(cdx+1)-1) = ( ...
+					  ypm(npi(cdx)  :3:npi(cdx+1)-3) ...
+					+ ypm(npi(cdx)+1:3:npi(cdx+1)-2) ...
+				 	+ ypm(npi(cdx)+2:3:npi(cdx+1)-1) ...
+				 	);
+		otherwise
+			error('here');
+		end	
+	end % for cdx
 
-%	if (m > 2)
-		% inhomogeneous part
-		%yi = yc(m:m:end);
-%	end
-	
 	% ode-coefficients at section mid-points
 	cc = feval(odefun,xc,yc);
+%	global saveflag
+%	if (saveflag)
+%		l = load('test.mat');
+%		save('test.mat','cc','yc');
+%$AA','rr');
+%		error('here');
+%	end
 
-	% TODO allocate AA
-	AA = [];
-	rr = zeros(mi(end)*nxc,1);
-	%ii = []; %zeros(neq*m*nxc,1);
+
+	% TODO, global buffer
+	AA = sparse(npi(end)-1,npi(end)-1,6*npi(end));
+	bb = zeros(npi(end)-1,1);
 	ll = zeros(nxc,2,neq);
 
-% TODO, global buffer
-
 	% for each of the coupled odes
-	for ccdx=1:neq
+	for cdx=1:neq
 		% eigenvalues, roots of the characteristic polynomial
 		% roots are in general not complex conjugate pairs,
 		% as this is only the case when coefficients are real
 		% and case the solution a damped wave
-		l            = roots2(cc(:,1:3,ccdx));
-		ll(:,:,ccdx) = l;
+		l            = roots2(cc(:,1:3,cdx));
+		ll(:,:,cdx) = l;
 
-		% silent asumption : ode are either purely 1st or 2nd order, but
-		% not mixed
-		if (0 == cc(1,1,ccdx))
-			[A, b] = bvp1c_assemble(cc,ll,ccdx,dx,xi,bcfun);
-		else
-			[A, b] = bvp2c_assemble_(cc,ll,ccdx,dx,xi,bcfun);
+		% asumption : ode are either purely 1st or 2nd order, but not mixed
+		switch (oo(cdx))
+		case {-1}
+			[A, b] = bvp_row(cc,ll,cdx,dx,xi,bcfun);
+		case {1}
+			[A, b] = bvp1c_assemble(cc,ll,cdx,dx,xi,bcfun);
+		case {2}
+			[A, b] = bvp2c_assemble_A(cc,ll,cdx,dx,xi,bcfun);
+		otherwise
+			error('here');
 		end
 	
 		% stack system of odes
 		% when the equations are only weekly non-linear,
 		% so they can be solved individually
-		AA(1+mi(ccdx)*nxc:mi(ccdx+1)*nxc, ...
-		   1+mi(ccdx)*nxc:mi(ccdx+1)*nxc) = A;
-		rr(1+mi(ccdx)*nxc:mi(ccdx+1)*nxc,1) = b;
-	end % for ccdx
+		if (oo(cdx) == -1)
+			AA(npi(cdx), npi(cdx-1):npi(cdx)) = A;
+			bb(npi(cdx)) = b;
+		else
+			AA(npi(cdx):npi(cdx+1)-1, npi(cdx):npi(cdx+1)-1) = A;
+			bb(npi(cdx):npi(cdx+1)-1) = b;
+		end
+	end % for cdx
 
-function [A,b,ih] = bvp2c_assemble_(cc,ll,ccdx,dx,xi,bcfun)
+function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
 	odec = cc(:,:,ccdx);
 	l    = ll(:,:,ccdx);
 	m    = 3;
@@ -281,7 +439,8 @@ function [A,b,ih] = bvp2c_assemble_(cc,ll,ccdx,dx,xi,bcfun)
 	% rhs
 	b(m*nxc) = v;
 	ih = 0;
-end % bvp2c_assemble
+   end % bvp2c_assemble_A
+end % bvp2c_assemble_AA
 
-end % bvp2c_assemble_
+end % bvp2c_assemble
 
