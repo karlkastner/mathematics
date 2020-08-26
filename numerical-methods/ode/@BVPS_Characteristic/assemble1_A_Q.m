@@ -1,15 +1,20 @@
 % Sat 18 Apr 22:02:13 +08 2020
-function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
+function [A,b] = assemble1_A_Q(obj,cdx,edx)
+	xi     = obj.xi(cdx,:);
+	xc     = obj.out(cdx).xc;
+	dx     = obj.out(cdx).dx;
+	nxc    = obj.nxc(cdx);
+
 	% only use last 3 coefficients
 	%c  = cc(:,end-2:end,ccdx); 
 
 	% c1 z' + c2 z + c3 Q0 + c4 == 0
-	c  = cc(:,:,ccdx); 
+	c  = obj.out(cdx).cc(:,:,edx); 
 	% TODO if c==0 then r==0, exploit
 	fdx = (c(:,2) ~= 0);
 
 	% root for homogeneous part
-	r  = ll(:,1,ccdx);
+	r  = obj.out(cdx).ll(:,1,edx);
 
 	% match at rightend at segment i with right end at segment i+1
 	nxc = size(c,1);
@@ -29,7 +34,7 @@ function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 	% match values at right and left end of segment j and j+1
 	% degenerated, without damping,
 	% the piecewise solution is a linear function
-	Abuf(nbuf+id,3)   = (   fdx(1:end-1).*( -myexp(+0.5*r(id).*dx(id))) ...
+	Abuf(nbuf+id,3)   = (   fdx(1:end-1).*( -obj.exp(+0.5*r(id).*dx(id))) ...
 			      + (1-fdx(1:end-1)).*-0.5.*dx(id));
 	nbuf = nbuf+nxc-1;
 	Abuf(nbuf+id,1) = 2*id+1;
@@ -38,7 +43,7 @@ function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 	nbuf = nbuf+nxc-1;
 	Abuf(nbuf+id,1) = 2*id+1;
 	Abuf(nbuf+id,2) = 2*id+1;
-	Abuf(nbuf+id,3)  = ( fdx(2:end).*+myexp(-0.5*r(id+1).*dx(id+1)) ...
+	Abuf(nbuf+id,3)  = ( fdx(2:end).*+obj.exp(-0.5*r(id+1).*dx(id+1)) ...
 			         + (1-fdx(2:end)).*-0.5.*dx(id+1) );
 	nbuf = nbuf+nxc-1;
 	Abuf(nbuf+id,1) = 2*id+1;
@@ -62,18 +67,17 @@ function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 
 	% TODO write bc to buffer
 	A = sparse(Abuf(:,1),Abuf(:,2),Abuf(:,3),2*nxc+1,2*nxc+1);
-%$full(A)
-%$pause
+
 	% boundary condition at left end
 	% only one boundary has to be specified for first order odes
 	%[v, p, ~, type] = bcfun(xi(1),[],ccdx);
-	[v, p, ~, type] = bcfun(1,ccdx,bcarg{:});
+	[v, p, ~, type] = obj.bcfun(cdx,1,edx,obj.opt.bcarg{:});
 	row = 1;
 	switch (type)
 	case {'z'}
 		% p*f(0) + (1-p)*f(0)'' = v
 		if (0~=c(1,2))
-			A(row,1) = p*myexp(-0.5*r(1)*dx(1)) + (1-p)*r(1)*myexp(-0.5*r(1)*dx(1));
+			A(row,1) = p*obj.exp(-0.5*r(1)*dx(1)) + (1-p)*r(1)*obj.exp(-0.5*r(1)*dx(1));
 			A(row,2) = p;
 			b(row)   = v;
 		else
@@ -94,13 +98,13 @@ function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 	end
 
 	%[v, p, ~, type] = bcfun(xi(2),[],ccdx);
-	[v, p, ~, type] = bcfun(2,ccdx,bcarg{:});
+	[v, p, ~, type] = obj.bcfun(cdx,2,edx,obj.opt.bcarg{:});
 	row=2*nxc+1;
 	switch (type)
 	case {'z'}
 		if (0~=c(end,2))
-			A(row,2*nxc-1) = (       p*myexp(+0.5*r(nxc)*dx(nxc)) ...
-					     + (1-p)*r(nxc)*myexp(+0.5*r(nxc)*dx(nxc)) ...
+			A(row,2*nxc-1) = (       p*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
+					     + (1-p)*r(nxc)*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
 					 );
 			A(row,2*nxc)   = p;
 			b(row)         = v;
@@ -120,7 +124,5 @@ function [A,b] = bvp1c_assemble_Q(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 	otherwise
 		error('here');
 	end
-%full(A)
-%pause
-end % bvp1c_assemble
+end % assemble1_A_Q
 

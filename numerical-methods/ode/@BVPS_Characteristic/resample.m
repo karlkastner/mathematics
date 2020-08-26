@@ -10,8 +10,8 @@
 			end % while
 			% expand
 			dx   = xr(idx) - xc(k);
-			yr(idx) =   ypm(3*(k-1)+1)*myexp(dx*l(k,1)) ...
-		                  + ypm(3*(k-1)+3)*myexp(dx*l(k,2));
+			yr(idx) =   ypm(3*(k-1)+1)*obj.exp(dx*l(k,1)) ...
+		                  + ypm(3*(k-1)+3)*obj.exp(dx*l(k,2));
 		end % for idx
 	end % if opt.xr
 
