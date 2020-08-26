@@ -26,6 +26,14 @@ function opt = bvp2check_arguments(opt)
 	if (~isfield(opt.sopt,'relaxation'))
 		opt.sopt.relaxation = 0.5;
 	end
+	
+	if (~isfield(opt,'reconstruct_y'))
+		opt.reconstruct_y = true;
+	end
+
+	if (~isfield(opt,'bcarg'))
+		opt.bcarg = {};
+	end
 
 	% minimum number of grid points
 	opt.nx = max(2,opt.nx);

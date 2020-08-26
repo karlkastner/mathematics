@@ -136,7 +136,8 @@ function y = bvp2fdm_(y)
 
 	% apply robin boundary conditions
 	% f(0)*p1 + p2*f'(0) = f0;
-	[f, p]     = bcfun(X(1),y(1),ccdx);
+	%[f, p]     = bcfun(X(1),y(1),ccdx);
+	[f, p]     = bcfun(1,ccdx);
 
 	p(end+1:3) = 0;
 	A(1,:)    = 0;
@@ -173,7 +174,8 @@ function y = bvp2fdm_(y)
 %pause
 
 	% f(L)*p00 + p01*f'(L) = fL;
-	[f, p]     = bcfun(X(2),y(end),ccdx);
+	[f, p]     = bcfun(2,ccdx);
+	%[f, p]     = bcfun(X(2),y(end),ccdx);
 %	if (0 == p(3))
 %		if (0 == p(2))
 %			scale = 1/dx(end)^2;

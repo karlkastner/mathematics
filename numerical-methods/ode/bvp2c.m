@@ -16,8 +16,9 @@
 %%  + q(x,2)*( p(x,1) y_r(x) + p(x,2) y_r'(x)    = v(x)
 %% where q weighs the waves travelling from left to right and right to left (default [1 1])
 %
-% TODO use buffers instead of sparse
-function [out] = bvp2c(odefun,bcfun,ifun,xi,nx,varargin)
+% TODO make classe
+% TODO allow for resolve (do not rerun through init process)
+function [out] = bvp2c(odefun,bcfun,ifun,xi,nx,junction_condition,dischargeisvariable,varargin)
 
 	opt = bvp2_check_arguments(varargin{:});
 
@@ -49,75 +50,96 @@ function [out] = bvp2c(odefun,bcfun,ifun,xi,nx,varargin)
 	neq = length(oo);
 
 	% start index of segment end-points
-	ni    = zeros(neq+1,nc);
-	ni(1,:) = 1;
+	ni       = zeros(neq+1,nc);
+	ni(1,:)  = 1;
 	% start index of segment mid-points
-	nci    = zeros(neq+1,nc);
+	nci      = zeros(neq+1,nc);
 	nci(1,:) = 1;
 	% start index of segment-mid points, separated parts of ode solution
-	npi    = zeros(neq+1,nc);
+	npi      = zeros(neq+1,nc);
 	npi(1,:) = 1;
 
 	% number of equations per ode
 	for cdx=1:neq
 		% oder of ode
 		switch (oo(cdx))
-		case {-1} % special for Q0 coupling
-			ni(cdx+1,:)  = ni(cdx,:)  + 1;
-			nci(cdx+1,:) = nci(cdx,:) + 1;
-			npi(cdx+1,:) = npi(cdx,:) + 1;
 		case {1} % first order
 			% homogeneous and inhomogeneous part
-			ni(cdx+1,:)  = ni(cdx,:)   + nxc+1;
-			nci(cdx+1,:)  = nci(cdx,:) + nxc;
-			npi(cdx+1,:) = npi(cdx,:)  + 2*nxc;
+			ni(cdx+1,:)  = ni(cdx,:)   + rvec(nxc)+1 + dischargeisvariable;
+			nci(cdx+1,:) = nci(cdx,:)  + rvec(nxc)   + dischargeisvariable;
+			npi(cdx+1,:) = npi(cdx,:)  + 2*rvec(nxc) + dischargeisvariable;
 		case {2} % second order
 			% homogeneous left-going, right-going and inhomogeneous part
-			ni(cdx+1,:)  = ni(cdx,:)  + nxc+1;
-			nci(cdx+1,:) = nci(cdx,:) + nxc;
-			npi(cdx+1,:) = npi(cdx,:) + 3*nxc;
+			ni(cdx+1,:)  = ni(cdx,:)  + rvec(nxc)+1;
+			nci(cdx+1,:) = nci(cdx,:) + rvec(nxc);
+			npi(cdx+1,:) = npi(cdx,:) + 3*rvec(nxc);
 		otherwise
 			error('');
 		end
 	end % for neq
 
 	% indices into global discretization matrix
-	npii   = npi + [0,npi(end,1:end-1)-1];
+	npii   = npi + [0,cumsum(npi(end,1:end-1)-1)];
 
 	% initial value of ypm
 	% complex amplitude of the left and right going wave at segment mid points
-	% TODO should reassembly not take place inside iteration?
 	ypm    = zeros(npii(end,end)-1,1);
 	if (~isempty(ifun))
 	    for cdx=1:nc
 		yi      = feval(ifun{cdx},out(cdx).x);
+		if (length(yi) == npi(end,cdx)-1)
+				ypm(npii(1,cdx):npii(end,cdx)-1) = yi;
+		else
 		for edx = 1:neq
 			% assign initial values into the inhomogeneous part
 			% this does not matter, as yi is reassembled later
 			% the inhomogeneous part is always the second part
-			yi_ = yi(ni(edx,cdx):ni(edx+1,cdx)-1);
+			if (length(yi) == nci(end,cdx)-1)
+				yi_ = yi(nci(edx,cdx):nci(edx+1,cdx)-1);
+			else
+				yi_ = yi(ni(edx,cdx):ni(edx+1,cdx)-1);
+			end
 			switch (oo(edx))
-			case {-1}
-				ypm(npi(edx),cdx) = yi_;
 			case {1}
-				yci = mid(yi_);
-				ypm(npi(edx,cdx):2:npi(edx+1,cdx)-2) = yci;
+				if (~dischargeisvariable)
+					if (length(yi) ~= nci(end,cdx)-1)
+						yi_ = mid(yi_);
+					end
+					ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-1) = yi_;
+				else
+					% discharge
+					ypm(npii(edx+1,cdx)-1) = yi_(end);
+
+					% level
+					if (length(yi) ~= nci(end,cdx)-1)
+						yi_ = mid(yi_(1:end-1));
+					end
+					ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-2) = yi_;
+				end
 			case {2}
-				yci = mid(yi_);
-				ypm(npi(edx,cdx):3:npi(edx+1,cdx)-2) = yci;
+				if (length(yi) ~= nci(end,cdx)-1)
+					yi_ = mid(yi_);
+				end
+				ypm(npii(edx,cdx)+1:3:npii(edx+1,cdx)-1) = yi_;
 			end % switch
+		   end % if
 		end % for edx
 	    end % for cdx
 	end % ~isempty(ifun)
+%figure(1)
+%clf
+%	plot(abs(ypm))
+%plot([real(ypm),imag(ypm)])
 
 	% solve non-linear system by picard iteration
-	[ypm, out.cflag, out.kiter] = picard(@bvp2c_solve,ypm,opt.sopt);
+	[ypm, out(1).cflag, out(1).kiter] = picard(@bvp2c_solve,ypm,opt.sopt);
 
 	% interpolate solution to segment end points (grid points)
-	inner2outer_();
+	reconstruct();
 
 function ypm = bvp2c_solve(ypm)
-	[AA,bb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nci,npi,npii);
+	[AA,bb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni, ...
+			  nci,npi,npii,junction_condition,dischargeisvariable,opt.bcarg);
 
 	% balance
 	if (isfield(opt,'balance') && opt.balance)
@@ -128,40 +150,70 @@ function ypm = bvp2c_solve(ypm)
 
 	% solve
 	ypm    = (AA \ bb);
+%	ypm = pinv(full(AA))*bb;
 end % bvp2c_solve
 
-	function inner2outer_()
+	% TODO reconstruct with exp instead of using inner2outer
+	function reconstruct()
 	    for cdx=1:nc
-		out(cdx).y = zeros(ni(end,cdx)-1,1);
+	        yc = zeros(nci(end,cdx)-1,1);
+		if (opt.reconstruct_y)
+			y = zeros(ni(end,cdx)-1,1);
+		end
 		for edx=1:neq
-			r = out(cdx).ll(:,1,edx);
+			c = out(cdx).cc;
 			switch (oo(edx))
-			case {-1}
-				y_ = ypm(npii(edx,cdx));
 			case {1}
-			    if (0 ~= r(1,1,edx))
-				y_ = (   ypm(npii(edx,cdx)  :2:npii(edx+1,cdx)-2) ...
+			    if (~dischargeisvariable)
+				% TODO, check for each row
+			     if (0 ~= c(1,2,edx))
+				% this does not happen for the
+				yc_ = (   ypm(npii(edx,cdx)  :2:npii(edx+1,cdx)-2) ...
 				       + ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-1) ...
 				     );
-			    else
+			     else
 				% degenerated, linear function
-				y_ = ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-1); % or +0, -2?
+				yc_ = ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-1); % or +0, -2?
+			     end
+				if (opt.reconstruct_y)
+					y_ = inner2outer(yc_);
+				end
+			    else
+			     if (0 ~= c(1,2,edx))
+				yc_ = (  ypm(npii(edx,cdx)  :2:npii(edx+1,cdx)-3) ...
+				       + ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-2) ...
+				      );
+			     else
+				% degenerated, linear function
+				yc_ = ypm(npii(edx,cdx)+1:2:npii(edx+1,cdx)-2); % or +0, -2?
+			     end
+				if (opt.reconstruct_y)
+					y_  = [inner2outer(yc_); ypm(npii(edx+1,cdx)-1)];
+				end
+				yc_ = [yc_; ypm(npii(edx+1,cdx)-1)];
 			    end
-				y_ = inner2outer(y_);
 			case {2}
 				% TODO use bvp1c/2c to expand with exact exponential
-				y_ = (   ypm(npii(edx,cdx)  :3:npii(edx+1,cdx)-3) ...
+				yc_ = (  ypm(npii(edx,cdx)  :3:npii(edx+1,cdx)-3) ...
 				       + ypm(npii(edx,cdx)+1:3:npii(edx+1,cdx)-2) ...
 				       + ypm(npii(edx,cdx)+2:3:npii(edx+1,cdx)-1) ...
 			             );
-				y_ = inner2outer(y_);
+				if (opt.reconstruct_y)
+					y_ = inner2outer(yc_);
+				end
 		        otherwise
 				error('here');
 		     	end % switch mm
-			out(cdx).y(ni(edx,cdx):ni(edx+1,cdx)-1) = y_;
+			yc(nci(edx,cdx):nci(edx+1,cdx)-1) = yc_;
+			if (opt.reconstruct_y)
+				y(ni(edx,cdx):ni(edx+1,cdx)-1) = y_;
+			end
 		end % for edx
+	    	out(cdx).yc   = yc;
+		out(cdx).y    = y;
+		out(cdx).ypm  = ypm(npii(1,cdx):npii(end,cdx)-1);
 	    end % for cdx
-	end % inner2outer_
+	end % reconstruct
 
 end % function bvp2c
 

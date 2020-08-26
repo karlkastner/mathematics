@@ -94,7 +94,7 @@ function y = wave_twopassq_(y)
 	y = interp1(xy,y,x);
 
 	% apply boundary condition
-	[bv bp] = bcfun(Xi(1),y(1));
+	[bv bp] = bcfun(1,y(1));
 	scale   = bv/(bp(1)*y(1) + bp(2)*(y(2)-y(1))/dx);
 	y       = scale*y;
 

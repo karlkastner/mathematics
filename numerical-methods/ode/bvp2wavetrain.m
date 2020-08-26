@@ -181,7 +181,7 @@ function y = wavetrainq_(y)
 	% (the current implementation works only with zero value at right end)
 	% TODO extend for general case and make solution a linear combination
 	% of the left and right-going waves
-	[bv bp] = bcfun(X(1),y(1));
+	[bv bp] = bcfun(1,y(1));
 	scale   = bv/(bp(1)*y(1) + bp(2)*(y(2)-y(1))/dx);
 	y       = scale*y;
 	

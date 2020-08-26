@@ -1,19 +1,20 @@
 % Sat 28 Oct 14:43:06 CEST 2017
 %
-% function [AA,bb,ll] = bvp2c_assemble(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,npi)
+% function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nci,npi,npii,jfun,dischargeisvariable)
 %
 %
 % output :
-%	AA : left hand side discretization matrix
-%	bb : right hand side vector
-%	ll : eingevalues of the characteristic functions
+%	AAA : left hand side discretization matrix
+%	bbb : right hand side vector
+%	out(id).lll : eingevalues of the characteristic functions
 %
 % TODO, treatment of degenerated second order equations a y'' + by' + cy = 0, with c = 0
-function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nci,npi,npii)
-
+% TODO, treatment of degenerated first order solution at junctions
+function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nci,npi,npii,jfun,dischargeisvariable,bcarg)
 	nc = length(odefun);
 
 	% allocate memory for differential operator
+	% TODO global buffers
 	AAA  = sparse([],[],[],npii(end,end)-1,npii(end,end)-1,6*npii(end,end)-1);
 
 	% allocate memory for inhomogeneous part
@@ -22,7 +23,8 @@ function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nc
 	% for each edge in graph (channel in network)
 	for cdx_=1:nc
 		% set up discretisation matrix for coupled odes along edge (channel)
-		[AA,bb,ll] = bvp2c_assemble_AA(      ypm(npii(1,cdx_):npii(end,cdx_)-1) ...
+		[AA,bb,ll,cc] = bvp2c_assemble_AA( ...
+                                                  ypm(npii(1,cdx_):npii(end,cdx_)-1) ...
 						, odefun{cdx_} ...
 					        , bcfun{cdx_} ...
 						, xi(cdx_,:) ...
@@ -36,116 +38,181 @@ function [AAA,bbb,out] = bvp2c_assemble(out,ypm,odefun,bcfun,xi,neq,nxc,oo,ni,nc
 						, npi(:,cdx_) ...
 					   );
 		% write to global discretization matrix
-		% TODO global buffers
 		AAA(npii(1,cdx_):npii(end,cdx_)-1,npii(1,cdx_):npii(end,cdx_)-1) = AA;
 		bbb(npii(1,cdx_):npii(end,cdx_)-1,1)     = bb;
 		out(cdx_).ll = ll;
+		out(cdx_).cc = cc;
 		%.lll(npii(1,cdx_):npii(end,cdx_)-1,1:2,:) = ll;
 	end % for cdx_
 
-function apply_coupling_condition()
-% coupling condition : 
-% mean flow :
-%	Qup == Qdown
-%	sign(x-xmid)*Q_i = 0
+	if (nargin()>12 && ~isempty(jfun))
+		couple_junctions();
+	end
 
-% first connecting channels :
-%	sign(x-xmid)*Q_i = 0
-% remaining connecting channels :
-%	1/(i*o*w)*dQ/dx == 1/(i*o*w)*dQ/dx
+function couple_junctions()
+    if (~dischargeisvariable)
+		error('here')
+    end
+    % mid point of channels (for determining direction)
+    ximid = 0.5*(xi(:,1)+xi(:,2));
 
-% TODO, make general, this is customized for river tide computation
-for cdx=1:length(ccon)
-	ximid = 0.5*(xi(:,1)+xi(:,2));
+    % TODO, make general, this is semi-customized for river tide computation
+    % for each junction
+    for jdx=1:length(jfun)
 
-	% channel ids
-	cid = ccon(cdx).cid;
-	% endpoint ids
-	eid = ccon(cdx).eid;
+	% channel direction
+	% dir = sign(xi(:,2)-xi(:,1));
+    
+    	% cid : channel indices
+	% eid : endpoint indices {1,2},
+	% p   : scales, for matching level of the frequency compontents,
+	%               these are 1/(iow) 
+    	[cid, eid, p] = feval(jfun{jdx});
 
-	%
-	p = ccon(cdx).eid;
+	% fetch end point properties
+	% segment length
+	dx = zeros(length(cid),1);
 
-	% for each parallel equation (frequency component)
-	for idx=1:neq
-		% row indices
-	%	rid = ei(cdx,eid)+mi(idx) + TODO start/end
-		% directions of channel with respect to bifurcation
-		sig = sing(xi(cdx,eid) - ximid(cid));
-	
-		if (1 == idx)
-			% mean flow
-			% TODO
-%-> coupling for z0
-%-> coupling bc of z0_i == z0_j (n-1 conditions)
-%		  sum Q = 0	(nth-condition)
-%-> equations for unknown Q0 (nxc+1) :
-%-> replace this row by inflow, where Q0 is given
-%-> watch out in iteration, initial value of Q0 has to be non-zero
-
-
-
-			% mean discharge for each channel, TODO, this has to go into bvp2c_assemble
-			for cdx=1:nc
-			end
-			% coupling condition
-			A(rid(1),:) = 0;
-			b(rid(1))   = 0;
-
-			% eq 1 : sum Q0_i = 0
-			for rdx=1:length(rid)
-				A(rid(1),rid(rdx)) = 1;
-			end
-			b(rid(1)) = 0;
-
-			% eq 2..nc : z0_i = z0_1
-			for rdx=2:length(rid)
-				A(rid(rdx),:)   = 0;
-				A(rid(rdx)+1,:) = 0;
-				b(rid(rdx),:)   = 0;
-				b(rid(rdx)+1,:) = 0;
-				A(rid(rdx),rid(1))       =  1;
-				A(rid(rdx),rid(rdx))     = -1;
-				A(rid(rdx)+1,rid(1)+1)   =  1;
-				A(rid(rdx)+1,rid(rdx)+1) = -1;
-			end
-		else
-			% tides
-		% first row, equal discharge
-		A(rid(1)+(1:3),:) = 0;
-		b(rid(1)+(1:3))   = 0; % no external inflow/outflow at bi
-		for rdx=1:length(rid)
-			% f consits of 3 elements (columns) and is shifted
-			% Q-, Q+ and constant part
-			A(rid(rdx),rid(rdx))     = sig(rdx);
-			A(rid(rdx)+1,rid(rdx)+1) = sig(rdx);
-			A(rid(rdx)+2,rid(rdx)+2) = sig(rdx);
+	% eigenvalues
+	l  = zeros(length(cid),2,neq);
+	% indices
+	rid_ = zeros(neq,length(cid));
+	col_ = zeros(neq,length(cid));
+	for cdx=1:length(cid)
+		switch (eid(cdx))
+		case {1}
+			dx(cdx)     = out(cid(cdx)).dx(1);
+			l(cdx,:,:)  = out(cid(cdx)).ll(1,:,:);
+			rid_(:,cdx) = npii(1:end-1,cid(cdx));
+			col_(:,cdx) = npii(1:end-1,cid(cdx));
+		case {2}
+			dx(cdx)     = out(cid(cdx)).dx(end);
+			l(cdx,:,:)  = out(cid(cdx)).ll(end,:,:);
+			rid_(:,cdx) = npii(2:end,cid(cdx))-1;  
+			% TODO this is a quick and dirty hack
+			% nb : tidal shift by 3, because there are 3 parts
+			%      mean shift by 3, because there are 2 parts and the mean discharge
+			col_(:,cdx) = npii(2:end,cid(cdx)) - 3.*(1==cvec(oo)) - 3.*(2==cvec(oo));
+			%rid_(:,cdx) = rid_(:,cdx) - 1;
+		otherwise
+			error('here');
 		end
-		% reamining, : z_i == z_1
-		for rdx=2:length(rid)
-			A(rid(rdx),:)   = 0;
-			A(rid(rdx)+1,:) = 0;
-			A(rid(rdx)+2,:) = 0;
-			b(rid(rdx))     = 0;
-			b(rid(rdx)+2)   = 0;
-			b(rid(rdx)+3)   = 0;
-			% z- = 1/(iow) dQ/dx = 1/(iow) l Q
-		%	A(rid(rdx),rid(1))     =  dQm/dx TODO
-		%	A(rid(rdx),rid(rdx)) = -dQm/dx TODO
-			% TODO, what about constant?
-			% z+
-		%	A(rid(rdx)+2,rid(1)+2) =  dQp/dx TODO
-		%	A(rid(rdx)+2,rid(1)+2) = -dQp/dx TODO
-		end % rdx
-		end % if
-	end % for idx
-    end % for cdx
+    		dir(cdx) = sign(xi(cdx,eid(cdx)) - ximid(cid(cdx)));
+	end % for cdx
+
+    	% for each parallel equation (frequency component)
+    	for edx=1:neq
+    		% row indices
+		rid = rid_(edx,:)';
+		col = col_(edx,:)';
+
+		switch (oo(edx))
+		case {1} % match mean frequency component
+			% condition for first connecting channel :
+    			% conservation of (tidally averaged) discharge
+			% sum dir*Q0_i  == 0 (1 equation)
+			% reset row
+			AAA(rid(1),:) = 0;
+			bbb(rid(1))   = 0;
+			for cdx=1:length(cid)
+				% mean discharge Q0 has only 1 variable
+				%AAA(rid(1),rid(cdx)) = dir(cdx);
+				% here, the column indices are for the tidally averaged discharge,
+				% not of the tidally averaged water level (rid)
+				% TODO avoid magic number for index "2"
+				AAA(rid(1),npii(2,cid(cdx))-1) = dir(cdx);
+			end % for cdx
+				
+			% condition for remaining channels meeting at junction:
+			% continuty of surface elevation (equal tidally averaged water level)
+    			% z0_i - z0_1 == 0, i>1 (n-1 equations)
+			% the water level does not depend on channel direction,
+			% so dir is not factored in
+    			for cdx=2:length(cid)
+				% reset row
+				AAA(rid(cdx),:) = 0;
+				bbb(rid(cdx))   = 0;
+			% note : solution for water level is always degenerated
+				% homogeneous part	
+% TODO check cc (!)
+				if (0) %abs(l(1,1,edx)) ~= 0)
+					% this actually never happens
+					AAA(rid(cdx),col(1))     = -myexp(dir(1)*0.5*l(1,1,edx).*dx(1));
+				else
+					AAA(rid(cdx),col(1))     = -dir(1)*0.5*dx(1);
+				end
+				% inhomogeneous part
+				AAA(rid(cdx),col(1)+1)   = -1;
+
+				% homogeneous part	
+% TODO check cc (!)
+				if (0) %abs(l(cdx,1,edx)) ~= 0)
+					% this actually never happens
+					AAA(rid(cdx),col(cdx))   = +myexp(dir(cdx)*0.5*l(cdx,1,edx).*dx(cdx));
+				else
+					AAA(rid(cdx),col(cdx))   = +dir(cdx)*0.5*dx(cdx);
+				end
+				% inhomogeneous part
+				AAA(rid(cdx),col(cdx)+1) = +1;
+    			end % for cdx
+		case {-1}
+			% TODO deprecated
+			% nothing to do (Q0 is matched for 1==edx)
+		case {2}
+			% frequency components (tide)
+
+			% condition for first connecting channel :
+			% conservation of tidal discharge of e-th frequency component
+			% sum s Qt_i == 0, i = 1 .. n
+
+			% reset row
+    			AAA(rid(1),:) = 0;
+			% no external inflow/outflow at junction
+    			bbb(rid(1))   = 0;
+    
+    			for cdx=1:length(rid)
+    				% discharge consits of 3 unknowns (columns)
+				% left going part (Q-)
+    				AAA(rid(1),col(cdx))   = dir(cdx)*myexp(dir(cdx)*0.5*l(cdx,1,edx)*dx(cdx));
+				% inhomogeneous part
+    				AAA(rid(1),col(cdx)+1) = dir(cdx);
+				% right going part (Q+)
+				AAA(rid(1),col(cdx)+2) = dir(cdx)*myexp(dir(cdx)*0.5*l(cdx,2,edx)*dx(cdx));
+    			end % for cdx
+
+			% condition for remaining connecting channels :
+			% equal (oscillation) of water level of e-th frequency component
+			%    zt_i - zt_1 == 0
+			% => 1/(iow_i) dQt_i/dx - 1/(iow_1) dQ_1/dx == 0
+			% => 1/(iow) (l_i^- Q_i^- + l_i^+ Q_i^+) - 1/(iow_1) (l_i^- Q_i^- + l_i^+ Q_i^+) == 0
+			% p = 1/iow, 1/io can be factored out, but 1/w not
+			% sign of channel direction is not factored in, as the water level is not a directional vector quantity
+			for cdx=2:length(rid)
+				% reset row
+    				AAA(rid(cdx),:) = 0;
+    				bbb(rid(cdx))   = 0;
+
+				% left going
+    				AAA(rid(cdx),col(1))     = -p(1)*l(1,1,edx)*myexp(dir(1)*0.5*l(1,1,edx)*dx(1));
+				% derivative of inhomogeneous part is zero
+				% right going
+				AAA(rid(cdx),col(1)+2)   = -p(1)*l(1,2,edx)*myexp(dir(1)*0.5*l(1,2,edx)*dx(1));
+
+				% left going
+    				AAA(rid(cdx),col(cdx))   = +p(cdx)*l(cdx,1,edx)*myexp(dir(cdx)*0.5*l(cdx,1,edx)*dx(cdx));
+				% derivative of inhomogeneous part is zero
+				% right going
+				AAA(rid(cdx),col(cdx)+2) = +p(cdx)*l(cdx,2,edx)*myexp(dir(cdx)*0.5*l(cdx,2,edx)*dx(cdx));
+			end % for cdx
+		otherwise
+			error('here');
+		end % switch oo(edx)
+	end % for edx (each frequ ency component)
+    end % for cdx (each junction)
 end % function coupling_condition
 
-function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,nci,npi)
+function [AA,bb,ll,cc] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,nci,npi)
 
-	% ode-coefficients at section mid-points
-%	cc = feval(odefun);
 
 	% construct function values at section mid-points from separated parts
 	yc = zeros(nci(end)-1,1);
@@ -157,15 +224,20 @@ function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,
 			% first order ode
 			%c = cc(1,end-2:end,cdx);
 			% TODO this condition has to be checked for each row (!)
-			if (true) %0 ~= c(1,2)) 
+			if (false) %0 ~= c(1,2)) 
 			yc(nci(cdx):nci(cdx+1)-1) = ( ...
 			   		  ypm(npi(cdx)  :2:npi(cdx+1)-2) ...
 			   		+ ypm(npi(cdx)+1:2:npi(cdx+1)-1) ...
 					);
 			else
-			yc(nci(cdx):nci(cdx+1)-1) = ... 
-			   		ypm(npi(cdx)+1:2:npi(cdx+1)-1);
-				
+			if (~dischargeisvariable)
+				yc(nci(cdx):nci(cdx+1)-1) = ... 
+				   		ypm(npi(cdx)+1:2:npi(cdx+1)-1);
+			else
+				yc(nci(cdx):nci(cdx+1)-2) = ... 
+				   		ypm(npi(cdx)+1:2:npi(cdx+1)-2);
+				yc(nci(cdx+1)-1) = ypm(npi(cdx+1)-1);
+			end	
 			end
 
 		case {2}
@@ -183,14 +255,6 @@ function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,
 
 	% ode-coefficients at section mid-points
 	cc = feval(odefun,xc,yc);
-%	global saveflag
-%	if (saveflag)
-%		l = load('test.mat');
-%		save('test.mat','cc','yc');
-%$AA','rr');
-%		error('here');
-%	end
-
 
 	% TODO, global buffer
 	AA = sparse(npi(end)-1,npi(end)-1,6*npi(end));
@@ -208,12 +272,14 @@ function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,
 
 		% asumption : ode are either purely 1st or 2nd order, but not mixed
 		switch (oo(cdx))
-		case {-1}
-			[A, b] = bvp_row(cc,ll,cdx,dx,xi,bcfun);
 		case {1}
-			[A, b] = bvp1c_assemble(cc,ll,cdx,dx,xi,bcfun);
+			if (dischargeisvariable)
+				[A, b] = bvp1c_assemble_Q(cc,ll,cdx,dx,xi,bcfun,bcarg);
+			else
+				[A, b] = bvp1c_assemble(cc,ll,cdx,dx,xi,bcfun,bcarg);
+			end
 		case {2}
-			[A, b] = bvp2c_assemble_A(cc,ll,cdx,dx,xi,bcfun);
+			[A, b] = bvp2c_assemble_A(cc,ll,cdx,dx,xi,bcfun,bcarg);
 		otherwise
 			error('here');
 		end
@@ -222,6 +288,7 @@ function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,
 		% when the equations are only weekly non-linear,
 		% so they can be solved individually
 		if (oo(cdx) == -1)
+			% TODO deprecated
 			AA(npi(cdx), npi(cdx-1):npi(cdx)) = A;
 			bb(npi(cdx)) = b;
 		else
@@ -230,14 +297,14 @@ function [AA,bb,ll] = bvp2c_assemble_AA(ypm,odefun,bcfun,xi,xc,dx,neq,nxc,oo,ni,
 		end
 	end % for cdx
 
-function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
+function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun,bcarg)
 	odec = cc(:,:,ccdx);
 	l    = ll(:,:,ccdx);
 	m    = 3;
 %	odec = bsxfun(@times,odec,1./odec(:,1));
 	nobuff = false;
 	
-	b = zeros(nxc,1);
+	b = zeros(3*nxc,1);
 	Abuff = zeros(6+(6+4)*(nxc-1)+3*nxc,3);
 	if (nobuff)
 	A = sparse([],[],[],m*nxc,m*nxc,(12+2)*nxc);
@@ -251,11 +318,14 @@ function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
 	% TODO check sign of imaginary part to decide which root is the left going
 	nout = 3;
 	if (nout < 3)
-		[v, p] = bcfun(xi(1),[],ccdx);
+		[v, p] = bcfun(1,ccdx,bcarg{:});
+		%[v, p] = bcfun(xi(1),[],ccdx);
 		q = [1, 1];
 	else
-		[v, p, q] = bcfun(xi(1),[],ccdx);
+		[v, p, q] = bcfun(1,ccdx,bcarg{:});
+		%[v, p, q] = bcfun(xi(1),[],ccdx);
 	end
+	if (~isempty(v))
 	if ( 0 == sum(abs(p(1:2))) )
 		error('weights must be non-zero');
 	end
@@ -275,9 +345,16 @@ function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
 	nbuf = 3;
 
 	% right hand size
-	% b    = -c(1:2:end-1,4);, nope, as this is not the ode, but y1 = y2
 	b(1) = v;
 
+	else
+		nbuf = 3;
+		% dummy zeros
+		Abuf(1:3,1)=1;
+		Abuf(1:3,2)=1;
+	end
+
+	
 	k = 1:nxc-1;
 	Abuf(nbuf+(1:nxc-1),1) = m*(k-1)+3;
 	Abuf(nbuf+(1:nxc-1),2) = m*(k-1)+1;
@@ -408,11 +485,14 @@ function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
 	% boundary condition at right end
 	% fn(L)  = 0 (or better asymptotic y' = r y)
 	if (nout < 3)
-		[v, p] = bcfun(xi(2),[],ccdx);
+		%[v, p] = bcfun(xi(2),[],ccdx);
+		[v, p] = bcfun(2,ccdx,bcarg{:});
 		q      = [1, 1];
 	else
-		[v, p, q] = bcfun(xi(2),[],ccdx);
+		[v, p, q] = bcfun(2,ccdx,bcarg{:});
+		%[v, p, q] = bcfun(xi(2),[],ccdx);
 	end
+	if (~isempty(v))
 	if ( 0 == sum(abs(p(1:2))) )
 		error('weights must be non-zero');
 	end
@@ -433,12 +513,15 @@ function [A,b,ih] = bvp2c_assemble_A(cc,ll,ccdx,dx,xi,bcfun)
 	Abuf(nbuf+3,1) = m*nxc;
 	Abuf(nbuf+3,2) = m*nxc-m+3;
 	Abuf(nbuf+3,3) = q(2)*(p(1) + p(2)*l(nxc,2))*myexp(+0.5*l(nxc,2)*dx(nxc));
-	
-	A = sparse(Abuf(:,1),Abuf(:,2),Abuf(:,3));
-
 	% rhs
 	b(m*nxc) = v;
-	ih = 0;
+	else
+		% dummy zeros
+		Abuf(nbuf+(1:3),1) = 1;
+		Abuf(nbuf+(1:3),2) = 1;
+	end	
+
+	A = sparse(Abuf(:,1),Abuf(:,2),Abuf(:,3),3*nxc,3*nxc);
    end % bvp2c_assemble_A
 end % bvp2c_assemble_AA
 

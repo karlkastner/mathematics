@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 2:12M
+mathematics\protect\\Revision 2:13M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -3197,6 +3197,11 @@ ${}$
  TODO use difference matrix function for simplicity
 
 \end{lstlisting}
+\subsection{central\_difference}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{cmean}
 ${}$
 \begin{lstlisting}
@@ -3253,6 +3258,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  distance matrix for a 2 dimensional rectangular matrix
+
+\end{lstlisting}
+\subsection{downwind\_difference}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{gradpde2d}
@@ -3419,6 +3429,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_difference\_kernel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{upwind\_difference}
 ${}$
 \begin{lstlisting}
 
@@ -4577,6 +4592,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{numerical-methods/ode/@Time\_Stepper}
+\subsection{Time\_Stepper}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{solve}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{numerical-methods/ode}
 \subsection{bvp1c}
 ${}$
@@ -4584,6 +4610,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{bvp1c\_assemble}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bvp1c\_assemble\_Q}
 ${}$
 \begin{lstlisting}
 
@@ -4610,31 +4641,6 @@ ${}$
     q(x,1)*( p(x,1) y_l(x) + p(x,2)  y_l'(x)
   + q(x,2)*( p(x,1) y_r(x) + p(x,2) y_r'(x)    = v(x)
  where q weighs the waves travelling from left to right and right to left (default [1 1])
-
-\end{lstlisting}
-\subsection{bvp2c2}
-${}$
-\begin{lstlisting}
- solve second order boundary value problem via roots of the characteristic
- polynomial
-
- input:
-
- x   : [nx1] discretized domain
-       n : number of vertices
-      nxc = n-1 : number of segments
-
- bc  : struct : boundary condition
-       bc.p(1)*y(0) + bc.pd(2)*y'(0) = bc.val(1)
-       bc.p(2)*y(L) + bc.pd(2)*y'(L) = bc.val(2)
-
- output:
-
- A   : [2*nxc x 2*ns] disrcretisation matrix
- rhs : [2*nxc x 1] right hand size
-
- y = A^-1 rhs
-
 
 \end{lstlisting}
 \subsection{bvp2c\_assemble}
@@ -4684,11 +4690,6 @@ ${}$
  solve first for the wave number k, and then for y
 
 \end{lstlisting}
-\subsection{bvp\_row}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{ivp\_euler\_forward}
 ${}$
 \begin{lstlisting}
@@ -4718,11 +4719,6 @@ ${}$
 \begin{lstlisting}
  second order odes 
  transmittded and reflected wave
-
-\end{lstlisting}
-\subsection{ode\_adams\_bashforth}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{step\_trapezoidal}
