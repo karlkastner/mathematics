@@ -32,6 +32,10 @@ function [to,fo] = solve(obj,odefun,f0)
 		nf = 1;
 		nd = 1;
 		ddir = 1;
+	case {'maccormack'}
+		nf = 1;
+		nd = 1;
+		ddir = 1;
 	otherwise
 		error('here');
 %		mode   = 'normal';
@@ -112,12 +116,11 @@ function [to,fo] = solve(obj,odefun,f0)
 			% leap-frog
 			% TODO interpolate
 			f(:,idf())  = f(:,idf(2)) + 2*dt*df_dt(:,idd(1));
-
 			% TODO robert-asselin-filter
-		case {'mccormack'}
-			% TODO implement
-			% f = mccormack_step(tt,x,f,odefun,dt);
-			error('not yet implemented');
+		case {'maccormack'}
+			f_ = f + dt.*df_dt;
+			[df_dt_] = odefun(t,f_,-ddir);
+			f  = 0.5*(f+f_) + 0.5*dt.*df_dt_;
 		case {'adams-bashforth'}
 			% TODO extend to variable time step
 			switch (min(obj.order,tdx-1))

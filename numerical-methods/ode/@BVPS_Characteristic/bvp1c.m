@@ -6,10 +6,9 @@
 %  order equations)
 function [x, y, out] = bvp1c(odefun,bcfun,xi,varargin)
 	opt = bvp2_check_arguments(varargin{:});
-	nx  = opt.nx;
 
 	% segment end points
-	x   = mesh1(xi,opt.nx,opt.xs);
+	x   = mesh1(xi,obj.nx,opt.xs);
 
 	% segment mid points
 	xc  = mid(x);
@@ -18,7 +17,7 @@ function [x, y, out] = bvp1c(odefun,bcfun,xi,varargin)
 	dx  = diff(x);
 
 	% number of segments
-	nxc = nx-1;
+	nxc = obj.nx-1;
 
 	% number of equations per segment
 	m   = 2;
@@ -99,7 +98,7 @@ end
 
 function y = inner2outer_bvp1c(ypm,ll)
 	y = zeros((nxc+1)*neq,1);
-	nx = nxc+1;
+	nx = obj.nx;
 	for ccdx=1:neq
 		r = ll(:,1,ccdx);
 		if (0 ~= r(1,1,ccdx))

@@ -1,12 +1,12 @@
 % Sat 28 Oct 14:43:06 CEST 2017
-function bvp2check_arguments(obj)
-%	if (nargin()<1)
-%		obj.opt = struct();
-%	end
+function arguments(obj)
 
 	% number of grid points
-	if (~isfield(obj.opt,'nx'))
-		obj.opt.nx = 100;
+	if (isempty(obj.nx))
+		obj.nx = 100;
+	else
+		% minimum number of grid points
+		obj.nx = max(2,obj.nx);
 	end
 
 	if (~isfield(obj.opt,'xs'))
@@ -20,7 +20,7 @@ function bvp2check_arguments(obj)
 
 	% maximum number of iterations
 	if (~isfield(obj.opt.sopt,'maxiter'))
-		obj.opt.sopt.maxiter = opt.nx;
+		obj.opt.sopt.maxiter = sum(obj.nx);
 	end
 	% relaxation constant
 	if (~isfield(obj.opt.sopt,'relaxation'))
@@ -39,6 +39,9 @@ function bvp2check_arguments(obj)
 		obj.opt.balance = false;
 	end
 
-	% minimum number of grid points
-	obj.opt.nx = max(2,obj.opt.nx);
-end 
+	if (~isfield(obj.opt,'couple_frequency_components'))
+		obj.opt.couple_frequency_components = true;
+	end
+
+end % check_arguments
+

@@ -1,5 +1,5 @@
 % Sat 18 Apr 22:02:13 +08 2020
-function [A,b] = assemble1_A_Q(obj,cdx,edx)
+function assemble1_A_Q(obj,cdx,edx)
 	xi     = obj.xi(cdx,:);
 	xc     = obj.out(cdx).xc;
 	dx     = obj.out(cdx).dx;
@@ -10,7 +10,7 @@ function [A,b] = assemble1_A_Q(obj,cdx,edx)
 
 	% c1 z' + c2 z + c3 Q0 + c4 == 0
 	c  = obj.out(cdx).cc(:,:,edx); 
-	% TODO if c==0 then r==0, exploit
+	% TODO explot that c==0 when r==0
 	fdx = (c(:,2) ~= 0);
 
 	% root for homogeneous part
@@ -19,7 +19,7 @@ function [A,b] = assemble1_A_Q(obj,cdx,edx)
 	% match at rightend at segment i with right end at segment i+1
 	nxc = size(c,1);
 
-	Abuf = zeros(5*(nxc-1)+4,3);
+	Abuf = zeros(6*(nxc-1)+4,3);
 	b    = zeros(2*nxc+1,1);
 
 	% first row : left boundary condition
@@ -65,9 +65,6 @@ function [A,b] = assemble1_A_Q(obj,cdx,edx)
 	nbuf = nbuf+nxc;
 	b(2*id) = -c(:,4);
 
-	% TODO write bc to buffer
-	A = sparse(Abuf(:,1),Abuf(:,2),Abuf(:,3),2*nxc+1,2*nxc+1);
-
 	% boundary condition at left end
 	% only one boundary has to be specified for first order odes
 	%[v, p, ~, type] = bcfun(xi(1),[],ccdx);
@@ -77,17 +74,31 @@ function [A,b] = assemble1_A_Q(obj,cdx,edx)
 	case {'z'}
 		% p*f(0) + (1-p)*f(0)'' = v
 		if (0~=c(1,2))
-			A(row,1) = p*obj.exp(-0.5*r(1)*dx(1)) + (1-p)*r(1)*obj.exp(-0.5*r(1)*dx(1));
+			A(row,1) = p(1)*obj.exp(-0.5*r(1)*dx(1)) + (1-p)*r(1)*obj.exp(-0.5*r(1)*dx(1));
 			A(row,2) = p;
 			b(row)   = v;
 		else
-			A(row,1) = p*(-0.5*dx(1)) + (1-p);
-			A(row,2) = p;
-			b(row)   = v;
+			nbuf        = nbuf+1;
+			Abuf(nbuf,1) = row;
+			Abuf(nbuf,2) = 1;
+			Abuf(nbuf,3) = p(1)*(-0.5*dx(1)) + (1-p(1));
+			nbuf = nbuf+1;
+			Abuf(nbuf,1) = row;
+			Abuf(nbuf,2) = 2;
+			Abuf(nbuf,3) = p(1);
+			b(row)       = v;
 		end
 		nQ = 0;
 	case {'Q'}
-		A(row,2*nxc+1) = 1;
+		%row  = 2*nxc+1;
+		nbuf = nbuf+1;
+		Abuf(nbuf,1) = row;
+		Abuf(nbuf,2) = 2*nxc+1;
+		Abuf(nbuf,3) = 1;
+		nbuf         = nbuf+1;
+		Abuf(nbuf,1) = row;
+		Abuf(nbuf,2) = 2*nxc+1;
+		Abuf(nbuf,3) = 0; % dummy, for non-zero index in Abuf
 		b(row) = v; 
 		nQ = 1;
 	case {''}
@@ -103,26 +114,44 @@ function [A,b] = assemble1_A_Q(obj,cdx,edx)
 	switch (type)
 	case {'z'}
 		if (0~=c(end,2))
-			A(row,2*nxc-1) = (       p*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
-					     + (1-p)*r(nxc)*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
+			A(row,2*nxc-1) = (       p(1)*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
+					     + (1-p(1))*r(nxc)*obj.exp(+0.5*r(nxc)*dx(nxc)) ...
 					 );
-			A(row,2*nxc)   = p;
+			A(row,2*nxc)   = p(1);
 			b(row)         = v;
 		else
-			A(row,2*nxc-1) = ( p*0.5*dx(nxc) + (1-p) );
-			A(row,2*nxc)   = p;
+			nbuf         = nbuf + 1;
+			Abuf(nbuf,1) = row;
+			Abuf(nbuf,2) = 2*nxc-1;
+			Abuf(nbuf,3) = ( p(1)*0.5*dx(nxc) + (1-p(1)) );
+			nbuf         = nbuf + 1;
+			Abuf(nbuf,1) = row;
+			Abuf(nbuf,2) = 2*nxc;
+			Abuf(nbuf,3) = p;
+
 			b(row)       = v;
 		end
 	case {'Q'}
 		if (1 == nQ)
 			error('need, discharge can only be specified once, need at least level at one end');
 		end
-		A(row,2*nxc+1) = 1;
+		nbuf = nbuf+1;
+		Abuf(nbuf,1) = row;
+		Abuf(nbuf,2) = 2*nxc+1;
+		Abuf(nbuf,3) = 1;
+		nbuf = nbuf+1;
+		Abuf(nbuf,1) = row;
+		Abuf(nbuf,2) = 2*nxc+1;
+		Abuf(nbuf,3) = 0; % dummy
 		b(row) = v; 
 	case {''}
 		% nothing to do
 	otherwise
 		error('here');
 	end
+
+	Abuf(:,1:2) = Abuf(:,1:2) + obj.npi(edx,cdx)-1 + obj.npii(1,cdx)-1;
+	obj.Abuf   = [obj.Abuf; Abuf];
+	obj.b(obj.npii(edx,cdx):obj.npii(edx+1,cdx)-1,1)   = b;
 end % assemble1_A_Q
 

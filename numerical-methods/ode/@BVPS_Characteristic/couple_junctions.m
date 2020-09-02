@@ -30,6 +30,7 @@ function [AAA,bb] = couple_junctions(obj,AAA,bb)
 
 	% eigenvalues
 	l  = zeros(length(cid),2,obj.neq);
+
 	% indices
 	rid_ = zeros(obj.neq,length(cid));
 	col_ = zeros(obj.neq,length(cid));
@@ -110,10 +111,8 @@ function [AAA,bb] = couple_junctions(obj,AAA,bb)
 				% inhomogeneous part
 				AAA(rid(cdx),col(cdx)+1) = +1;
     			end % for cdx
-		case {-1}
-			% TODO deprecated
-			% nothing to do (Q0 is matched for 1==edx)
 		case {2}
+			if (obj.opt.couple_frequency_components)
 			% frequency components (tide)
 
 			% condition for first connecting channel :
@@ -159,10 +158,11 @@ function [AAA,bb] = couple_junctions(obj,AAA,bb)
 				% right going
 				AAA(rid(cdx),col(cdx)+2) = +p(cdx)*l(cdx,2,edx)*obj.exp(dir(cdx)*0.5*l(cdx,2,edx)*dx(cdx));
 			end % for cdx
+			end % if couple frequency components
 		otherwise
 			error('here');
 		end % switch oo(edx)
-	end % for edx (each frequ ency component)
+	end % for edx (each frequency component)
     end % for cdx (each junction)
 end % function coupling_condition
 

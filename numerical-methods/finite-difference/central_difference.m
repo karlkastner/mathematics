@@ -17,7 +17,8 @@
 	%	rval = [0, ..., -1/2, 3/2]
 function dy = central_difference(x,y)
 	% TODO heed variable step width
-	dy = [   -y(1) + 0.5*(y(2) + y(3));
-	        0.5*diff(y(3:end)-y(1:end-2));
-	      y(end) - 0.5*(y(end-1) + y(end-2))];
+%	dy = [   -y(1) + 0.5*(y(2) + y(3));
+%	        0.5*diff(y(3:end)-y(1:end-2));
+%	      y(end) - 0.5*(y(end-1) + y(end-2))];
+	dy = 0.5*(y(3:end) - y(1:end-2));
 end

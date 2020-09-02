@@ -89,8 +89,24 @@ function ypm = solve_(ypm)
 		b = s.*b;
 	end
 
+	% reset warning
+        lastwarn('', '');
+
 	% solve
 	ypm    = (A \ b);
+
+        % get possible warning
+        [warnMsg, warnId] = lastwarn();
+       
+	if(strcmp(warnId,'MATLAB:singularMatrix'))
+		obj.warn.k = obj.warn.k + 1;
+		if (obj.warn.k > obj.warn.kmax)
+			error('Could not recover from singular discretisation matrix');
+		end	
+        else
+		obj.warn.k = 0;
+	end
+
 %	ypm = pinv(full(AA))*bb;
 end % solve_
 

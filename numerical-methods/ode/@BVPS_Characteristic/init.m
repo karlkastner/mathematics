@@ -1,11 +1,9 @@
 % Wed 26 Aug 14:58:23 +08 2020
 
 function init(obj)
-%varargin{:});
 	obj.check_arguments();
 
 	% number of edges in graph (channels in network)
-	%nc = length(odefun);
 	obj.nc = size(obj.xi,1);
 
 	% solution for edges in graph (channel in network)
