@@ -7,13 +7,16 @@
 %% h = L/(n+1) constant step with
 %% function [D1, d1] = derivative_matrix_1d(n,L,order)
 % TODO allow optionally for circular boundary condition
-function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
+function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 	if (nargin()< 2 || isempty(L))
 		% choose domain [0 1]
 		L = 1;
 	end
 	if (nargin() < 3 || isempty(order))
 		order = 2;
+	end
+	if (nargin() < 4 || isempty(circular))
+		circular = false;
 	end
 
 	if (isscalar(arg1))
@@ -44,8 +47,10 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 	case {-2,'-2'}
 		% second order right
 		d1 = 1.0/h*[-3/2, 2, -1/2];
-	 case {3,'3'}
+	case {3,'3',4}
 		d1 = 1/(12*h)*[1 -8 0 8 -1];
+	case {6}
+		d1 = 1/(60*h)*[-1, 9, -45, 0, 45, -9, 1];
 	 otherwise
 		error('not yet implemented');
 	end % switch
@@ -58,23 +63,39 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 	% and correct first and last rows at boundary
 	switch (order)
 	case {-1,'-1'}
-		d1(end,2)   =   1/h;
-		d1(end-1,1) =  -1/h;
+		if (~circular)
+			d1(end,2)   =   1/h;
+			d1(end-1,1) =  -1/h;
+		end
 		D1 = spdiags(d1,-1:1,n,n);
+		if (circular)
+			D1(end,1) = 1/h;
+		end
 	case {+1,'+1'}
-		d1(1,2) = -1/h;
-		d1(2,3) =  1/h;
+		if (~circular)
+			d1(1,2) = -1/h;
+			d1(2,3) =  1/h;
+		end
 		D1 = spdiags(d1,-1:1,n,n);
+		if (circular)
+			D1(1,end) = -1/h;
+		end
 	case {'+2'}
 		D1 = spdiags(d1,-2:0,n,n);
 		D1(1,1:2) = 1/h*[-1, 1];
 		D1(2,1:2) = 1/h*[-1, 1];
 	case {2,'2'}
-		d1(1,2)     = -1/h;
-		d1(2,3)     =  1/h;
-		d1(end-1,1) = -1/h;
-		d1(end,2)   =  1/h;
+		if (~circular)
+			d1(1,2)     = -1/h;
+			d1(2,3)     =  1/h;
+			d1(end-1,1) = -1/h;
+			d1(end,2)   =  1/h;
+		end
 		D1 = spdiags(d1,-1:1,n,n);
+		if (circular)
+			D1(1,end) = -0.5/h;
+			D1(end,1) = +0.5/h;
+		end
 		% note there seems to be a mistake in table of my master thesis!
 		%D1(1,1:3) = 0.5/h*[-3 4 -1];
 		%D1(end,end-2:end) = 0.5/h*[1 -4 3];
@@ -82,8 +103,40 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order)
 		D1 = spdiags(d1,0:2,n,n);
 		D1(end-1,end-1:end) = 1/h*[-1, 1];
 		D1(end,end-1:end)   = 1/h*[-1, 1];
-	case {3,'3'}
+	case {3,'3',4}
 		D1 = spdiags(d1,-2:2,n,n);
+
+		if (circular)
+				D1(2,end)   = -D1(2,4);
+				D1(end-1,1) = -D1(end-1,end-3);
+
+				D1(1,end)   = -D1(1,2);
+				D1(1,end-1) = -D1(1,3);
+				D1(end,2)   = -D1(end,end-2);		
+				D1(end,1)   = -D1(end,end-1);	
+		else
+		warning('bc not yet implemented')
+		end
+	case {6}
+		D1 = spdiags(d1,-3:3,n,n);
+		if (circular)
+				D1(3,end)   = -D1(3,6);
+				D1(end-2,1) = -D1(end-2,end-5);
+
+				D1(2,end)    = -D1(2,4);
+				D1(2,end-1)  = -D1(2,5);
+				D1(end-1,2)  = -D1(end-1,end-4);		
+				D1(end-1,1)  = -D1(end-1,end-3);
+			
+				D1(1,end)    = -D1(1,2);
+				D1(1,end-1)  = -D1(1,3);
+				D1(1,end-2)  = -D1(1,4);
+				D1(end,3)    = -D1(end,end-3);		
+				D1(end,2)    = -D1(end,end-2);		
+				D1(end,1)    = -D1(end,end-1);
+		else
+			warning('bc not yet implemented')
+		end
 	otherwise
 		error('here');
 	end

@@ -83,7 +83,7 @@ function ypm = solve_(ypm)
 
 	% balance
 	if (obj.opt.balance)
-		% todo, two sided with sqrt(s)
+		% TODO two sided with sqrt(s)
 		s  = 1./sqrt(abs(diag(A)));
 		A = diag(s)*A.*diag(s);
 		b = s.*b;
@@ -94,6 +94,7 @@ function ypm = solve_(ypm)
 
 	% solve
 	ypm    = (A \ b);
+%	ypm = pinv(full(AA))*bb;
 
         % get possible warning
         [warnMsg, warnId] = lastwarn();
@@ -107,7 +108,6 @@ function ypm = solve_(ypm)
 		obj.warn.k = 0;
 	end
 
-%	ypm = pinv(full(AA))*bb;
 end % solve_
 
 end % function solve

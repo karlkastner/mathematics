@@ -2,7 +2,8 @@
 % Karl Kastner, Berlin
 %
 %% rotation matrix from angle
-function R = rot2(alpha,idx,jdx,n)
+% function R = rot2(alpha,idx,jdx,n)
+function R = rot2(alpha_rad,idx,jdx,n)
 	if (nargin()<2)
 		idx=1;
 	end
@@ -14,9 +15,13 @@ function R = rot2(alpha,idx,jdx,n)
 	end
 %	idx = min(idx_,jdx_);
 %	jdx = max(idx_,jdx_);
+if (~issym(alpha_rad))
 	R = speye(n);
-	c = cos(alpha);
-	s = sin(alpha);
+else
+	R = sym(eye(n));
+end
+	c = cos(alpha_rad);
+	s = sin(alpha_rad);
 	R(idx,idx) =  c;
 	R(jdx,jdx) =  c;
 	R(idx,jdx) = -s; % signs were swapped

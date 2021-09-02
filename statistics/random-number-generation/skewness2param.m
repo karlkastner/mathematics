@@ -1,11 +1,16 @@
 % 2015-08-03 14:09:44.313605435 +0200
 % Karl Kastner, Berlin
+%
+% convert skewness to skew-parameter of the skew-normal-distribution
+% azzalini
 function a = skewness2param(sk)
-	if (abs(sk) > 1-sqrt(eps))
-		error('skewness has to be between -1 and 1');
+	lim = (2^(1/3)*(4 - pi)^(2/3))/(pi - 2);
+	if (abs(sk) > lim)
+		warning(['skewness has to be between +/-',num2str(lim)]);
 	end
-	sk23 = abs(sk).^(2/3);
-	delta = sqrt(sk23/(sk23*2/pi + (0.5*(4-pi))^(2/3)*2/pi));
-	a = sign(sk)*delta/sqrt(1-delta^2);
+	sk23  = abs(sk).^(2/3);
+	%delta = sqrt(sk23/(sk23*2/pi + (0.5*(4-pi))^(2/3)*2/pi));
+	delta = sqrt(sk23./(2/pi*(sk23 + (2-pi/2)^(2/3))));
+	a     = sign(sk).*delta./sqrt(1-delta.^2);
 end
 

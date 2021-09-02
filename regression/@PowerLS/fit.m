@@ -19,7 +19,9 @@ function [param res A obj] = fit(obj,X,Y,W)
 	A = [ones(size(X)) log(X)];
 
 	% linear fit for initial parameters
-	c_lin = A \ log(Y);
+	e = 1e-5;
+	fdx = all(Y>e,2) & (X>e);
+	c_lin = A(fdx,:) \ log(Y(fdx,:));
 	
 	% nonlinear fit
 	sqrtW = sqrt(W);
@@ -54,7 +56,9 @@ function [param res A obj] = fit(obj,X,Y,W)
 	% TODO weighing
 	% g = 2*A'*exp(2*A*c) - 2*A'*(exp(A*c).*Y)
 	for idx=1:size(c,2)
-		H  = 4*(diag(exp(A*c(:,idx)))*A)'*diag(exp(A*c(:,idx)))*A;
+		d = diag(sparse(exp(A*c(:,idx))));
+		H  = 4*(d*A)'*(d*A);
+		%H  = 4*(diag(exp(A*c(:,idx)))*A)'*diag(exp(A*c(:,idx)))*A;
 		% in case of OLS H = 2*A'A
 		%AA = 1/2*H;
 		%C0 = inv(AA);

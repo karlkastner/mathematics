@@ -1,7 +1,10 @@
 % Sat 28 Oct 14:43:06 CEST 2017
-% TODO directly write to global buffer
-% TODO, treatment of degenerated second order equations a y'' + by' + cy = 0, with c = 0
-% TODO, during iteration, only variable elements of the buffer have to be rewritten
+%
+%% assemble the discretisation matrix for a second-order ode
+%% (non-zero frequency component)
+%
+% TODO treatment of degenerated second order equations a y'' + by' + cy = 0, with c = 0
+% TODO during iteration, only variable elements of the buffer have to be rewritten
 function assemble2_A(obj,cdx,edx)
 
 	dx     = obj.out(cdx).dx;
@@ -9,8 +12,8 @@ function assemble2_A(obj,cdx,edx)
 
 	odec = obj.out(cdx).cc(:,:,edx);
 	l    = obj.out(cdx).ll(:,:,edx);
-%	odec = bsxfun(@times,odec,1./odec(:,1));
 	
+	% TODO directly write to global buffers
 	b = zeros(3*nxc,1);
 	Abuf = zeros(6+(6+4)*(nxc-1)+3*nxc,3);
 

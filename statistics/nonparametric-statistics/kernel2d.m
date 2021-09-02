@@ -2,6 +2,7 @@
 % Karl Kastner, Berlin
 %
 %% kernel density estimate in two dimensions
+%function [Z, X, Y] = kernel2d(X,Y,xi,yi,sx,sy,rho,n1,n2,fun)
 function [Z, X, Y] = kernel2d(X,Y,xi,yi,sx,sy,rho,n1,n2,fun)
 	n    = length(xi);
 
@@ -20,6 +21,8 @@ function [Z, X, Y] = kernel2d(X,Y,xi,yi,sx,sy,rho,n1,n2,fun)
 		xmin = xmin-0.5*dx;
 		xmax = xmax+0.5*dx;
 		X = linspace(xmin,xmax,n1)';
+	else
+		n1 = length(X);
 	end
 	if (isempty(Y))
 		 if (nargin() < 9 || isempty(n2))
@@ -31,8 +34,6 @@ function [Z, X, Y] = kernel2d(X,Y,xi,yi,sx,sy,rho,n1,n2,fun)
 		ymin = ymin-0.5*dy;
 		ymax = ymax+0.5*dy;
 		Y = linspace(ymin,ymax,n2);
-
-
 	else
 		n2 = length(Y);
 	end

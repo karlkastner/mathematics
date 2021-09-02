@@ -35,20 +35,19 @@ function ab = fourier_multiplicative_interaction_coefficients(a,b,m,kmin)
 	end
 	%if (1==kmin)
 	%end
-		d = 0;
 
 	for idx=kmin:na
 	 for jdx=kmin:nb
 		% plus
 		if (idx+jdx-1<=m)
-			ab(:,d+idx+jdx-1) = ab(:,d+idx+jdx-1)+a(:,idx).*b(:,jdx);
+			ab(:,+idx+jdx-1) = ab(:,+idx+jdx-1) + a(:,idx).*b(:,jdx);
 		end
 
 		% minus
 		if (jdx>idx)
-			ab(:,d+jdx-idx+1) = ab(:,d+jdx-idx+1) + conj(a(:,idx)).*b(:,jdx);
+			ab(:,+jdx-idx+1) = ab(:,+jdx-idx+1) + conj(a(:,idx)).*b(:,jdx);
 		else
-			ab(:,d-jdx+idx+1) = ab(:,d-jdx+idx+1) + (a(:,idx)).*conj(b(:,jdx));
+			ab(:,-jdx+idx+1) = ab(:,-jdx+idx+1) + (a(:,idx)).*conj(b(:,jdx));
 		end
          end
 	end

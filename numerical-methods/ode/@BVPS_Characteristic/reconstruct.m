@@ -4,6 +4,10 @@ function reconstruct(obj,ypm)
 	nci = obj.nci;
 	npii = obj.npii;
 	ni = obj.ni;
+	
+	% TODO
+	% yc = obj.Ic*ypm;
+
     for cdx=1:obj.nc
         yc = zeros(nci(end,cdx)-1,1);
 	if (obj.opt.reconstruct_y)
@@ -46,7 +50,7 @@ function reconstruct(obj,ypm)
 			yc_ = (  ypm(npii(edx,cdx)  :3:npii(edx+1,cdx)-3) ...
 			       + ypm(npii(edx,cdx)+1:3:npii(edx+1,cdx)-2) ...
 			       + ypm(npii(edx,cdx)+2:3:npii(edx+1,cdx)-1) ...
-		             );
+		              );
 			if (obj.opt.reconstruct_y)
 				y_ = inner2outer(yc_);
 			end

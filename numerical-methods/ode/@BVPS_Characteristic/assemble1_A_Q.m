@@ -1,4 +1,6 @@
 % Sat 18 Apr 22:02:13 +08 2020
+%% assemble the discretisation matrix for a first order ode
+%% (mean component, zero frequency)
 function assemble1_A_Q(obj,cdx,edx)
 	xi     = obj.xi(cdx,:);
 	xc     = obj.out(cdx).xc;

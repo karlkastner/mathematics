@@ -10,6 +10,7 @@
 %
 % TODO should negative weights be interpretred as sign change,
 % so that sw = sum(|w|) ? -> no, think of sample being added twice
+% function [mu, serr] = wmean(w,x,varargin)
 function [mu, serr] = wmean(w,x,varargin)
 	if (isvector(x) && nargin() < 3)
 		x = cvec(x);

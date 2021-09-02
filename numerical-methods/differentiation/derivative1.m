@@ -3,6 +3,7 @@
 %
 %% first derivative on variable mesh
 %% second order accurate
+% function dy_dx = derivative1(x,y,order)
 function dy_dx = derivative1(x,y,order)
 	istransposed = false;
 	if (isvector(y) && isrow(y))

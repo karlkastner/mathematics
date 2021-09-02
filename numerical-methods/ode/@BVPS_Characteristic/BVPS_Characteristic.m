@@ -1,5 +1,8 @@
 % Wed 26 Aug 13:47:23 +08 2020
 %
+%% solve coupled first- and second-order 1D boundary-value problems
+%
+%
 % discrete solver for boundary value problems
 % employs the method of characteristics
 %
@@ -18,34 +21,56 @@
 %
 classdef BVPS_Characteristic < handle
 	properties
+		% function returning ode-coefficients
 		odefun
+		% function returning boundary-coefficients
 		bcfun
+		% function returning initial-values
 		inifun
 	
-		% xc, dx,
+		% struct containing solution and intermediate values
+		% xc, dx
 		out = struct()
 
+		% number of channels
 		nc
-		xi
-		nx
-		nxc
+		% number of equations (frequency components)
 		neq
+		% 1d-coordinate of channel end points
+		xi
+		% number of grid points per channel
+		nx
+		% number of segments (nxc-1) per channel
+		nxc
+		% cumulated number of grid points
 		ni
+		% cumulated number of segments
 		nci
+		% cumulated number of segments for decomposed solution
 		npi
+		% cumulated number of segments for decomposed solution
 		npii
+		% order of equations
 		oo
 
-		opt = struct();
+		% options
+		opt  = struct();
 		warn = struct('k',0,'kmax',3);
 
+		% exponential function, can be replaced by @(x) (1+x)
 		exp = @exp;
 
 		% discretisation matrix buffer
 		Abuf
+		% associated counter
 		nbuf
+		% right hand side
 		b
 
+		% Ic
+		% Dc
+
+		% junction condition
 		jfun
 	end % properties
 	methods

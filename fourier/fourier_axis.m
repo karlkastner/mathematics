@@ -15,12 +15,14 @@
 %% mask : mask for 1/2 of the fourier transform
 %%        (as both halves are complex conjugates)
 %% N    : frequency id
+% function [f T mask N] = fourier_axis(X)
 % function [f T mask N] = fourier_axis(L,n)
 function [f, T, mask, N] = fourier_axis(varargin)
 	if (1 == nargin())
 		X = varargin{1};
 		n = length(X);
 		L = (max(X)-min(X))*n/(n-1);
+		%L = (max(X)-min(X))*n/(n-1);
 	else
 		L = varargin{1};
 		n = varargin{2};
@@ -30,10 +32,12 @@ function [f, T, mask, N] = fourier_axis(varargin)
 	mask = false(n,1);
 	% even
 	if (0 == mod(n,2))
-		N = [0:n/2,n/2-1:-1:1]';
-		mask(1:n/2+1) = true;
+		%N = [0:n/2,-(n/2-1:-1:1)]';
+		%mask(1:n/2+1) = true;
+		N = [0:n/2-1,-(n/2:-1:1)]';
+		mask(1:n/2) = true;
 	else
-		N = [0:(n-1)/2,(n-1)/2:-1:1]';
+		N = [0:(n-1)/2,-((n-1)/2:-1:1)]';
 		mask(1:(n+1)/2) = true;
 	end
 

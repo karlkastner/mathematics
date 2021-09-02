@@ -3,8 +3,9 @@
 %
 %% weighed standard deviation
 %
-function [sd] = wstd(w,x)
-	sd = sqrt(wvar(w,x));
+% function [sd] = wstd(w,x)
+function [sd] = wstd(w,x,varargin)
+	sd = sqrt(wvar(w,x,varargin{:}));
 %	if (isvector(x))
 %		x = cvec(x);
 %		w = cvec(w);

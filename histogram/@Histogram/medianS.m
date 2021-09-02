@@ -1,10 +1,11 @@
+% 2016-03-08 21:39:40.358145745 +0800
 function me = medianS(h,edge)
 	H      = Histogram.cdfS(h);
 	centre = Histogram.centreS(edge);
 	valid  = Histogram.validS(h);
 
 	me = NaN(size(H,1),1);
-	% make cdf strictly monotoneous
+	% TODO quick fix make cdf strictly monotoneous
 	for idx=2:size(H,2)
 		H(:,idx) = max(H(:,idx),H(:,idx-1)+sqrt(eps));
 	end
@@ -21,3 +22,4 @@ function me = medianS(h,edge)
 	%err = me - me_;
 	%me = interp1(centre(:),H',0.5,'linear',NaN)';	
 end % medianS
+

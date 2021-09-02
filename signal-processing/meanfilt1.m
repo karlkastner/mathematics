@@ -17,8 +17,8 @@ function [Y, S, sd] = meanfilt1(X,nf)
 	S = zeros(size(X));
 	% TODO, this is not central, should be 0.5 at both ends if order is even
 	nf = min(nf,n); % was floor(nf/2)
-	l = floor(nf/2)
-	r = nf-l-1
+	l = floor(nf/2);
+	r = nf-l-1;
 	% round(nf/2)-1;
 	% TODO this is asymmetric at the ends
 	% implement alternative where the filter width is reduced at the ends

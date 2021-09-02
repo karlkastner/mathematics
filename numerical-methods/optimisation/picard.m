@@ -1,5 +1,6 @@
 % Fri  8 Sep 08:59:04 CEST 2017
 %% picard iteration
+% function [x, cflag, iter] = picard(fun, x, opt)
 function [x, cflag, iter] = picard(fun, x, opt)
 	if (nargin()<3)
 		opt = struct();

@@ -50,9 +50,13 @@ classdef Histogram < handle
 	end
 	methods
 	function obj = Histogram(h,edge)
-		obj.edge = rvec(edge);
+		if (nargin()>0)
 		obj.h = h;
+		end
+		if (nargin()>1)
+		obj.edge = rvec(edge);
 		obj.normalize();
+		end
 	end
 	function obj = normalize(obj)
             % normalise pdf
@@ -65,7 +69,7 @@ classdef Histogram < handle
 	end
 
 	% pseudo members
-	function [centre obj] = centre(obj)
+	function [centre] = centre(obj)
 		centre = 0.5*(obj.edge(1:end-1)+obj.edge(2:end));
 	end % centre
 	end % methods

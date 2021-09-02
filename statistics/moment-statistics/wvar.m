@@ -13,7 +13,7 @@
 % df/dxi = w_i
 % s^2 = sum (df/dxi)^2 s_xi^2 = sum wi^2 s_xi^2
 %
-function [s2 s2_mu dof] = wvar(w,x,fullpop,varargin)
+function [s2, s2_mu, dof] = wvar(w,x,fullpop,varargin)
 	if (isvector(x))
 		x = cvec(x);
 		w = cvec(w);
@@ -22,23 +22,25 @@ function [s2 s2_mu dof] = wvar(w,x,fullpop,varargin)
 		w = repmat(cvec(w),1,size(x,2));
 	end
 	wx     = w.*x;
-%	sw     = sum(w);
-%	w      = bsxfun(@times,w,1./sw);
+
+	p      = 1;
 
 	sw     = sum(w);
-	sw2    = sum(w.^2);
+	swp    = sum(w.^p);
+
 	% weighted mean
 	mu     = sum(wx)./sw;
 
 	% weighted squared residuals
-	w2dx2  = w.^2.*bsxfun(@minus,x,mu).^2;
+	w2dx2  = w.^p.*bsxfun(@minus,x,mu).^2;
 
-	s2_mu    = sum(w2dx2)./sw.^2;
-	dof      = sw.^2./sw2;
-	s2       = dof.*s2_mu;
+	s2      = sum(w2dx2)./swp;
+%	s2       = dof.*s2;
 
-	% number of degree of freedoms (normalisation again not necessary)
 	if (nargin()<3 || ~fullpop)
+		sw2    = sum(w.^2);
+		% number of degree of freedoms (normalisation again not necessary)
+		dof = sw.^2./sw2;
 		s2  = dof./(dof-1).*s2;
 	end
 end % wvar

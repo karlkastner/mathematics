@@ -1,4 +1,4 @@
-else
+%else
 	A   = sparse([],[],[],m*nxc,m*nxc,2*m*nxc);
 	b   = zeros(m*nxc,1);
 	for id=1:nxc-1
@@ -26,5 +26,5 @@ else
 		end
 		% rhs
 	end
-end
+%end
 

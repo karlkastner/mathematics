@@ -1,6 +1,7 @@
 % Fri Mar  6 18:13:35 CET 2015
 % Karl Kastner, Berlin
 %% triangular filter window
+% function w = triwin(x,x0,L)
 function w = triwin(x,x0,L)
 	if (nargin()<2)
 		x0 = 0.5*(x(1)+x(end));

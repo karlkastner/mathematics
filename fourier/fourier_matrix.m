@@ -12,6 +12,7 @@ function A = fourier_matrix(T,t)
 	A = zeros(length(t),no);
 	A(:,1) = 1;
 	for idx=1:length(T)
+		% was 2cos,2sin
 		A(:,2*idx)   = cos(2*pi*t/T(idx));
 		A(:,2*idx+1) = sin(2*pi*t/T(idx));
 	end % for

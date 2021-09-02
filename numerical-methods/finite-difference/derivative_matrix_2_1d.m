@@ -16,6 +16,7 @@
 % order : [2,4] : accuracy of discretisation, only second order for variable grid 
 % 
 %
+% function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 	if (nargin()<2||isempty(L))
 		% choose domain [0 1]
@@ -40,31 +41,74 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 		%h = L/(n+1); % n? 1/(n-1); changed Sat Nov 27 02:01:15 MSK 2010
 		h = L/(n-1);
 		switch (order)
+		case {2}
+			% second order: ddu_m := (1/h^2)*(u_l -2u_m + u_n);
+			D2 = (1/h^2)*[1, -2, 1];
+			m = 1;
 		case {4}
 			% TODO there might be a mistake in the msc-thesis,
 			%      as this kernel seems only valid for h=1
 			D2 = [-1, 16, -30, 16, -1]/(12*h^2);
 			m = 2;
-		otherwise % == 2
-			% second order: ddu_m := (1/h^2)*(u_l -2u_m + u_n);
-			D2 = (1/h^2)*[1, -2, 1];
-			m = 1;
+		case {6}
+			D2 = [2,   -27,   270,  -490,    270,   -27,     2]/(180*h*h);
+			m = 3;	
+		otherwise 
+			error('order must be 2, 4 or 6');
 		end
 		D2 = spdiags(repmat(D2,n,1),-m:m,n,n);
-		
+
 		% boundaries
+		switch (lower(bcl))
+		case {'c','circular'}
+			switch (order)
+			case {2}
+				D2(1,end) = D2(1,2);
+				D2(end,1) = D2(end,end-1);
+			case {4}
+				D2(2,end)   = D2(2,4);
+				D2(end-1,1) = D2(end-1,end-3);
+
+				D2(1,end)   = D2(1,2);
+				D2(1,end-1) = D2(1,3);
+				D2(end,2)   = D2(end,end-2);		
+				D2(end,1)   = D2(end,end-1);	
+			case {6}
+				D2(3,end)   = D2(3,6);
+				D2(end-2,1) = D2(end-2,end-5);
+
+				D2(2,end)    = D2(2,4);
+				D2(2,end-1)  = D2(2,5);
+				D2(end-1,2)  = D2(end-1,end-4);		
+				D2(end-1,1)  = D2(end-1,end-3);
+			
+				D2(1,end)    = D2(1,2);
+				D2(1,end-1)  = D2(1,3);
+				D2(1,end-2)  = D2(1,4);
+				D2(end,3)    = D2(end,end-3);		
+				D2(end,2)    = D2(end,end-2);		
+				D2(end,1)    = D2(end,end-1);
+			end % if
+		case {'neumann'}
+			% linear extrapolation
 		switch (order)
-		case {5}
+		case {2}
+			%D2(1,1:3)       = 1/h^2*[1, -2, 1];
+			%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
+			%D2(1,1:2) = 1/h*[-1,1];
+			D2(end,end-1:end) = 1/h*[-1,1];
+		case {4}
 			D2(1:2,:) = 0;
 			D2(end-1:end,:) = 0;
 			D2(2,1:3)       = 1/h^2*[1, -2, 1];
 			D2(n-1,n-2:n)   = 1/h^2*[1, -2, 1];
 			D2(1,1:3)       = 1/h^2*[1, -2, 1];
 			D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
-		otherwise % 2
-			D2(1,1:3)       = 1/h^2*[1, -2, 1];
-			D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
 		end
+		otherwise
+			% hom dirichlet, do nothing
+		end
+		
 	else
 		x = cvec(nx);
 		n = length(x);
@@ -81,6 +125,7 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 		D2(1,1:3) = D2(2,1:3);
 		D2(end,end-2:end) = D2(end-1,end-2:end);
 	end
+
 
 if (0)
 	switch (lower(bcl)) % homogeneous dirichlet f(0)=f(L)=0

@@ -32,7 +32,7 @@ function [to,fo] = solve(obj,odefun,f0)
 		nf = 1;
 		nd = 1;
 		ddir = 1;
-	case {'maccormack'}
+	case {'mccormack'}
 		nf = 1;
 		nd = 1;
 		ddir = 1;
@@ -117,7 +117,7 @@ function [to,fo] = solve(obj,odefun,f0)
 			% TODO interpolate
 			f(:,idf())  = f(:,idf(2)) + 2*dt*df_dt(:,idd(1));
 			% TODO robert-asselin-filter
-		case {'maccormack'}
+		case {'mccormack'}
 			f_ = f + dt.*df_dt;
 			[df_dt_] = odefun(t,f_,-ddir);
 			f  = 0.5*(f+f_) + 0.5*dt.*df_dt_;
