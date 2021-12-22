@@ -16,9 +16,9 @@
 function [s2, s2_mu, dof] = wvar(w,x,fullpop,varargin)
 	if (isvector(x))
 		x = cvec(x);
-		w = cvec(w);
 	end
 	if (isvector(w))
+		w = cvec(w);
 		w = repmat(cvec(w),1,size(x,2));
 	end
 	wx     = w.*x;

@@ -2,7 +2,7 @@
 % Karl Kastner, Berlin
 %
 %% transform modes (mu,sd) to parameters of the log normal distribution
-function [lmu,lsd] = logn_mode2param(mu,sd)
+function [lmu,lsd] = logn_moment2param(mu,sd)
 	lsd = sqrt(log(1 + sd.^2./mu.^2));
 	lmu = log(mu)-0.5*lsd.^2;
 end
