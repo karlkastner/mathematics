@@ -1,9 +1,16 @@
 % Sun 11 Jul 20:28:23 CEST 2021
-% TODO odd
 function [Dx,Dy,D2x,Dxy,D2y] = fourier_derivative_matrix_2d(n,L)
 	s = -1;
-	kx = 2i*pi*[0:n(1)/2-1,s*(n(1)/2:-1:1)]'/L(1);
-	ky = 2i*pi*[0:n(2)/2-1,s*(n(2)/2:-1:1)]'/L(2);
+	if (0 == mod(n(1),2))
+		kx = 2i*pi*[0:n(1)/2-1,s*(n(1)/2:-1:1)]'/L(1);
+	else
+		kx = 2*pi*[0:(n(1)-1)/2,s*((n(1)-1)/2:-1:1)]/L(1);
+	end
+	if (0 == mod(n(2),2))
+		ky = 2i*pi*[0:n(2)/2-1,s*(n(2)/2:-1:1)]'/L(2);
+	else
+		ky = 2*pi*[0:(n(2)-1)/2,s*((n(2)-1)/2:-1:1)]/L(2);
+	end
 	D1x = diag(sparse(kx));
 	D1y = diag(sparse(ky));
 	Ix  = speye(n(1));

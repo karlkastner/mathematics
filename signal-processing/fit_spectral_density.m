@@ -1,6 +1,10 @@
 % Tue 20 Jul 22:40:41 CEST 2021
+% Karl Kästner, Berlin
+%
+%% fit spectral densities
+%
 % function [par,S_] = fit_spectral_density(fx,S,par,L,form,model,method)
-function [par,S_,resn] = fit_spectral_density(fx,S,par,L,form,model,method,fmax)
+function [par,S_,resn] = fit_spectral_density(fx,S,par,L,form,model,method,fmin,fmax)
 	if (nargin()<3 || isempty(par))
 		par = [0.6,1]; 
 	end
@@ -11,15 +15,19 @@ function [par,S_,resn] = fit_spectral_density(fx,S,par,L,form,model,method,fmax)
 		method = 'll';
 	end
 	if (nargin()<8)
+		fmin = 0;
+	end
+	if (nargin()<9)
 		fmax = inf;
 	end
 
 	S   = cvec(S);
 	n   = length(fx);
 
-	df = 1/L;
-	fdx = fx>0 & fx < fmax;
-	S  = S/sum(S(fdx));
+	fdx = fx>fmin & fx < fmax;
+	IS = spectral_density_area(fx,S);
+	S   = S./IS;
+	Sflat = 2*L/n;
 	
 	switch (method)
 	case {'ls','lsrel'}
@@ -31,10 +39,13 @@ function [par,S_,resn] = fit_spectral_density(fx,S,par,L,form,model,method,fmax)
 	otherwise
 		error('here')
 	end
-	S_ = real(S_);
-	fdx  = fx>=0;
-	fdx0 = fx==0;
-	S_ = S_/(df*(0.5*S_(fdx0) + sum(S_(fdx))));
+	%S_   = real(S_);
+	%df  = 1/L;
+	%fdx  = fx>=0;
+	%fdx0 = fx==0;
+	%IS = spectral_density_area(fx,S_)
+	%S_ = S_/IS;
+	%(df*(0.5*S_(fdx0) + sum(S_(fdx))));
 
 	function res = resfun(par)
 		switch (model)
@@ -47,19 +58,24 @@ function [par,S_,resn] = fit_spectral_density(fx,S,par,L,form,model,method,fmax)
 			S_ = spectral_density_lorentzian(fx,par(1),par(2));
 		case {'brownian-phase'}
 			S_ = spectral_density_brownian_phase(fx,par(1),par(2));
+		case {'lognormal'}
+			S_ = lognpdf(abs(fx),par(1),par(2));
 		otherwise
 			disp(model);
 			error('here')
 		end
 		S_ = real(S_);
-		S_ = S_/sum(S_(fdx));
+		IS_ = spectral_density_area(fx,S);
+		S_ = S_/IS_;
+		%sum(S_(fdx));
 		switch (method)
 		case {'lsrel'}
-			res = (S(fdx)-S_(fdx))./S_(fdx);
+			res   = (S(fdx)-S_(fdx))./(S_(fdx)+Sflat);
 		case {'ls'}
 			res = S_(fdx) - S(fdx);
 		case {'ll'}
-			res    = (log(S_) + S./S_);
+			res = log(S./(S_+Sflat));
+			%res    = (log(S_+Sflat) + S./(S_+Sflat));
 			res(1) = 0;
 			res    = sum(res(fdx));
 		end

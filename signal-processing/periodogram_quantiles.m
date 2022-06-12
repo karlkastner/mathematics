@@ -1,4 +1,8 @@
 % Wed 28 Jul 17:21:42 CEST 2021
+% Karl Kästner, Berlin
+%
+%% quantiles of a periodogram
+%
 function q = periodogram_quantiles(fx,S,p,smooth)
 	if (nargin()<3||isempty(p))
 		p = [0.16,0.84];

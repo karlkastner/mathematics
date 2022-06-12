@@ -2,6 +2,7 @@
 % Karl Kastner, Berlin
 %
 %% mean and standard error of X
+%
 function [m, s] = mean_man(X) 
 	if (isempty(X))
 		m = NaN(class(X));

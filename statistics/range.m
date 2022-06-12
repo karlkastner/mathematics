@@ -1,7 +1,8 @@
 % 2015-06-09 21:17:23.351522837 +0200
 % Karl Kastner, Berlin
 %
-%% mid range
+%% range and mid range of input
+%
 function [range, midrange] = range(X)
 	maX = max(X);
 	miX = min(X);

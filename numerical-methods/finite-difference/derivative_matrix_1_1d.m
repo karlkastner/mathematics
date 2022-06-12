@@ -5,6 +5,7 @@
 %% finite difference matrix of first derivative in one dimensions
 %% n : number of grid points
 %% h = L/(n+1) constant step with
+%%
 %% function [D1, d1] = derivative_matrix_1d(n,L,order)
 % TODO allow optionally for circular boundary condition
 function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
@@ -49,6 +50,12 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 		d1 = 1.0/h*[-3/2, 2, -1/2];
 	case {3,'3',4}
 		d1 = 1/(12*h)*[1 -8 0 8 -1];
+	case {'+3'}
+		k = -2:0;
+		d1=1/h*[ -1   18   63   46]/30;
+	case {'-3'}
+		k = 0:3;
+		d1=1/h*[-46   63  -18    1]/30;
 	case {6}
 		d1 = 1/(60*h)*[-1, 9, -45, 0, 45, -9, 1];
 	 otherwise
@@ -103,6 +110,8 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 		D1 = spdiags(d1,0:2,n,n);
 		D1(end-1,end-1:end) = 1/h*[-1, 1];
 		D1(end,end-1:end)   = 1/h*[-1, 1];
+	case {'+3','-3'}
+		D1 = spdiags(d,k,n,n);
 	case {3,'3',4}
 		D1 = spdiags(d1,-2:2,n,n);
 

@@ -2,12 +2,20 @@
 % Fri  2 Jul 18:22:26 CEST 2021
 % Karl Kastner, Berlin
 %
-% function S = bartlett_periodogram(x,y,m,nn)
-% x :
-% y :
-% S :
-% TODO replace x by L
-%% TODO welsh sliding window
+%% estimate the spectral density nonparametrically with Bartlett's method
+%
+% function [S, S_std, Se, SS] = periodogram_bartlett(y,L,m,ni,pwin,subtract_mean)
+% y  : data in real space
+% L  : length of transect
+% m  : number of segments L_seg = L/m
+% ni : number of samples in output
+% piwin : apply window to segments
+% subtract_mean : subtract_local mean of segments
+% TODO welsh sliding window
+% TODO should we better normalize the individual or joint density?
+% note : fourier interpolation (padding with zeros) for each segment
+%        cannot be replaced by fourier interpolation of the joint density,
+%        the latter differs and can have slightly negative values
 function [S, S_std, Se, SS] = periodogram_bartlett(y,L,m,ni,pwin,subtract_mean)
 	if (isvector(y))
 		y = cvec(y);

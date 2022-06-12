@@ -2,7 +2,7 @@
 % Karl Kastner, Berlin
 %
 %% skewness of a weighted set of samples
-% function sk = wskew(w,x)
+%% function sk = wskew(w,x)
 function sk = wskew(w,x)
 	w  = w./sum(w);
 	mu = wmean(w,x);

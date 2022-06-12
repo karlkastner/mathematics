@@ -1,6 +1,8 @@
 % Wed Jan 28 17:38:56 CET 2015
 % Karl Kastner, Berlin
+%
 %% moving average filter with special treatment of the boundaries
+%
 function [Y, S, sd] = meanfilt1(X,nf)
 	if (~isscalar(nf))
 		error('nf must be scalar');
@@ -62,23 +64,23 @@ function [Y, S, sd] = meanfilt1(X,nf)
 		end
 	end
 
-		switch (method)
-		case {0} % reduce filter size (symmetric)
-			for idx=r-1:-1:0
-				Y(end-idx,:) = mean_man(X(end-2*idx:end,:)');
-				% [n-2*idx,n-idx,n]
-			end
-		case {1}
-		case {2}
-			for idx=1:r
-				A = [ones(nf,1),(1:nf)']
-				c = A \ X(end-nf+1:end,:);
-				A = [1,nf-r+idx]
-				Y(end-r+idx,:) = A*c;
-				n-r+idx
-				
-			end
+	switch (method)
+	case {0} % reduce filter size (symmetric)
+		for idx=r:-1:0
+			Y(end-idx,:) = mean_man(X(end-2*idx:end,:)');
 		end
+	case {1}
+		error('not yet implemented');
+	case {2}
+		for idx=1:r
+			A = [ones(nf,1),(1:nf)']
+			c = A \ X(end-nf+1:end,:);
+			A = [1,nf-r+idx]
+			Y(end-r+idx,:) = A*c;
+			n-r+idx
+			
+		end
+	end
 
 	% estimate the discretisation error
 %	dY  = cdiff(Y);

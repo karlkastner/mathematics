@@ -1,6 +1,11 @@
 % Sat 26 Jun 10:35:59 CEST 2021
-% TODO solve by cholesky factorisation / tridiagonal
+% Karl Kastner, Berlin
+%
+% filter the input vector with a spatial (two-sided) bandpass
+% in real space (finite difference approximation)
+%
 % function [y] = banspass1d_implicit(x,rho,order,invert)
+% TODO solve by cholesky factorisation / tridiagonal
 function [y] = banspass1d_implicit(x,rho,order,invert)
 	if (nargin()<4||isempty(invert))
 		invert = false;

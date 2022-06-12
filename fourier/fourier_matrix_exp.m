@@ -12,8 +12,9 @@ function A = fourier_matrix_exp(T,t)
 	A      = zeros(length(t),no);
 	A(:,1) = 1;
 	for idx=1:length(T)
-		A(:,2*idx)   = 2*exp(+2i*pi*t/T(idx));
-		A(:,2*idx+1) = 2*exp(-2i*pi*t/T(idx));
+		% was 2exp
+		A(:,2*idx)   = exp(+2i*pi*t/T(idx));
+		A(:,2*idx+1) = exp(-2i*pi*t/T(idx));
 	end % for
 end % fourier_matrix_exp
 

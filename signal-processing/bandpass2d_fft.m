@@ -2,6 +2,8 @@
 % note : this function is for testing purposes only,
 %        directly multiply the ft of the signal with the ft of the filter
 %        to obtain the filtered signal in a single step
+%
+% function y = bandpass2d_fft(x,rho,a,order)
 function y = bandpass2d_fft(x,rho,a,order)
 	if (nargin()<4)
 		order = 1;
@@ -19,7 +21,7 @@ function y = bandpass2d_fft(x,rho,a,order)
 	rho = rho./(1 - 2*rho + rho.*rho);
 
 	% derivative matrix
-	if (nargin()<2)
+	if (nargin()<2 || isempty(a))
 		% no rotation, coordinate axis-parallel smoothing
 		D2 = rho(1)*D2x+rho(2)*D2y;
 	else
@@ -41,17 +43,20 @@ function y = bandpass2d_fft(x,rho,a,order)
 
 	% high pass, derive with D2
 	% y = D2*x
-	f   = flat(fft2(x));
-	D2f = D2*f;
-	D2f = reshape(D2f,n);
-	x   = flat(ifft2(D2f));
+	x = flat(x);
+%	f   = flat(fft2(x));
+%	D2f = D2*f;
+%	D2f = reshape(D2f,n);
+%	x   = flat(ifft2(D2f));
+	x = fun(x);	
 
 	% low pass
 	% y = (I - rho*D)*x
-	y = pcg(@fun, flat(y),[],sum(n));
+	x = pcg(@fun, flat(x),[],sum(n));
+	x = reshape(x,n);
 	end
 
-	y = reshape(y,n);
+	y = x;
 
 	function y = fun(x)
 		x_  = reshape(x,n);

@@ -2,8 +2,10 @@
 % Karl Kastner, Berlin
 %
 %% filter with triangular window
-% trifilt1 is ident to twice applying rectfilt1 (meanfilt1) with half the domain size
-% note : inifnitely many convolution yield a gaussian
+%% trifilt1 is ident to twice applying rectfilt1 (meanfilt1) with half the domain size
+%% note : inifnitely many convolution yield a gaussian
+%
+% function [Y f] = trifilt1(X,nf)
 %
 function [Y f] = trifilt1(X,nf)
 

@@ -1,6 +1,8 @@
 % Fr 4. Mär 16:55:19 CET 2016
 % Karl Kastner, Berlin
-%% n-points on an ellipse
+%
+%% return points on an ellipse
+%% n : number of points
 %% ci : confidence interval, i.e. for 1 sigma
 %       for 1-sigma : ci = norminv(1)-norminv(-1) = 1-2*normcdf(-1) ~ 0.68
 function [X, Y, V, E] = ellipse(c,ci,n)

@@ -1,4 +1,4 @@
-% 2021-06-21 22:52:10.758702394 +0200 t_spectrum.m
+% 2021-06-21 22:52:10.758702394 +0200
 function [mu,se,r,n] = periodogram_annular(f,n,x)
 	if (nargin()<3)
 		x = (1:length(f));

@@ -2,6 +2,7 @@
 % Karl Kastner, Berlin
 %
 %% kurtosis with weighted samples
+% function ku = wkurt(w,x)
 function ku = wkurt(w,x)
 	w  = w/sum(w);
 	mu = wmean(w,x);

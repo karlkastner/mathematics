@@ -2,8 +2,11 @@
 %% linear interpolation of segment mit point to grid points at segment ends
 %% assumes equal grid spacing
 function x = inner2outer(x,dim)
-	if (isvector(x))
+	if (isvector(x) && isrow(x))
 		x=cvec(x);
+		transpose = true;
+	else
+		transpose = false;
 	end
 	if (nargin()<2)
 		dim = 1;
@@ -22,6 +25,9 @@ function x = inner2outer(x,dim)
 			nd = ndims(x);
 			x = shiftdim(x,nd-dim+1);
 		end
+	end
+	if (transpose)
+		x=x.';
 	end
 end
 

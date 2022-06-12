@@ -1,5 +1,6 @@
 % Sun 11 Jul 21:39:38 CEST 2021
 %
+% function y = lowpass1d_fft(x,rho,order)
 function y = lowpass1d_fft(x,rho,order)
 	if (nargin()<3)
 		order = 1;

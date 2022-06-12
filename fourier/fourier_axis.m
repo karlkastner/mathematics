@@ -17,6 +17,8 @@
 %% N    : frequency id
 % function [f T mask N] = fourier_axis(X)
 % function [f T mask N] = fourier_axis(L,n)
+%
+% note that fa(fa(x)) = x
 function [f, T, mask, N] = fourier_axis(varargin)
 	if (1 == nargin())
 		X = varargin{1};

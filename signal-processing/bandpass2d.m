@@ -1,3 +1,5 @@
+% 2021-06-23 18:56:45.535572579 +0200
+
 function x = bandpass2d(x,p,k) %varargin)
 	for idx=1:k
 %	x = bandpass1d(x,p,1); %varargin{:});
