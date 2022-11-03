@@ -5,9 +5,9 @@ function [R,Rx,Ry] = acf_brownian_phase_2d(lx,ly,fc,sx,sy)
 		ly = rvec(ly);
 	end
 	% perpendicular to bands
-	Rx = acf_brownian_phase(lx,fc,sx);
+	Rx = autocorr_brownian_phase(lx,fc,sx);
 	% parallel to bands
-	Ry = acf_brownian_phase_across(ly,sy);
+	Ry = autocorr_brownian_phase_across(ly,sy);
 
 	R = Rx.*Ry;
 end

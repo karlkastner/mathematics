@@ -3,25 +3,29 @@
 %
 %% random numbers of the skew normal distribution
 % function [x mu sd sk] = skewnrnd(mu,sd,sk,n)
-function [x, mu, sd, sk] = skewnrnd(mu,sd,sk,n)
+function [x, mu, sd, sk] = skewnrnd(mu,sd,sk,n,n2)
 	a = skewness2param(sk);
+	if (nargin()>4)
+		n(2) = n2;
+	end
 	if (length(n)==1)
 		n(2) = 1;
 	end
-
 	% sample
 %	% skew normal - this does not work, use algorithm
-	% x = 2*x.*normcdf(s*x);	fdx = true(n,1);
+	% x = 2*x.*normcdf(s*x);
+	% X = randn(n,m);
+	% X = X.*normcdf(a*X);
 	z = zeros(n);
 	m = prod(n);
-	fdx=(1:m);
+	id=(1:m);
 	while (m > 0)
 		x   = randn(m,1);
 		y   = randn(m,1);
 		sdx = x < a*y;
-		z(fdx(sdx)) = y(sdx);
-		fdx(sdx)    = [];
-		m           = length(fdx);
+		z(id(sdx)) = y(sdx);
+		id(sdx)    = [];
+		m          = length(id);
 	end
 	x = z;
 	% "normalisation" (except for skewneww)
@@ -29,6 +33,5 @@ function [x, mu, sd, sk] = skewnrnd(mu,sd,sk,n)
 	x = (x-mu_)*(sd/sd_)+mu;
 	%x = x*sd/sd_-(mu_mu_);
 end
-
 
 

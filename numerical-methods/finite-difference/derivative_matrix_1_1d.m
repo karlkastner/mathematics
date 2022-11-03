@@ -8,7 +8,7 @@
 %%
 %% function [D1, d1] = derivative_matrix_1d(n,L,order)
 % TODO allow optionally for circular boundary condition
-function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
+function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,bc)
 	if (nargin()< 2 || isempty(L))
 		% choose domain [0 1]
 		L = 1;
@@ -16,8 +16,14 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 	if (nargin() < 3 || isempty(order))
 		order = 2;
 	end
-	if (nargin() < 4 || isempty(circular))
-		circular = false;
+	if (nargin() < 4 || isempty(bc))
+		bc = 'dirichlet';
+	end
+	switch(bc)
+	case {'neumann','dirichlet','circular'}
+		% nothing to do
+	otherwise
+	error('unknown boundary condition');
 	end
 
 	if (isscalar(arg1))
@@ -58,7 +64,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 		d1=1/h*[-46   63  -18    1]/30;
 	case {6}
 		d1 = 1/(60*h)*[-1, 9, -45, 0, 45, -9, 1];
-	 otherwise
+	otherwise
 		error('not yet implemented');
 	end % switch
 
@@ -70,21 +76,42 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 	% and correct first and last rows at boundary
 	switch (order)
 	case {-1,'-1'}
-		if (~circular)
-			d1(end,2)   =   1/h;
-			d1(end-1,1) =  -1/h;
-		end
+%		if (~strcmp(bc,'circular'))
+%			d1(end,2)   =   1/h;
+%			d1(end-1,1) =  -1/h;
+%		end
 		D1 = spdiags(d1,-1:1,n,n);
-		if (circular)
+		switch (bc)
+		case ('dirichlet')
+			% nothing to do, outside value is zero
+			% TODO this depends where the boundary is placed
+		case ('neumann')
+			% [0,-1| 1]/h	bc and pde
+			% [-1,2|-1]/h	extrapolation
+			% [-1,1]/h	
+			D1(end,end-1:end) = [-1,1]/h;
+		case ('circular')
 			D1(end,1) = 1/h;
 		end
 	case {+1,'+1'}
-		if (~circular)
-			d1(1,2) = -1/h;
-			d1(2,3) =  1/h;
-		end
+%		if (~strcmp(bc,'circular'))
+%			d1(1,2) = -1/h;
+%			d1(2,3) =  1/h;
+%		end
 		D1 = spdiags(d1,-1:1,n,n);
-		if (circular)
+%		if (strcmp(bc,'circular'))
+%			D1(1,end) = -1/h;
+%		end
+		switch (bc)
+		case ('dirichlet')
+			% nothing to do, outside value is zero
+			% TODO this depends where the boundary is placed
+		case ('neumann')
+			% [-1| 1, 0]/h	bc and pde
+			% [-1| 2,-1]/h	extrapolation
+			% [0 |-1, 1]/h
+			D1(1,1:2) = [-1,1]/h;
+		case ('circular')
 			D1(1,end) = -1/h;
 		end
 	case {'+2'}
@@ -92,14 +119,14 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 		D1(1,1:2) = 1/h*[-1, 1];
 		D1(2,1:2) = 1/h*[-1, 1];
 	case {2,'2'}
-		if (~circular)
+		if (~strcmp(bc,'circular'))
 			d1(1,2)     = -1/h;
 			d1(2,3)     =  1/h;
 			d1(end-1,1) = -1/h;
 			d1(end,2)   =  1/h;
 		end
 		D1 = spdiags(d1,-1:1,n,n);
-		if (circular)
+		if (strcmp(bc,'circular'))
 			D1(1,end) = -0.5/h;
 			D1(end,1) = +0.5/h;
 		end
@@ -115,7 +142,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 	case {3,'3',4}
 		D1 = spdiags(d1,-2:2,n,n);
 
-		if (circular)
+		if (strcmp(bc,'circular'))
 				D1(2,end)   = -D1(2,4);
 				D1(end-1,1) = -D1(end-1,end-3);
 
@@ -128,7 +155,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,circular)
 		end
 	case {6}
 		D1 = spdiags(d1,-3:3,n,n);
-		if (circular)
+		if (strcmp(bc,'circular'))
 				D1(3,end)   = -D1(3,6);
 				D1(end-2,1) = -D1(end-2,end-5);
 

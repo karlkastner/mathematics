@@ -9,8 +9,8 @@ function [fc,Sc] = spectral_density_brownian_phase_mode(f0,s)
 	else
 		pi_ = pi;
 	end
-	p  = pi*s.^2;
-	fc = f0.*sqrt(2*sqrt(1 + p.^2) - p.^2 - 1);
-	Sc = p./(2*pi*f0.*(sqrt(1+p.^2) - 1));
+	p  = pi*s.*s;
+	fc = f0.*sqrt(2*sqrt(1 + p.*p) - p.*p - 1);
+	Sc = p./(2*pi*f0.*(sqrt(1+p.*p) - 1));
 end
 

@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 17M
+mathematics\protect\\Revision 19M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -535,20 +535,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{fft\_derivative}
-${}$
-\begin{lstlisting}
- derivative by fourier transform
- exponential convergence for periodic functions
- results in spurious oscillations for aperiodic functions
-
- input:
- x : data, sampled in equal intervals 
- k : order of the derivative
-
- dx : kth-derivative of x
-
-\end{lstlisting}
 \subsection{fft\_man}
 ${}$
 \begin{lstlisting}
@@ -609,6 +595,11 @@ ${}$
  mask : mask for 1/2 of the fourier transform
         (as both halves are complex conjugates)
  N    : frequency id
+
+\end{lstlisting}
+\subsection{fourier\_axis\_2d}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{fourier\_cesaro\_correction}
@@ -682,8 +673,23 @@ ${}$
 \subsection{fourier\_derivative}
 ${}$
 \begin{lstlisting}
- coefficients of the derivative of a fourier series
- not of discrete fourier transform (fft) 
+ derivative via fourier transform
+ exponential convergence for periodic functions
+ results in spurious oscillations for aperiodic functions
+
+ input:
+ x : data, sampled in equal intervals 
+ k : order of the derivative
+
+ dx : kth-derivative of x
+
+ note : 1) the derivative converges with spectral accuracy, i.e. is
+           exact up to rounding condition for L sufficiently large
+	     and x being periodic
+	  2) the derivative converges with order p, when x has only
+	     p-continous derivatives, including discontinuous derivatives
+	     over the boundary
+	  3) discontinuous derivatives result in gibbs phenomenon
 
 \end{lstlisting}
 \subsection{fourier\_derivative\_matrix\_1d}
@@ -790,6 +796,7 @@ ${}$
 \subsection{fourier\_random\_phase\_walk}
 ${}$
 \begin{lstlisting}
+ evaluete fourier series where the phase undergoes a brownian motion
 
 \end{lstlisting}
 \subsection{fourier\_range}
@@ -882,6 +889,16 @@ ${}$
  [x0,p,q,r] piecewise linear polynomials at the boundaries
 
 \end{lstlisting}
+\subsection{mean\_fourier\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{moments\_fourier\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{nanfft}
 ${}$
 \begin{lstlisting}
@@ -927,6 +944,11 @@ ${}$
  spectral density
 
 \end{lstlisting}
+\subsection{std\_fourier\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_complex\_exp\_product}
 ${}$
 \begin{lstlisting}
@@ -938,6 +960,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_idftmtx}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{var\_fourier\_power}
 ${}$
 \begin{lstlisting}
 
@@ -1368,7 +1395,8 @@ ${}$
 \subsection{ellipse}
 ${}$
 \begin{lstlisting}
- n-points on an ellipse
+ return points on an ellipse
+ n : number of points
  ci : confidence interval, i.e. for 1 sigma
 
 \end{lstlisting}
@@ -1456,16 +1484,6 @@ ${}$
 \begin{lstlisting}
  streamline radius of curvature
  simplifies when rotatate to streamwise coordinates to R = 1/dv/ds * u
-
-\end{lstlisting}
-\section{mathematics}
-\begin{lstlisting}
-mathematical functions of various kind
-
-\end{lstlisting}
-\subsection{hexagonal\_pattern}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \section{histogram/@Histogram}
@@ -2799,6 +2817,7 @@ ${}$
 \subsection{padd2}
 ${}$
 \begin{lstlisting}
+ padd values around a 2d (image) matrix, constant exprapolation
 
 \end{lstlisting}
 \subsection{paddext}
@@ -2959,6 +2978,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{up}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{vander\_nd}
 ${}$
 \begin{lstlisting}
 
@@ -3244,6 +3268,12 @@ ${}$
  round to n digits
 
 \end{lstlisting}
+\section{numerical-methods}
+\subsection{advect\_analytic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{numerical-methods/differentiation}
 \subsection{derivative1}
 ${}$
@@ -3256,6 +3286,12 @@ ${}$
 ${}$
 \begin{lstlisting}
  second derivative on a variable mesh
+
+\end{lstlisting}
+\section{numerical-methods}
+\subsection{diffuse\_analytic}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{numerical-methods/finite-difference}
@@ -3298,6 +3334,7 @@ ${}$
  finite difference matrix of first derivative in one dimensions
  n : number of grid points
  h = L/(n+1) constant step with
+
  function [D1, d1] = derivative_matrix_1d(n,L,order)
 
 \end{lstlisting}
@@ -5323,6 +5360,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{patterns}
+\subsection{band\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{hexagonal\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{regression/@PolyOLS}
 \subsection{PolyOLS}
 ${}$
@@ -5558,53 +5606,6 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing}
-\subsection{acf\_bp}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_decay\_rate}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_effective\_sample\_size}
-${}$
-\begin{lstlisting}
- effective sample size from acf
-
-\end{lstlisting}
-\subsection{acf\_genton}
-${}$
-\begin{lstlisting}
- autocorrelation function
-
-\end{lstlisting}
-\subsection{acf\_hp}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_lp}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_periodic\_additive\_noise}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_periodic\_windowed}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{acf\_radial}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{acfar1}
 ${}$
 \begin{lstlisting}
@@ -5720,6 +5721,8 @@ ${}$
 \subsection{ar2\_acf2c}
 ${}$
 \begin{lstlisting}
+ determine coefficients of the ar2 process from the first two lags of the
+ autocorrelation function
 
 \end{lstlisting}
 \subsection{ar2conv}
@@ -5750,15 +5753,86 @@ ${}$
  filter will always have negative weights
 
 \end{lstlisting}
+\section{signal-processing/autocorr}
 \subsection{autocorr2}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{autocorr\_bandpass}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_brownian\_phase}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_brownian\_phase\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_brownian\_phase\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_decay\_rate}
+${}$
+\begin{lstlisting}
+ estimate exponential decay of the autocorrelation
+
+\end{lstlisting}
+\subsection{autocorr\_effective\_sample\_size}
+${}$
+\begin{lstlisting}
+ effective sample size from acf
+
+\end{lstlisting}
 \subsection{autocorr\_fft}
 ${}$
 \begin{lstlisting}
+ estimate sample autocorrelation function
+
+\end{lstlisting}
+\subsection{autocorr\_genton}
+${}$
+\begin{lstlisting}
  autocorrelation function
+
+\end{lstlisting}
+\subsection{autocorr\_highpass}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_lowpass}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_periodic\_additive\_noise}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_periodic\_windowed}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorr\_radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{signal-processing}
+\subsection{average\_wave\_shape}
+${}$
+\begin{lstlisting}
+ extract waves with varying length from a wave train and and average their shape
 
 \end{lstlisting}
 \subsection{bandpass}
@@ -5775,6 +5849,7 @@ ${}$
 \subsection{bandpass1d\_fft}
 ${}$
 \begin{lstlisting}
+ filter input vector with a spatial (two-sided) bandpass in fourier space
 
 \end{lstlisting}
 \subsection{bandpass1d\_implicit}
@@ -5803,6 +5878,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{bandpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{bandpass2d\_implicit}
 ${}$
 \begin{lstlisting}
@@ -5811,6 +5891,19 @@ ${}$
 \subsection{bandpass2d\_iso}
 ${}$
 \begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass\_arg}
+${}$
+\begin{lstlisting}
+ determine correlation coefficient from frequency of mode for the symmetric
+
+\end{lstlisting}
+\subsection{bandpass\_f0\_to\_rho}
+${}$
+\begin{lstlisting}
+ correlation coefficient for the pth-order symmetric bandpass filter with
+ maximum at f0 (when rho_lp = rho_hp)
 
 \end{lstlisting}
 \subsection{bandpass\_max}
@@ -5966,6 +6059,17 @@ ${}$
  requires function value to fall to p*max before new value is allowed
 
 \end{lstlisting}
+\subsection{determine\_phase\_shift}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{determine\_phase\_shift1}
+${}$
+\begin{lstlisting}
+ average phase and phase shift per time step of a train of waves
+
+\end{lstlisting}
 \subsection{digital\_low\_pass\_filter}
 ${}$
 \begin{lstlisting}
@@ -6008,16 +6112,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  invalidate values that exceed n-times the robust standard deviation
-
-\end{lstlisting}
-\subsection{filter\_arg}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{filter\_f0\_to\_rho}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{filter\_r\_to\_f0}
@@ -6095,6 +6189,19 @@ ${}$
 \subsection{fit\_spectral\_density}
 ${}$
 \begin{lstlisting}
+ fit spectral densities
+
+\end{lstlisting}
+\subsection{fit\_spectral\_density\_2d}
+${}$
+\begin{lstlisting}
+ fit spectral densities
+
+\end{lstlisting}
+\subsection{fit\_spectral\_density\_radial}
+${}$
+\begin{lstlisting}
+ fit spectral densities
 
 \end{lstlisting}
 \subsection{flattopwin}
@@ -6156,6 +6263,12 @@ ${}$
  high pass filter
 
 \end{lstlisting}
+\subsection{highpass1d\_fft\_cos}
+${}$
+\begin{lstlisting}
+ filter the input vector with a cosine-shaped highpass in frequency space
+
+\end{lstlisting}
 \subsection{highpass1d\_implicit}
 ${}$
 \begin{lstlisting}
@@ -6166,7 +6279,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{highpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{highpass2d\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{highpass\_arg}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{highpass\_fc\_to\_rho}
 ${}$
 \begin{lstlisting}
 
@@ -6237,7 +6365,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{lowpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{lowpass2d\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass\_arg}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass\_fc\_to\_rho}
 ${}$
 \begin{lstlisting}
 
@@ -6269,6 +6412,12 @@ ${}$
 ${}$
 \begin{lstlisting}
  moving average filter with special treatment of the boundaries
+
+\end{lstlisting}
+\subsection{meanfilt2}
+${}$
+\begin{lstlisting}
+ filter with a rectangular window along both dimensions
 
 \end{lstlisting}
 \subsection{medfilt1\_man}
@@ -6339,6 +6488,11 @@ ${}$
  convert neper to db
 
 \end{lstlisting}
+\subsection{oscillator\_noisy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{peaks\_man}
 ${}$
 \begin{lstlisting}
@@ -6348,6 +6502,13 @@ ${}$
 \subsection{periodogram}
 ${}$
 \begin{lstlisting}
+ compute the normalized periodogram
+
+\end{lstlisting}
+\subsection{periodogram\_2d}
+${}$
+\begin{lstlisting}
+ compute the normalized periodogram in two dimensions
 
 \end{lstlisting}
 \subsection{periodogram\_annular}
@@ -6358,7 +6519,7 @@ ${}$
 \subsection{periodogram\_bartlett}
 ${}$
 \begin{lstlisting}
- TODO welsh sliding window
+ estimate the spectral density nonparametrically with Bartlett's method
 
 \end{lstlisting}
 \subsection{periodogram\_bootstrap}
@@ -6369,6 +6530,7 @@ ${}$
 \subsection{periodogram\_confidence\_interval}
 ${}$
 \begin{lstlisting}
+ confidence interval for periodogram values
 
 \end{lstlisting}
 \subsection{periodogram\_median}
@@ -6384,9 +6546,17 @@ ${}$
 \subsection{periodogram\_qq}
 ${}$
 \begin{lstlisting}
+ qq-plot of a spectral density estimate by smoothing against the expected
+ beta-density
 
 \end{lstlisting}
 \subsection{periodogram\_quantiles}
+${}$
+\begin{lstlisting}
+ quantiles of a periodogram
+
+\end{lstlisting}
+\subsection{periodogram\_radial}
 ${}$
 \begin{lstlisting}
 
@@ -6394,9 +6564,56 @@ ${}$
 \subsection{periodogram\_std}
 ${}$
 \begin{lstlisting}
+ standard deviation of a periodogram
 
 \end{lstlisting}
-\subsection{periodogram\_test}
+\subsection{periodogram\_test\_periodicity}
+${}$
+\begin{lstlisting}
+ test a periodogram for hidden periodic frequency components
+ 
+ function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity(fx,Shat,nf,fmin,fmax,S,mode)
+ input:
+	fx : frequengcies
+	Shat : corresponding periodogram values
+      nf   : number of bins to test for periodicity, ignored when S is given
+	fmin, fmax : frequency range limits to test
+	S    : exact (a priori known theoretical spectral density, must not be estimated from the periodogram)
+	mode : automatically set to "exact", when S given
+	       inclusive : estimate density by smoothing including the central bin
+	       exclusive : estimate density by smoothing  excluding the central bin
+	note: inclusive and exclusive lead to different distribution
+	      but identical p-values
+
+\end{lstlisting}
+\subsection{periodogram\_test\_periodicity\_2d}
+${}$
+\begin{lstlisting}
+ test a periodogram for hidden periodic frequency components
+ 
+ function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity(fx,Shat,nf,fmin,fmax,S,mode)
+ input:
+	fx : frequengcies
+	Shat : corresponding periodogram values
+      nf   : number of bins to test for periodicity, ignored when S is given
+	fmin, fmax : frequency range limits to test
+	S    : exact (a priori known theoretical spectral density, must not be estimated from the periodogram)
+	mode : automatically set to "exact", when S given
+	       inclusive : estimate density by smoothing including the central bin
+	       exclusive : estimate density by smoothing  excluding the central bin
+	note: inclusive and exclusive lead to different distribution
+	      but identical p-values
+
+\end{lstlisting}
+\subsection{periodogram\_test\_stationarity}
+${}$
+\begin{lstlisting}
+ test a periodogram for statoinarity
+ note : the method works, but is of little practical use,
+ as it requires about 50 periods and a small dx to detect a frequency change by a factor of 2
+
+\end{lstlisting}
+\subsection{periodogram\_welsh}
 ${}$
 \begin{lstlisting}
 
@@ -6413,6 +6630,12 @@ ${}$
 ${}$
 \begin{lstlisting}
  medfilt1, after fitting a quadratic polynomial
+
+\end{lstlisting}
+\subsection{radial\_window}
+${}$
+\begin{lstlisting}
+ radial filter window in the 2d-frequency domain
 
 \end{lstlisting}
 \subsection{randar1}
@@ -6505,6 +6728,7 @@ ${}$
  filter with fast fourier transform
 
 \end{lstlisting}
+\section{signal-processing/spectral-density}
 \subsection{spectral\_density\_ar2}
 ${}$
 \begin{lstlisting}
@@ -6513,19 +6737,102 @@ ${}$
 \subsection{spectral\_density\_area}
 ${}$
 \begin{lstlisting}
+ integrate the spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_2d\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_2d\_scale\_old}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{spectral\_density\_bandpass\_continuous}
 ${}$
 \begin{lstlisting}
+ S : spectral density of the bandpass filter in continuos space
+     limit case of the discrete bandpass for dx -> 0
+
+ function [S,IS] = spectral_density_bandpass_continous(fx,fc,order)
+ f     : frequency (abszissa)
+ fc    : central frequncy, location of maximum on abszissa
+ order : number of times filter is applied iteratively, not necessarily integer
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_continuous\_max}
+${}$
+\begin{lstlisting}
+ maximum of the bandpass spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_continuous\_max2par}
+${}$
+\begin{lstlisting}
+ transform mode (maxima) of the bandpass spectral density into the paramter
+ of the underlying distribution 
+
+\end{lstlisting}
+\subsection{spectral\_density\_bandpass\_continuous\_scale}
+${}$
+\begin{lstlisting}
+ normaliztation scale of the spatial bandpass density
 
 \end{lstlisting}
 \subsection{spectral\_density\_bandpass\_discrete}
 ${}$
 \begin{lstlisting}
+ spectral density of the discrete spatial (two-sided) bandpass filter
 
 \end{lstlisting}
 \subsection{spectral\_density\_brownian\_phase}
+${}$
+\begin{lstlisting}
+ spectral density of a fourier series where the phase undergoes brownian motion
+ with standard deviation s per unit distance
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_mode}
+${}$
+\begin{lstlisting}
+ mode (maximum) of the spectral density of the fourier series with brownian phase
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_mode2par}
+${}$
+\begin{lstlisting}
+ transform mode to parameters of the brownian phase spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_scale}
+${}$
+\begin{lstlisting}
+ normalization scale of the brownian phase spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_estimate\_2d}
 ${}$
 \begin{lstlisting}
 
@@ -6533,6 +6840,7 @@ ${}$
 \subsection{spectral\_density\_flat}
 ${}$
 \begin{lstlisting}
+ flat spectral density of a random vector woth iid elements
 
 \end{lstlisting}
 \subsection{spectral\_density\_highpass}
@@ -6540,9 +6848,44 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{spectral\_density\_highpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_highpass\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_highpass\_cos}
+${}$
+\begin{lstlisting}
+ consine shaped spectral density of a highpass filter
+
+\end{lstlisting}
 \subsection{spectral\_density\_lorentzian}
 ${}$
 \begin{lstlisting}
+ lorentzian spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_lorentzian\_max}
+${}$
+\begin{lstlisting}
+ mode (maximum) of the lorentzian spectral density
+
+\end{lstlisting}
+\subsection{spectral\_density\_lorentzian\_max2par}
+${}$
+\begin{lstlisting}
+ transform maximum of the lorentzian spectral density to its distribution parameters
+
+\end{lstlisting}
+\subsection{spectral\_density\_lorentzian\_scale}
+${}$
+\begin{lstlisting}
+ normalization scale of the lorentzian spectral density
 
 \end{lstlisting}
 \subsection{spectral\_density\_lowpass}
@@ -6550,7 +6893,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{spectral\_density\_radial}
+\subsection{spectral\_density\_lowpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_lowpass\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_lowpass\_one\_sided}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_periodic\_additive\_noise}
 ${}$
 \begin{lstlisting}
 
@@ -6560,6 +6918,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{signal-processing}
 \subsection{spectrogram}
 ${}$
 \begin{lstlisting}
@@ -6756,11 +7115,14 @@ ${}$
 ${}$
 \begin{lstlisting}
  filter with triangular window
+ trifilt1 is ident to twice applying rectfilt1 (meanfilt1) with half the domain size
+ note : inifnitely many convolution yield a gaussian
 
 \end{lstlisting}
 \subsection{trifilt2}
 ${}$
 \begin{lstlisting}
+ filter with a triangular window along both dimensions
 
 \end{lstlisting}
 \subsection{triwin}
@@ -7063,12 +7425,13 @@ ${}$
 \subsection{logn\_mode}
 ${}$
 \begin{lstlisting}
+ mode (maximum) of the log-normal density
 
 \end{lstlisting}
 \subsection{logn\_moment2param}
 ${}$
 \begin{lstlisting}
- transform modes (mu,sd) to parameters of the log normal distribution
+ transform the mode (mu,sd) to parameters of the log normal distribution
 
 \end{lstlisting}
 \subsection{logn\_param2moment}
@@ -7113,21 +7476,21 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{f\_mean}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{f\_std}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{f\_var\_finite}
 ${}$
 \begin{lstlisting}
  reduction of variance when sampling from a finite population
  without replacement
+
+\end{lstlisting}
+\subsection{fisher\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fisher\_std}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{gam\_mean}
@@ -7144,6 +7507,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  transform modes (mu,sd) to parameters of the gamma distribution
+
+\end{lstlisting}
+\subsection{gamma\_stirling}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{gaussfit3}
@@ -7806,6 +8174,7 @@ ${}$
 ${}$
 \begin{lstlisting}
  skewness of a weighted set of samples
+ function sk = wskew(w,x)
 
 \end{lstlisting}
 \subsection{wstd}
@@ -8174,7 +8543,7 @@ ${}$
 \subsection{range}
 ${}$
 \begin{lstlisting}
- mid range
+ range and mid range of input
 
 \end{lstlisting}
 \subsection{resample\_with\_replacement}
@@ -8389,6 +8758,24 @@ ${}$
 
 \end{lstlisting}
 \subsection{wnormpdf}
+${}$
+\begin{lstlisting}
+ wrapped normal distribution to the unit circle
+ c.f. stephens
+
+\end{lstlisting}
+\section{stochastic}
+\subsection{brownian\_noise\_1d\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_noise\_1d\_fft}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_noise\_2d\_fft}
 ${}$
 \begin{lstlisting}
 
@@ -8891,6 +9278,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_max\_normal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_moments\_fourier\_power}
 ${}$
 \begin{lstlisting}
 

@@ -1,0 +1,1 @@
+ figure(1); fc=0.1; s=0.5*fc; x=linspace(-4,4)'; f=@(x) 1./(1+(1/s*(x-fc)).^2); plot(x,[normpdf(s*x)/normpdf(0),f(x)]); hline(normpdf(-1)); fx = linspace(0,0.5)'; S = spectral_density_bp(fx,fc,1,1,length(f),'f'); S(:,2) = normpdf(fx,fc,s); S(:,3) = f(fx); S=S./max(S); plot(fx,[S]); 

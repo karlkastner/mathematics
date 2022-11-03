@@ -2,34 +2,18 @@
 %
 %% transform mode to parameters of the brownian phase spectral density
 %
+% function [f0, s] = spectral_density_brownian_phase_mode2par(fc,Sc)
 function [f0, s] = spectral_density_brownian_phase_mode2par(fc,Sc)
-if (0)
-	for idx=1:length(Sc)
-	p2_ = roots([  1  ...
-                    , (8*Sc(idx)^2*fc^2*pi^2 - 2)  ...
-                    ,-(8*Sc(idx)^2*fc^2*pi^2 - 16*Sc(idx)^4*fc^4*pi^4 + 3)  ...
-                    ,-16*Sc(idx)^2*fc^2*pi^2 ...
-                   ]);
-	[~, mdx] = min(abs(imag(p2_)));
-	p2(idx) = p2_(mdx);
-	end
-else
-	% TODO use roost3 function
-	a3 =  4*Sc.^2.*fc.^2.*pi.^2;
-        a1 =  (2.*a3 - 2);
-        a2 = (-2.*a3 + a3.*a3 - 3);
-	p2  = ( (    ((- a1.^2/9 + a2/3).^3 + (a1.^3/27 - (a2.*a1)/6 + -2*a3).^2).^(1/2) ...
-		+ 2*a3 ...
-		+ (a1.*a2)/6 - a1.^3/27 ...
-	       ).^(1/3) ...
-	       - (- a1.^2/9 + a2/3) ...
-		./ (((- a1.^2/9 + a2/3).^3 + (a1.^3/27 - (a2.*a1)/6 + -2*a3).^2).^(1/2) + 2*a3 + (a1.*a2)/6 - a1.^3/27).^(1/3) ... 
-	       - a1/3 ...
-	     );
-end
-	p  = sqrt(p2);
-	s  = sqrt(pi^3*p);
-	f0 = fc./sqrt(2.*sqrt(p2 + 1) - p2 - 1);
 
+	%r = root(z^3 - z^2 + z*(4*Sc^2*fc^2*pi^2 - 2) - 4*Sc^2*fc^2*pi^2, z, 1)
+	rp = [1, -1, (4*Sc^2*fc^2*pi^2 - 2), -4*Sc^2*fc^2*pi^2];
+	r = roots3(rp)
+	% choose real root
+	r = r(1);
+	p2 = (  pi^2*((4*Sc^2*fc^2*pi^2 - 1)*r^2 ...
+	      - 12*Sc^2*fc^2*pi^2 + 16*Sc^4*fc^4*pi^4 ...
+              + 2*r)/(16*Sc^2*fc^2) );
+	s = sqrt(pi/sqrt(p2));
+	f0 = fc./sqrt(2*(pi.^2*s.^4 + 1).^(1/2) - s.^4*pi^2 - 1);
 end % spectral_density_brownian_phase_mode2par
 

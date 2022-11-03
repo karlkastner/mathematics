@@ -3,10 +3,10 @@
 %
 %% finite difference derivative matrix in two dimensions
 % function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,circular)
-function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,circular)
+function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,bc)
 	% first oder derivative matrices
-	Dx1  = derivative_matrix_1_1d(n(1),L(1),order,circular);
-	Dy1  = derivative_matrix_1_1d(n(2),L(2),order,circular);
+	Dx1  = derivative_matrix_1_1d(n(1),L(1),order,bc{1});
+	Dy1  = derivative_matrix_1_1d(n(2),L(2),order,bc{2});
 
 	% bug corrected on
 	% Fri 18 May 10:04:14 CEST 2018
@@ -18,8 +18,8 @@ function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,circular)
 	end
 
 	% second order derivative
-	D2x1 = derivative_matrix_2_1d(n(1),L(1),order,circular);
-	D2y1 = derivative_matrix_2_1d(n(2),L(2),order,circular);
+	D2x1 = derivative_matrix_2_1d(n(1),L(1),order,bc{1});
+	D2y1 = derivative_matrix_2_1d(n(2),L(2),order,bc{2});
 
 	% this yields still a 1-neighbourhood kernel with 9 points of which 4
 	% are non-zero, as the differentiation is on orthogonal directions

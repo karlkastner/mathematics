@@ -29,7 +29,19 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 		bcl = 'dirichlet';
 	end
 	if (nargin() < 5)
-		bcr = 'dirichlet';
+		bcr = bcl;
+	end
+	switch(bcl)
+	case {'neumann','dirichlet','circular'}
+		% nothing to do
+	otherwise
+	error('unknown boundary condition');
+	end
+	switch(bcr)
+	case {'neumann','dirichlet','circular'}
+		% nothing to do
+	otherwise
+	error('unknown boundary condition');
 	end
 	if (isscalar(nx))
 		% 
@@ -60,7 +72,7 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 
 		% boundaries
 		switch (lower(bcl))
-		case {'c','circular'}
+		case {'circular'}
 			switch (order)
 			case {2}
 				D2(1,end) = D2(1,2);
@@ -93,10 +105,16 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 			% linear extrapolation
 		switch (order)
 		case {2}
+			%     [ 1 | -2, 1]/h^2
+			% bc: [-1 | 1]/h == 0
+			%     [ 0 | -1, 1]/h^2 = 0
 			%D2(1,1:3)       = 1/h^2*[1, -2, 1];
 			%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
-			%D2(1,1:2) = 1/h*[-1,1];
-			D2(end,end-1:end) = 1/h*[-1,1];
+			D2(1,1:2)        = 1/(h*h)*[-1,1];
+			%    [1, -2 | 1]/h^2 (ode)
+			%    [   -1 | 1] = 0 (bc)
+			%    [1, -1 | 0]/h^2
+			D2(end,end-1:end) = 1/(h*h)*[1,-1]; % was -1, 1
 		case {4}
 			D2(1:2,:) = 0;
 			D2(end-1:end,:) = 0;
@@ -106,7 +124,7 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 			D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
 		end
 		otherwise
-			% hom dirichlet, do nothing
+			% homogeneous dirichlet, do nothing
 		end
 		
 	else

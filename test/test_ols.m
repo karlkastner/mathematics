@@ -1,0 +1,1 @@
+n=10; m=1e3; x = linspace(0,1,n)'; s=4; y = s*randn(n,m); A = [ones(n,1),x]; c = A\y; mean(c,2), std(c,[],2), s*sqrt(diag(inv(A'*A))); f= @(c,x) sum(flat((c(1)+c(2)*x).^2)); hessian(@(c) f(c,x), [0,0])

@@ -2,6 +2,7 @@
 %% trapezoidal filter window
 % p = 0 : rectangular
 % p = 1 : triangular
+% function w = trapwin(x,x0,L,p)
 function w = trapwin(x,x0,L,p)
 	if (nargin()<2 || isempty(x0))
 		x0 = 0.5*(x(1)+x(end));

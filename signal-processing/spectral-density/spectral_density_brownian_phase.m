@@ -14,9 +14,9 @@ function [S,I] = spectral_density_brownian_phase(fx,f0,s,normalize)
 	else
 		pi_ = pi;
 	end
-	p = pi*s.^2;
+	p = pi_*s.^2;
 	% this is already analytically normalized
-	S = 4*p.*(p.^2 + fx.^2./f0.^2 + 1)./(2*pi*f0.*(4*p.^2 + (p.^2 + fx.^2./f0.^2 - 1).^2));
+	S = 4*p.*(p.^2 + fx.^2./f0.^2 + 1)./(2*pi_*f0.*(4*p.^2 + (p.^2 + fx.^2./f0.^2 - 1).^2));
 
 
 	switch (normalize)

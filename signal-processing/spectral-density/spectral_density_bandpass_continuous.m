@@ -1,65 +1,54 @@
 % Tue 23 Nov 17:31:17 CET 2021
 % Karl Kastner, Berlin
 %
-%% S : spectral density of the bandpass filter in continuos space
-%%     limit case of the discrete bandpass for dx -> 0
 %%
-%% function [S,IS] = spectral_density_bandpass_continous(fx,fc,order)
+%% function [S_bp,Sc] = spectral_density_bandpass_continous(fx,fc,order,normalize,pp)
+%%
+%% output :
+%% S_bp : spectral density of the bandpass filter in continuos space
+%%     limit case of the discrete bandpass for dx -> 0
+%% Sc   : scale factor to normalize area to 1, if noramlize = true
+%%
+%% input :
 %% f     : frequency (abszissa)
-%% fc    : central frequncy, location of maximum on abszissa
+%% fc    : central freqeuncy, location of maximum on abszissa
 %% order : number of times filter is applied iteratively, not necessarily integer
-function [S,IS] = spectral_density_bandpass_continuous(fx,fc,order,normalize,q)
-	if (nargin()< 3||isempty(order))
+%% normalize : normalize area under curve int_0^inf S(f) df = 1, if not maximum S(fc) = 1
+%% pp    : powers for recombination of the lowpass filter 
+function [S_bp,Sc] = spectral_density_bandpass_continuous(fx,fc,order,normalize,pp)
+	if (nargin()< 3 || isempty(order))
 		order = 1;
 	end
 	if (nargin()<4 || isempty(normalize))
 		normalize = 1;
 	end
 	if (nargin()<5)
-		q = 1;
+		pp = [];
 	end
-	switch (q)
-	case {1}
-		% from recombining a first order lowpass
-		% this is the spectral density scaled so that the max at f=fc is 1
-		S = (4*(1 - sqrt(1 + 3*(fx./fc).^2))./(1 + 3*(fx./fc).^2)).^2;
-	case {2}
-		% from recombining a second order lowpass
-		% this expression is simpler
-		S = (2*fc*fx./(fx.^2 + fc.^2)).^4;
-	otherwise
-		error('not yet implemented');
+	if (isempty(pp))
+		% this is identical to pp = [2,1/2,1]
+		% S     = (1-S_lp).*S_lp;
+		S_bp = (2*fc*fx./(fx.^2 + fc.^2)).^2;
+	else
+		% lowpass density
+		S_lp1 = spectral_density_lowpass_continuous(fx,fc,1,false);
+		% transfer function
+		T_lp1 = sqrt(S_lp1);
+		% bandpass density
+		S_bp     = ((1-T_lp1.^pp(1)).^pp(2).*T_lp1.^pp(3)).^2;
 	end
 
-	% nb: power 4 has to be separated, to ensure positivity
 	if (order ~= 1)
-		S = S.^order;
+		S_bp = S_bp.^order;
 	end
 	
 	% normalize
 	switch (normalize)
-	case {-1}
-		% do not normalize
-		if (issym(S))
-			syms Sc
-		else
-			Sc = 1;
-		end
-	case {0} % analytic, for limit case df = 1/L = 0
-		%IS = spectral_density_bandpass_continuous_scale(fc, order);
-		%Sc = spectral_density_bandpass_continuous_scale(fc, order, 0,1);
-		Sc = spectral_density_bandpass_continuous_scale(fc, order, 1,q)
-		S = Sc.*S;
-	otherwise % numerical, for finite L
-		%Sc = 1./spectral_density_area(fx, S);
-		Sc = spectral_density_bandpass_continuous_scale(fc, order, 1, q)
-%		L = 100;
-%		Sc = 1./quad(@(fx) spectral_density_bandpass_continuous(fx,fc,order,-1),0,L*fc);
-%		Sc = spectral_density_bandpass_continuous_scale(fc, order);
-%		df = fc/100;
-%		1./sum(df*spectral_density_bandpass_continuous(0:df:(L*fc),fc,order,-1))
-
-	end
-	S = Sc.*S;
+		case {0}
+			Sc  = 1; % do not normalize
+		otherwise % analytic, for limit case df = 1/L = 0
+			Sc = spectral_density_bandpass_continuous_scale(fc, order, pp);
+			S_bp = Sc.*S_bp;
+	end % switch
 end % spectral_density_bandpass_continuous
 
