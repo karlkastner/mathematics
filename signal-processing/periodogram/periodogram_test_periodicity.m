@@ -4,7 +4,7 @@
 %% test a periodogram for hidden periodic frequency components
 %% 
 %% function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity(fx,Shat,nf,fmin,fmax,S,mode)
-
+%%
 %% input:
 %%	fx : frequengcies
 %%	Shat : corresponding periodogram values
@@ -16,6 +16,8 @@
 %%	       exclusive : estimate density by smoothing  excluding the central bin
 %%	note: inclusive and exclusive lead to different distribution
 %%	      but identical p-values
+%%
+%% TODO pass L and not fx
 function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity( ...
 					       fx,Shat,nf,fmin,fmax,S,mode)
 	if (nargin()<4 || isempty(fmin))

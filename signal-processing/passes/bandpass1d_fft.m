@@ -3,6 +3,7 @@
 %
 %% filter input vector with a spatial (two-sided) bandpass in fourier space
 %
+% function y = bandpass1d_fft(y,fc,p,dx)
 function y = bandpass1d_fft(y,fc,p,dx)
 	if (isvector(y))
 		y = cvec(y);

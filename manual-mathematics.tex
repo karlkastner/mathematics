@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 19M
+mathematics\protect\\Revision 20M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -516,6 +516,11 @@ ${}$
  s : standard deviation of the frequency (!)
 
 \end{lstlisting}
+\subsection{caesaro\_weight}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{dftmtx\_man}
 ${}$
 \begin{lstlisting}
@@ -663,6 +668,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  fourier series coefficients of a square pulse
+
+\end{lstlisting}
+\subsection{fourier\_complete\_negative\_half\_plane}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{fourier\_cubic\_interaction\_coefficients}
@@ -860,6 +870,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fourier\_truncate\_negative\_half\_plane}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{hyperbolic\_fourier\_box}
 ${}$
 \begin{lstlisting}
@@ -1027,7 +1042,7 @@ ${}$
 \subsection{centroid}
 ${}$
 \begin{lstlisting}
- centroid pf a polygone
+ centroid of a polygone
 
 \end{lstlisting}
 \subsection{cosa\_min\_max}
@@ -2691,6 +2706,26 @@ ${}$
 
 \end{lstlisting}
 \section{linear-algebra}
+\subsection{laplacian\_eigenvalue}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{laplacian\_eigenvector}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{laplacian\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{least\_squares\_perpendicular\_offset}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{left}
 ${}$
 \begin{lstlisting}
@@ -3209,6 +3244,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{nearest\_fractional\_timestep}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{number-theory}
 \subsection{ceiln}
 ${}$
@@ -3376,6 +3421,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{diffusion\_matrix\_2d\_anisotropic2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{directional\_neighbour}
 ${}$
 \begin{lstlisting}
 
@@ -5360,13 +5410,12 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\section{patterns}
-\subsection{band\_pattern}
-${}$
+\section{mathematics}
 \begin{lstlisting}
+mathematical functions of various kind
 
 \end{lstlisting}
-\subsection{hexagonal\_pattern}
+\subsection{oversampleNZ}
 ${}$
 \begin{lstlisting}
 
@@ -5606,6 +5655,19 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing}
+\subsection{asymwin}
+${}$
+\begin{lstlisting}
+ creates asymmetrical filter windows
+ filter will always have negative weights
+
+\end{lstlisting}
+\section{signal-processing/autocorrelation}
+\subsection{acf\_radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{acfar1}
 ${}$
 \begin{lstlisting}
@@ -5746,14 +5808,6 @@ ${}$
  acf = [1 a1 a2 ...]
 
 \end{lstlisting}
-\subsection{asymwin}
-${}$
-\begin{lstlisting}
- creates asymmetrical filter windows
- filter will always have negative weights
-
-\end{lstlisting}
-\section{signal-processing/autocorr}
 \subsection{autocorr2}
 ${}$
 \begin{lstlisting}
@@ -5795,6 +5849,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  estimate sample autocorrelation function
+
+\end{lstlisting}
+\subsection{autocorr\_forest}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{autocorr\_genton}
@@ -5839,81 +5898,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  bandpass filter
-
-\end{lstlisting}
-\subsection{bandpass1d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass1d\_fft}
-${}$
-\begin{lstlisting}
- filter input vector with a spatial (two-sided) bandpass in fourier space
-
-\end{lstlisting}
-\subsection{bandpass1d\_implicit}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2}
-${}$
-\begin{lstlisting}
- bandpass filter
-
-\end{lstlisting}
-\subsection{bandpass2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_fft}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_ideal}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_implicit}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_iso}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass\_arg}
-${}$
-\begin{lstlisting}
- determine correlation coefficient from frequency of mode for the symmetric
-
-\end{lstlisting}
-\subsection{bandpass\_f0\_to\_rho}
-${}$
-\begin{lstlisting}
- correlation coefficient for the pth-order symmetric bandpass filter with
- maximum at f0 (when rho_lp = rho_hp)
-
-\end{lstlisting}
-\subsection{bandpass\_max}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass\_max2}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{bartlett}
@@ -6019,12 +6003,6 @@ ${}$
  meko 2015
 
 \end{lstlisting}
-\subsection{danielle\_window}
-${}$
-\begin{lstlisting}
- danielle fourier window
-
-\end{lstlisting}
 \subsection{db2neper}
 ${}$
 \begin{lstlisting}
@@ -6037,7 +6015,7 @@ ${}$
  power ratio from db
 
 \end{lstlisting}
-\subsection{derive\_bandpass\_normalization\_and\_zeros}
+\subsection{derive\_bandpass\_continuous\_scale}
 ${}$
 \begin{lstlisting}
 
@@ -6070,15 +6048,6 @@ ${}$
  average phase and phase shift per time step of a train of waves
 
 \end{lstlisting}
-\subsection{digital\_low\_pass\_filter}
-${}$
-\begin{lstlisting}
- design coefficients of a low pass filter with specified cut of frequency
- and sampling period
- alalogue low pass with pole at s=-omega_c=1/tau=1/RC
- Ha = tau/(tau + s) = 1/(1 + omega_c*s)
-
-\end{lstlisting}
 \subsection{doublesum\_ij}
 ${}$
 \begin{lstlisting}
@@ -6091,9 +6060,28 @@ ${}$
  convert effective sample size to ar1 correlation
 
 \end{lstlisting}
+\subsection{fcut2Lw\_gausswin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fcut\_gausswin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{filt\_hodges\_lehman}
 ${}$
 \begin{lstlisting}
+
+\end{lstlisting}
+\section{signal-processing/filters}
+\subsection{circfilt2}
+${}$
+\begin{lstlisting}
+ Mon 19 Dec 17:03:02 CET 2022
+ smooth (filter) the  2D image z with a circular disk of radius nf
+ apply periodic boundary conditions
 
 \end{lstlisting}
 \subsection{filter1}
@@ -6180,6 +6168,67 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gaussfilt2}
+${}$
+\begin{lstlisting}
+ smooth (filter) the  2D image z with a gaussian window
+ apply periodic boundary conditions
+
+\end{lstlisting}
+\subsection{lowpass\_discrete}
+${}$
+\begin{lstlisting}
+ design coefficients of a low pass filter with specified cut of frequency
+ and sampling period
+ alalogue low pass with pole at s=-omega_c=1/tau=1/RC
+ Ha = tau/(tau + s) = 1/(1 + omega_c*s)
+
+\end{lstlisting}
+\subsection{meanfilt2}
+${}$
+\begin{lstlisting}
+ filter with a rectangular window along both dimensions
+
+\end{lstlisting}
+\subsection{medfilt1\_man}
+${}$
+\begin{lstlisting}
+ moving median filter, supports columnwise operation
+
+\end{lstlisting}
+\subsection{medfilt1\_man2}
+${}$
+\begin{lstlisting}
+ moving median filter with special treatment of boundaries
+
+\end{lstlisting}
+\subsection{medfilt1\_padded}
+${}$
+\begin{lstlisting}
+ median filter with padding
+
+\end{lstlisting}
+\subsection{medfilt1\_reduced}
+${}$
+\begin{lstlisting}
+ median filter with padding
+
+\end{lstlisting}
+\subsection{trifilt1}
+${}$
+\begin{lstlisting}
+ filter with triangular window
+ trifilt1 is ident to twice applying rectfilt1 (meanfilt1) with half the domain size
+ note : inifnitely many convolution yield a gaussian
+
+\end{lstlisting}
+\subsection{trifilt2}
+${}$
+\begin{lstlisting}
+ filter with a triangular window along both dimensions
+
+\end{lstlisting}
+\section{signal-processing}
 \subsection{firls\_man}
 ${}$
 \begin{lstlisting}
@@ -6257,6 +6306,171 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{kaiserwin}
+${}$
+\begin{lstlisting}
+ kaiser filter window
+
+\end{lstlisting}
+\subsection{kalman}
+${}$
+\begin{lstlisting}
+ Kalman filter
+
+\end{lstlisting}
+\subsection{lanczoswin}
+${}$
+\begin{lstlisting}
+ Lanczos window
+
+\end{lstlisting}
+\subsection{last}
+${}$
+\begin{lstlisting}
+ lake tail, but for matrices
+
+\end{lstlisting}
+\subsection{maxfilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{meanfilt1}
+${}$
+\begin{lstlisting}
+ moving average filter with special treatment of the boundaries
+
+\end{lstlisting}
+\subsection{mid\_term\_single\_sample}
+${}$
+\begin{lstlisting}
+ variance of single sample, mid term
+
+\end{lstlisting}
+\subsection{minfilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{minmax}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mu2ar1}
+${}$
+\begin{lstlisting}
+ error variance of the mean of the finite length ar1 process
+
+
+ (mu)^2 = (sum epsi)^2 = sum_i sum_j eps_i eps_j = sum_ii(rho,n)/n^2
+ this has the limit s^2 for rho->1 
+
+\end{lstlisting}
+\subsection{mysmooth}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{nanautocorr}
+${}$
+\begin{lstlisting}
+ autocorrelation with nan-values
+
+\end{lstlisting}
+\subsection{nanmedfilt1}
+${}$
+\begin{lstlisting}
+ medfilt1, skipping nans
+
+\end{lstlisting}
+\subsection{neper2db}
+${}$
+\begin{lstlisting}
+ convert neper to db
+
+\end{lstlisting}
+\subsection{oscillator\_noisy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{signal-processing/passes}
+\subsection{bandpass1d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass1d\_fft}
+${}$
+\begin{lstlisting}
+ filter input vector with a spatial (two-sided) bandpass in fourier space
+
+\end{lstlisting}
+\subsection{bandpass1d\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2}
+${}$
+\begin{lstlisting}
+ bandpass filter
+
+\end{lstlisting}
+\subsection{bandpass2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_fft}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_iso}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass\_arg}
+${}$
+\begin{lstlisting}
+ determine correlation coefficient from frequency of mode for the symmetric
+
+\end{lstlisting}
+\subsection{bandpass\_f0\_to\_rho}
+${}$
+\begin{lstlisting}
+ correlation coefficient for the pth-order symmetric bandpass filter with
+ maximum at f0 (when rho_lp = rho_hp)
+
+\end{lstlisting}
+\subsection{bandpass\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass\_max2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{highpass}
 ${}$
 \begin{lstlisting}
@@ -6297,35 +6511,6 @@ ${}$
 \subsection{highpass\_fc\_to\_rho}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{jackknife\_block}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{kaiserwin}
-${}$
-\begin{lstlisting}
- kaiser filter window
-
-\end{lstlisting}
-\subsection{kalman}
-${}$
-\begin{lstlisting}
- Kalman filter
-
-\end{lstlisting}
-\subsection{lanczoswin}
-${}$
-\begin{lstlisting}
- Lanczos window
-
-\end{lstlisting}
-\subsection{last}
-${}$
-\begin{lstlisting}
- lake tail, but for matrices
 
 \end{lstlisting}
 \subsection{lowpass}
@@ -6403,102 +6588,14 @@ ${}$
  low-pass filter of data
 
 \end{lstlisting}
-\subsection{maxfilt1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{meanfilt1}
-${}$
-\begin{lstlisting}
- moving average filter with special treatment of the boundaries
-
-\end{lstlisting}
-\subsection{meanfilt2}
-${}$
-\begin{lstlisting}
- filter with a rectangular window along both dimensions
-
-\end{lstlisting}
-\subsection{medfilt1\_man}
-${}$
-\begin{lstlisting}
- moving median filter, supports columnwise operation
-
-\end{lstlisting}
-\subsection{medfilt1\_man2}
-${}$
-\begin{lstlisting}
- moving median filter with special treatment of boundaries
-
-\end{lstlisting}
-\subsection{medfilt1\_padded}
-${}$
-\begin{lstlisting}
- median filter with padding
-
-\end{lstlisting}
-\subsection{medfilt1\_reduced}
-${}$
-\begin{lstlisting}
- median filter with padding
-
-\end{lstlisting}
-\subsection{mid\_term\_single\_sample}
-${}$
-\begin{lstlisting}
- variance of single sample, mid term
-
-\end{lstlisting}
-\subsection{minfilt1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{mu2ar1}
-${}$
-\begin{lstlisting}
- error variance of the mean of the finite length ar1 process
-
-
- (mu)^2 = (sum epsi)^2 = sum_i sum_j eps_i eps_j = sum_ii(rho,n)/n^2
- this has the limit s^2 for rho->1 
-
-\end{lstlisting}
-\subsection{mysmooth}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{nanautocorr}
-${}$
-\begin{lstlisting}
- autocorrelation with nan-values
-
-\end{lstlisting}
-\subsection{nanmedfilt1}
-${}$
-\begin{lstlisting}
- medfilt1, skipping nans
-
-\end{lstlisting}
-\subsection{neper2db}
-${}$
-\begin{lstlisting}
- convert neper to db
-
-\end{lstlisting}
-\subsection{oscillator\_noisy}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
+\section{signal-processing}
 \subsection{peaks\_man}
 ${}$
 \begin{lstlisting}
  peaks of a periodogram
 
 \end{lstlisting}
+\section{signal-processing/periodogram}
 \subsection{periodogram}
 ${}$
 \begin{lstlisting}
@@ -6531,6 +6628,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  confidence interval for periodogram values
+
+\end{lstlisting}
+\subsection{periodogram\_filter}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{periodogram\_median}
@@ -6573,6 +6675,7 @@ ${}$
  test a periodogram for hidden periodic frequency components
  
  function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity(fx,Shat,nf,fmin,fmax,S,mode)
+
  input:
 	fx : frequengcies
 	Shat : corresponding periodogram values
@@ -6585,24 +6688,38 @@ ${}$
 	note: inclusive and exclusive lead to different distribution
 	      but identical p-values
 
+ TODO pass L and not fx
+
 \end{lstlisting}
 \subsection{periodogram\_test\_periodicity\_2d}
 ${}$
 \begin{lstlisting}
  test a periodogram for hidden periodic frequency components
  
- function [p,ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity(fx,Shat,nf,fmin,fmax,S,mode)
+ [p,stat,ratio] = periodogram_test_periodicity_2d(b, L, nf, frmin, frmax)
  input:
 	fx : frequengcies
-	Shat : corresponding periodogram values
-      nf   : number of bins to test for periodicity, ignored when S is given
-	fmin, fmax : frequency range limits to test
-	S    : exact (a priori known theoretical spectral density, must not be estimated from the periodogram)
+	b    : image to test for presence of hidden periodicities,
+             i.e. periodicities where the frequency is not known a priori
+      nf   : radius of circular disk (in number of bins) used for smoothing
+             the periodogram to estimate the spectral density
+      bmsk : mask determining parts of the image to include in the analysis
+             default is entire image
+	fmin, fmax : (radial) frequency range limits to test (fmask)
+
 	mode : automatically set to "exact", when S given
 	       inclusive : estimate density by smoothing including the central bin
 	       exclusive : estimate density by smoothing  excluding the central bin
 	note: inclusive and exclusive lead to different distribution
 	      but identical p-values
+
+ influence of masking the input file:
+ 	      - the root-mean-square energy of the ordinates is proportional
+	        to the number of unmasked points
+	      - values in the periodogram are not any more linearly independent
+	        so that the dof of the filter window is not nf^2
+
+ TODO make frmin, frmax an fmask
 
 \end{lstlisting}
 \subsection{periodogram\_test\_stationarity}
@@ -6618,6 +6735,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{signal-processing}
 \subsection{polyfilt1}
 ${}$
 \begin{lstlisting}
@@ -6632,10 +6750,14 @@ ${}$
  medfilt1, after fitting a quadratic polynomial
 
 \end{lstlisting}
-\subsection{radial\_window}
+\subsection{quadratfilt1}
 ${}$
 \begin{lstlisting}
- radial filter window in the 2d-frequency domain
+
+\end{lstlisting}
+\subsection{quadratwin}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{randar1}
@@ -6661,12 +6783,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  randomly generate the instance of an ar-p process
-
-\end{lstlisting}
-\subsection{range\_window}
-${}$
-\begin{lstlisting}
- range of values within a certain range of indices (window)
 
 \end{lstlisting}
 \subsection{rectwin}
@@ -6750,6 +6866,13 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{spectral\_density\_bandpass\_2d\_max2par}
+${}$
+\begin{lstlisting}
+ transform mode (maxima) of the bandpass spectral density into the paramter
+ of the underlying distribution 
+
+\end{lstlisting}
 \subsection{spectral\_density\_bandpass\_2d\_scale}
 ${}$
 \begin{lstlisting}
@@ -6763,13 +6886,20 @@ ${}$
 \subsection{spectral\_density\_bandpass\_continuous}
 ${}$
 \begin{lstlisting}
- S : spectral density of the bandpass filter in continuos space
-     limit case of the discrete bandpass for dx -> 0
 
- function [S,IS] = spectral_density_bandpass_continous(fx,fc,order)
+ function [S_bp,Sc] = spectral_density_bandpass_continous(fx,fc,order,normalize,pp)
+
+ output :
+ S_bp : spectral density of the bandpass filter in continuos space
+     limit case of the discrete bandpass for dx -> 0
+ Sc   : scale factor to normalize area to 1, if noramlize = true
+
+ input :
  f     : frequency (abszissa)
- fc    : central frequncy, location of maximum on abszissa
+ fc    : central freqeuncy, location of maximum on abszissa
  order : number of times filter is applied iteratively, not necessarily integer
+ normalize : normalize area under curve int_0^inf S(f) df = 1, if not maximum S(fc) = 1
+ pp    : powers for recombination of the lowpass filter 
 
 \end{lstlisting}
 \subsection{spectral\_density\_bandpass\_continuous\_max}
@@ -6814,6 +6944,21 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_across\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_across\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_brownian\_phase\_across\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{spectral\_density\_brownian\_phase\_mode}
 ${}$
 \begin{lstlisting}
@@ -6841,6 +6986,16 @@ ${}$
 ${}$
 \begin{lstlisting}
  flat spectral density of a random vector woth iid elements
+
+\end{lstlisting}
+\subsection{spectral\_density\_forest}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_gausswin}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{spectral\_density\_highpass}
@@ -6888,11 +7043,6 @@ ${}$
  normalization scale of the lorentzian spectral density
 
 \end{lstlisting}
-\subsection{spectral\_density\_lowpass}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{spectral\_density\_lowpass2d\_ideal}
 ${}$
 \begin{lstlisting}
@@ -6903,12 +7053,37 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{spectral\_density\_lowpass\_continuous}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_lowpass\_continuous\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_lowpass\_discrete}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{spectral\_density\_lowpass\_one\_sided}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{spectral\_density\_maximum\_bias\_corrected}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{spectral\_density\_periodic\_additive\_noise}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{spectral\_density\_rectwin}
 ${}$
 \begin{lstlisting}
 
@@ -6919,16 +7094,15 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing}
+\subsection{spectral\_density\_brownian\_phase\_reg2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{spectrogram}
 ${}$
 \begin{lstlisting}
  spectrogram
-
-\end{lstlisting}
-\subsection{std\_window}
-${}$
-\begin{lstlisting}
- moving block standard deviation
 
 \end{lstlisting}
 \subsection{sum\_i\_lag}
@@ -6979,126 +7153,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_acfar1\_2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_acfar1\_3}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_acfar1\_4}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_acfar2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1\_var\_factor}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1\_var\_factor\_2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1\_var\_mu\_single\_sample}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1\_var\_pop}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1\_var\_pop\_1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_ar1delay}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_bivariate\_covariance\_term}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_convexity}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_lanczoswin}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_madcorr}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_randar1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_randar1\_multivariate}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_randar2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_sum\_ij}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_sum\_multivar}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_trifilt1}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_wautocorr}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_wavelet\_transform}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_wordfilt}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_xar1\_mid\_term}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{tikhonov\_to\_ar1}
 ${}$
 \begin{lstlisting}
@@ -7111,20 +7165,6 @@ ${}$
  trapezoidal filter window
 
 \end{lstlisting}
-\subsection{trifilt1}
-${}$
-\begin{lstlisting}
- filter with triangular window
- trifilt1 is ident to twice applying rectfilt1 (meanfilt1) with half the domain size
- note : inifnitely many convolution yield a gaussian
-
-\end{lstlisting}
-\subsection{trifilt2}
-${}$
-\begin{lstlisting}
- filter with a triangular window along both dimensions
-
-\end{lstlisting}
 \subsection{triwin}
 ${}$
 \begin{lstlisting}
@@ -7135,6 +7175,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  triangular filter window
+
+\end{lstlisting}
+\subsection{tukeywin\_man}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{varar1}
@@ -7162,6 +7207,51 @@ ${}$
  filter with bandpass
 
 \end{lstlisting}
+\section{signal-processing/windows}
+\subsection{circwin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{danielle\_window}
+${}$
+\begin{lstlisting}
+ danielle fourier window
+
+\end{lstlisting}
+\subsection{gausswin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gausswin2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{radial\_window}
+${}$
+\begin{lstlisting}
+ radial filter window in the 2d-frequency domain
+
+\end{lstlisting}
+\subsection{range\_window}
+${}$
+\begin{lstlisting}
+ range of values within a certain range of indices (window)
+
+\end{lstlisting}
+\subsection{rectwin\_cutoff\_frequency}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{std\_window}
+${}$
+\begin{lstlisting}
+ moving block standard deviation
+
+\end{lstlisting}
 \subsection{window2d}
 ${}$
 \begin{lstlisting}
@@ -7172,6 +7262,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{signal-processing}
 \subsection{winfilt0}
 ${}$
 \begin{lstlisting}
@@ -7243,11 +7334,108 @@ ${}$
  returns row and column index of sorted values
 
 \end{lstlisting}
+\section{spatial-pattern-analysis/@Spatial\_Pattern}
+\subsection{Spatial\_Pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{analyze\_grid}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{analyze\_transect}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{extract\_improfile}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{imread}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{plot}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{tabulate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{spatial-pattern-analysis}
+\subsection{analyze\_grid2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{approximate\_ratio\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{banded\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_phase\_patch\_size\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{hexagonal\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{isisotropic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{patch\_size\_1d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{patch\_size\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{separate\_isotropic\_from\_anisotropic\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{suppress\_low\_frequency\_lobe}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{special-functions}
 \subsection{bessel\_sphere}
 ${}$
 \begin{lstlisting}
  spherical Bessel function of the first kind
+
+\end{lstlisting}
+\subsection{beta\_man}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{betainc\_man}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{digamma\_man}
@@ -7312,10 +7500,10 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{beta\_mode\_to\_parameter}
+\subsection{beta\_moment2param}
 ${}$
 \begin{lstlisting}
- transform modes (mean and sd) to paramets of the beta function
+ transform central moments (mean and sd) to parameters of the beta function
 
 \end{lstlisting}
 \subsection{beta\_skew}
@@ -7428,6 +7616,11 @@ ${}$
  mode (maximum) of the log-normal density
 
 \end{lstlisting}
+\subsection{logn\_mode2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{logn\_moment2param}
 ${}$
 \begin{lstlisting}
@@ -7471,6 +7664,16 @@ ${}$
 
 \end{lstlisting}
 \section{statistics}
+\subsection{error\_propagation\_fraction}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{error\_propagation\_product}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{example\_standard\_error\_of\_sample\_quantiles}
 ${}$
 \begin{lstlisting}
@@ -7484,6 +7687,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{fisher\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fisher\_moment2param}
 ${}$
 \begin{lstlisting}
 
@@ -7579,6 +7787,11 @@ ${}$
 
 \end{lstlisting}
 \section{statistics}
+\subsection{jackknife\_block}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{kurtncdf}
 ${}$
 \begin{lstlisting}
@@ -7790,6 +8003,11 @@ ${}$
  c.f. Wolperts
  this is the median, not the mean of the maximum!
  see median of gumbel
+
+\end{lstlisting}
+\subsection{mean\_angle}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{mean\_generalized\_gampdf}
@@ -8533,12 +8751,6 @@ ${}$
  random numbers of the skew normal distribution
 
 \end{lstlisting}
-\subsection{skewrnd2}
-${}$
-\begin{lstlisting}
- random numbers of the skew normal distribution
-
-\end{lstlisting}
 \section{statistics}
 \subsection{range}
 ${}$
@@ -8728,6 +8940,11 @@ ${}$
  more powerfull than unpaired test, as long as correlation between x1 and x2 > 0
 
 \end{lstlisting}
+\subsection{uniformnpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{wgeomean}
 ${}$
 \begin{lstlisting}
@@ -8765,17 +8982,95 @@ ${}$
 
 \end{lstlisting}
 \section{stochastic}
-\subsection{brownian\_noise\_1d\_acf}
+\subsection{brownian\_drift\_hitting\_probability}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{brownian\_noise\_1d\_fft}
+\subsection{brownian\_drift\_hitting\_probability2}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{brownian\_noise\_2d\_fft}
+\subsection{brownian\_field}
+${}$
+\begin{lstlisting}
+ simulate Fractional Brownian field on unit disk, with Hurst parameter 'H';
+ Reference:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_fft}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_fourier}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_interleave}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_1d\_laplacian}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_fft}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_fft\_old}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_fourier}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_interleave}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_interleaving}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_kahunen}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_2d\_laplacian}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_motion\_with\_drift\_hitting\_probability}
 ${}$
 \begin{lstlisting}
 
@@ -9236,28 +9531,84 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\section{test}
-\subsection{test\_bandpass2d}
+\section{test/signal-processing/autocorrelation}
+\subsection{test\_acf}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_gaussfit3}
+\subsection{test\_acf\_bias}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_geoserr}
+\subsection{test\_acf\_brownian\_phase}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_hexagonal\_pattern}
+\subsection{test\_acfar1\_2}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_lognfit\_quantile}
+\subsection{test\_acfar1\_3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_acfar1\_4}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_acfar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_factor}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_factor\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_mu\_single\_sample}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_pop}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1\_var\_pop\_1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar1delay}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/signal-processing/passes}
+\subsection{test\_bandpass2d\_ideal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_lowpass1d\_fft}
 ${}$
 \begin{lstlisting}
 
@@ -9277,7 +9628,495 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_lowpass2d\_rho}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/signal-processing/periodogram}
+\subsection{test\_periodicity\_test\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periodogram\_bartlett\_se}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periodogram\_gauss}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periodogram\_radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periodogram\_test}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periodogram\_test\_periodicity\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_periogogram\_significance}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/signal-processing/spectral-density}
+\subsection{test\_spectral\_density\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_2d\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_continuous}
+${}$
+\begin{lstlisting}
+	title(sprintf('n %d L %g %g%%',[n,L,1e2*rmse(idx,jdx)]));
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_continuous\_1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_maximum}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bandpass\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bp\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_bp\_approx}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_across\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_brownian\_phase\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_flat}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_hp\_cos}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_lorentzian\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_lorentzian\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_lowpass}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_lowpass\_continuous}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_lowpass\_continuous\_1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectral\_density\_maxiumum\_bias\_corrected}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/spatial-pattern-analysis}
+\subsection{test\_approximate\_ratio\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_approximate\_ratio\_quantile}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spearate\_isotropic\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/moment-statistics}
+\subsection{test\_wmean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics}
+\subsection{test\_fisher\_moment2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/stochastics}
+\subsection{test\_brownian\_surface}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test}
+\subsection{test\_S}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_advect\_analytic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_asymbp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bandpass2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bandwidth}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bartlett\_angle}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bartlett\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bartlett\_expansion}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_beta}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_betainc}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bivariate\_covariance\_term}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_drift\_hitting\_probability}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_drift\_hitting\_probability2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_motion\_1d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_motion\_2d\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_motion\_2d\_fft}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_noise\_1d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_noise\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_noise\_interleave}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_coherence}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_combined\_spectral\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_continuous\_fourier\_transform}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_convexity}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_d2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_determine\_phase\_shift}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_diffuse\_analytic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_diffusion\_matrix}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ellipse}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_error\_propagation\_fraction}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_f}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_f2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fit\_2d\_spectral\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fourier}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fourier\_derivative}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fourier\_derivative\_1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fourier\_integral}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fourier\_mask\_covariance\_matrix}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ft\_bp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gam}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gamma\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gaussfit3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gaussian\_flat}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_geoserr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_hexagonal\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_iafrate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_implicit\_ode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_imrotmat}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_integration}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ivp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_jacobian}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_lanczoswin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_laplacian\_power}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_lognfit\_quantile}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ls\_perpendicular\_offset}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_madcorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_mask}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_max\_normal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_moments}
 ${}$
 \begin{lstlisting}
 
@@ -9288,6 +10127,136 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_mtimes3x3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_noisy\_oscillator}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_nonperiodic\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_normaliztation}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ols}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_parcorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_positivity\_preserving}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar1\_multivariate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_randar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_ratio\_distributions}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_sd\_rectwin}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spatialrnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_spectrum\_additivity}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_stationarity}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_stationarity2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_sum\_ij}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_sum\_multivar}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_trifilt1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wautocorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wavelet\_transform}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_whittle}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_window}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_wordfilt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_xar1\_mid\_term}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{mathematics}
+\begin{lstlisting}
+mathematical functions of various kind
+
+\end{lstlisting}
+\subsection{trapezoidal\_fixed}
 ${}$
 \begin{lstlisting}
 
@@ -9307,6 +10276,11 @@ ${}$
  as of time of implmentation, the matlab interal cwt is affected by
  serious round-off errors and has issues with the scaling,
  which is not the case here
+
+\end{lstlisting}
+\subsection{cwt\_man2}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{example\_wavelets}

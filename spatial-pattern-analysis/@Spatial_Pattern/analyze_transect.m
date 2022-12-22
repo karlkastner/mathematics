@@ -31,8 +31,8 @@ function analyze(obj)
 	b0     = b-mean(b);
 
 	% moments of the raw periodogram
-	S.raw0      = periodogram(b0,obj.L);
-	f_mean0     = wmean(S.raw0(fdx),fx(fdx));
+	S.hat0      = periodogram(b0,obj.L);
+	f_mean0     = wmean(S.hat0(fdx),fx(fdx));
 
 	fmin = obj.opt.fminscale*f_mean0;
 	fmax = obj.opt.fmaxscale*f_mean0;
@@ -46,11 +46,11 @@ function analyze(obj)
 	end
 
 	% periodogram
-	S.raw  = periodogram(b_,obj.L);
+	S.hat  = periodogram(b_,obj.L);
 
 	% moments
-	f_mean   = wmean(S.raw(fdx),fx(fdx));
-	f_std	 = wstd(S.raw(fdx),fx(fdx));
+	f_mean   = wmean(S.hat(fdx),fx(fdx));
+	f_std	 = wstd(S.hat(fdx),fx(fdx));
 
 	% determine number of segments for bartlett's estimate
 	if (~isempty(obj.opt.nb))
@@ -66,13 +66,13 @@ function analyze(obj)
 %	Lw_gauss = fcut2Lw_gausswin(fcut_rect);
 
 	% non-parameteric densities
-	S.raw0        = periodogram(b0,obj.L);
+	S.hat0        = periodogram(b0,obj.L);
 	S.bartlett0   = periodogram_bartlett(b0,obj.L,stat.m,n,[],false);
 	S.bartlett    = periodogram_bartlett(b_,obj.L,stat.m,n,[],false);
 	S.gauss       = periodogram_gauss(b_,obj.L,stat.m); %Lw_gauss);
 	S.gauss_       = periodogram_gauss(b_,obj.L,stat.m_); %Lw_gauss);
 	S.rw          = periodogram_rectwin(b_,obj.L,stat.m); %Lw_gauss);
-	S.filt        = ifftshift(meanfilt1(fftshift(S.raw),stat.m));
+	S.filt        = ifftshift(meanfilt1(fftshift(S.hat),stat.m));
 	S.flat        = spectral_density_flat(obj.L,n);
 %obj.L
 %stat.m
@@ -81,7 +81,7 @@ function analyze(obj)
 %legend('filt','ba','g','rw')
 %pause
 
-	f_C = {'gauss','gauss_','bartlett','filt','raw'};
+	f_C = {'gauss','gauss_','bartlett','filt','hat'};
 
 	for idx=1:length(f_C)
 		[stat.Sc.(f_C{idx}),mdx] = max(S.(f_C{idx})(fdx));
@@ -130,7 +130,7 @@ function analyze(obj)
 		fitmethod = 'ls'; 
 		[par, S.(f_C{idx})] = fit_spectral_density(fx,S.(template), ...
 			par0.(f_C{idx}),obj.L,'f',model_C{idx},fitmethod,fmin,fmax); 
-		%[par, S.(f_C{idx})] = fit_spectral_density(fx,S.raw, ...
+		%[par, S.(f_C{idx})] = fit_spectral_density(fx,S.hat, ...
 		%	par,obj.L,'f',model_C{idx},fitmethod,fmin,fmax); 
 		[Sc,mdx] = max(S.(f_C{idx}));
 		stat.Sc.(f_C{idx}) = Sc;
@@ -167,7 +167,7 @@ function analyze(obj)
 	S.c = periodogram_confidence_interval(obj.opt.pp,S.ref,1);
 
 	try
-		[stat.p_periodic,ratio,maxShat,mdx_,fdx_,S.mue] = periodogram_test_periodicity(fx,S.raw,stat.m,fmin,fmax);
+		[stat.p_periodic,ratio,maxShat,mdx_,fdx_,S.mue] = periodogram_test_periodicity(fx,S.hat,stat.m,fmin,fmax);
 	catch e
 		disp(e);
 		stat.p_periodic = NaN;
@@ -175,7 +175,7 @@ function analyze(obj)
 	stat.periodic = (stat.p_periodic<obj.opt.confidence_level);
 
 	% correlogiram and autocorrelation
-	R.raw     = autocorr_fft(cvec(b),[],1);
+	R.hat     = autocorr_fft(cvec(b),[],1);
 	R.b       = real(ifft(S.bartlett));
 	R.b       = R.b/R.b(1);
 	R.bp      = real(ifft(S.bandpass));
@@ -194,7 +194,7 @@ function analyze(obj)
 
 	stat.biomass                  = mean(b);
 	stat.wavelength.mean          = 1./f_mean;
-	f_C = {'gauss','bartlett','bandpass','brownian','filt','lognormal','lorentzian','raw'};
+	f_C = {'gauss','bartlett','bandpass','brownian','filt','lognormal','lorentzian','hat'};
 	for idx=1:length(f_C)
 		stat.wavelength.(f_C{idx}) = 1./stat.fc.(f_C{idx});
 	end

@@ -1,6 +1,11 @@
 % 2021-06-23 21:35:41.688025320 +0200
+%
+% function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
+%
 % spot pattern of unit amplitude
-% output : z
+% output : z : pattern
+%	   x : x-coordinate
+%	   y : y-coordinate
 % 
 % Note : z_gap = 1 - z_spot
 function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)

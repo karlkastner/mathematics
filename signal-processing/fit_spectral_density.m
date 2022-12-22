@@ -17,7 +17,7 @@ function [par,Sp,cS,stat] = fit_spectral_density(fx,S,par,L,model,method,w,nf,fo
 		method = 'ls';
 	end
 	if (nargin()<7)
-		win = 1;
+		w = 1;
 	end
 	if (nargin()<8)
 		nf = 0;

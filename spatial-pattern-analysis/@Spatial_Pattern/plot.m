@@ -65,12 +65,12 @@ function transect_plot(obj,meta)
 	cla();
 	drawnow();
 	if (stat.p_periodic < obj.opt.confidence_level)
-	stem(fx(fdx)/xscale,yscale*S.raw(fdx),'-','linewidth',4,'marker','none');
-	ylim([0, 1.05*max(yscale*S.raw(fdx))])
+	stem(fx(fdx)/xscale,yscale*S.hat(fdx),'-','linewidth',4,'marker','none');
+	ylim([0, 1.05*max(yscale*S.hat(fdx))])
 	else
 	errorarea2(fx(fdx)/xscale,yscale*[S.c(fdx,1),zeros(size(S.c(fdx),1),1),S.c(fdx,2)],meta.areacol,'FaceAlpha',1)
 	hold on;
-	plot(fx(fdx)/xscale,yscale*S.raw(fdx),'k-','linewidth',1);
+	plot(fx(fdx)/xscale,yscale*S.hat(fdx),'k-','linewidth',1);
 	plot(fx(fdx)/xscale,yscale*S.ref(fdx),'r','linewidth',1.5);
 	ylim(meta.periodogram.ylim*yscale/xscale);
 	end
@@ -86,8 +86,8 @@ function transect_plot(obj,meta)
 	cla();
 	drawnow();
 	if (stat.p_periodic < obj.opt.confidence_level)
-	R.rate = acf_decay_rate(x,R.raw);
-	plot(x*xscale, R.raw, 'linewidth',1.5);
+	R.rate = acf_decay_rate(x,R.hat);
+	plot(x*xscale, R.hat, 'linewidth',1.5);
 	hold on;
 	h = plot(x*xscale,exp(-R.rate*x),'k--','linewidth',1.5);
 else
@@ -140,10 +140,10 @@ end
 	cla();
 	plot(pq,1/2*chi2inv(pq,2));
 	hold on;
-	plot(pq,sort(S.raw(fdx)./S.flat(fdx)));
-	plot(pq,sort(S.raw(fdx)./S.bartlett(fdx)));
+	plot(pq,sort(S.hat(fdx)./S.flat(fdx)));
+	plot(pq,sort(S.hat(fdx)./S.bartlett(fdx)));
 if (0)
-	plot(pq,sort(S.raw(fdx)./S.mui(fdx)));
+	plot(pq,sort(S.hat(fdx)./S.mui(fdx)));
 end
 	
 	splitfigure([2,2],[2,2],fflag);
@@ -151,13 +151,13 @@ end
 	h = plot([0,20],[0,20],'linewidth',0.5);
 	h.HandleVisibility='off';
 	hold on;
-	plot(qchi2,sort(S.raw(fdx)./S.flat(fdx)),'.k','linewidth',1.5);
+	plot(qchi2,sort(S.hat(fdx)./S.flat(fdx)),'.k','linewidth',1.5);
 	leg_C = {'flat'};
-	%plot(qbeta,sort(S.raw(fdx)./S.mui(fdx)),'.b','linewidth',1.5);
-	plot(qref,sort(S.raw(fdx)./S.ref(fdx)),'.r','linewidth',1.5);
+	%plot(qbeta,sort(S.hat(fdx)./S.mui(fdx)),'.b','linewidth',1.5);
+	plot(qref,sort(S.hat(fdx)./S.ref(fdx)),'.r','linewidth',1.5);
 	leg_C{end+1} = 'empirical';
 	if (0)
-	plot(1/2*chi2inv(p,2),sort(S.raw(fdx)./S.f(fdx,2)),'.b','linewidth',1.5);
+	plot(1/2*chi2inv(p,2),sort(S.hat(fdx)./S.f(fdx,2)),'.b','linewidth',1.5);
 	leg_C{end+1} = {'lorentzian'};
 	end
 	xlabel('expected quantile');

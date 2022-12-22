@@ -53,15 +53,13 @@ function analyze_grid(obj)
 	n = size(b);
 
 	% grid in real space
-	% TODO x an y do not match original figure when the figure was resampled or or resized
+	% note : x an y do not match original figure when the figure was resampled or or resized
 	obj.x   = linspace(-L(1)/2,L(1)/2,n(1))';
 	obj.y   = linspace(-L(2)/2,L(2)/2,n(2))';
 	rr      = hypot(obj.x',obj.y);
 
 	% grid in frequency space
 	[obj.f.x,obj.f.y,obj.f.rr,f.tt] = fourier_axis_2d(L,n);
-
-	% TODO smooth mask with border
 
 	% remove offset from 0
 	wbmsk = double(bmsk);
@@ -72,20 +70,20 @@ function analyze_grid(obj)
 	b_ = b_/wrms(wbmsk(:),b_(:));
 
 	% periodogram
-	% TODO use function
-	% TODO padd zeros to reach similar L for analysis for all patterns
-	% TODO iterate with clipping?
-	S.raw  = abs(fft2(wbmsk.*b_)).^2;
+	S.hat  = abs(fft2(wbmsk.*b_)).^2;
+
+	% determine if pattern is isotropic (spotted, gapped, labyrinthic)
+	% or anisotropic (banded)
+	obj.stat.isisotropic = isisotropic(S.hat,L);		
 
 	% mean frequency component
-	fr_mean = wmean(S.raw(:),obj.f.rr(:))
-
+	fr_mean = wmean(S.hat(:),obj.f.rr(:))
 
 	f_min = obj.opt.fminscale*fr_mean;
 	f_max = obj.opt.fmaxscale*fr_mean;
 
 	% remove spurious low-frequency components by lowpass filtering (truncation)
-%	S.raw = fftshift(S.raw);
+%	S.hat = fftshift(S.hat);
 
 	% windows for frequency range of interest
 	w.frr = ones(size(obj.f.rr));
@@ -95,10 +93,11 @@ function analyze_grid(obj)
 	% mask spurious low-frequency components
 	s = sqrt(-log(0.25));
 	if (~isempty(f_min) && f_min > 0)
-		w.frr = w.frr .* (1-normpdf(s*obj.f.rr/f_min)/normpdf(0));
+		w.frr = w.frr   .* (1-normpdf(s*obj.f.rr/f_min)/normpdf(0));
 		w.f.x  = w.f.x  .* (1-normpdf(s*obj.f.x/f_min)/normpdf(0));
 		w.f.y  = w.f.y  .* (1-normpdf(s*obj.f.y/f_min)/normpdf(0));
 	end
+
 	% mask high pass frequencies beyond range of interest
 	if (~isempty(f_max) && f_max < inf)
 		w.frr = w.frr .* ( normpdf(s*obj.f.rr/f_max)/normpdf(0));
@@ -109,20 +108,21 @@ function analyze_grid(obj)
 	w.fsmooth   = radial_window(ifftshift(rr),rmax);
 
 	% restrict to frequency range of interest
-	S.clip = w.frr.*S.raw;
+	S.clip = w.frr.*S.hat;
 
 	% spectral density through smoothing
 	S.gauss = real(fft2(w.fsmooth.*ifft2(S.clip)));
 
-	for field = {'raw','clip','gauss'}
+	for field = {'hat','clip','gauss'}
 		% normalize volume of density to 1
-		S.(field{1})   = 2*S.(field{1})/(sum(S.(field{1})(:))*df(1)*df(2));
+		S.(field{1})   = 2*S.(field{1})/(sum(sum(S.(field{1})))*df(1)*df(2));
 		% autocorrelaton
-		R.(field{1})   = 0.5*real(ifft2(S.(field{1})));
+		R.(field{1})   = 0.5*(n(1)*n(2))./(L(1)*L(2))*real(ifft2(S.(field{1})));
 		% normalize autocorrelation to 1
-		R.(field{1}) = R.(field{1})/R.(field{1})(1,1);
+		%R.(field{1}) = R.(field{1})/R.(field{1})(1,1);
 		% radial periodogram
-		[Smu, S.radial.(field{1}),kSr,obj.f.r] = periodogram_radial(S.(field{1}),L);
+		[S_,obj.f.r] = periodogram_radial(S.(field{1}),L);
+		S.radial.(field{1}) = S_.normalized;
 		% radial autocorrelation
 		[R.radial.(field{1}),obj.r] = autocorr_radial(R.(field{1}),L);
 		% maximum of the periodogram / density
@@ -161,7 +161,7 @@ function analyze_grid(obj)
 			angle = rad2deg(atan2(fc.yy.gauss,fc.xx.gauss));
 		end
 
-		for field = {'raw','clip','gauss'}
+		for field = {'hat','clip','gauss'}
 			% rotate periodogram/density
 			S.rot.(field{1})   = ifftshift(imrotate(fftshift(S.(field{1})),  -angle,'bilinear','crop'));
 			%S.rot.gauss = ifftshift(imrotate(fftshift(S.gauss),-stat.angle,'bilinear','crop'));
@@ -177,9 +177,10 @@ function analyze_grid(obj)
 			S.rot.y.(field{1}) = 2*S.rot.y.(field{1}) / (sum(S.rot.y.(field{1}))*df(2));
 
 			% autocorrelation in direction perpendictular to bands
-			R.rot.x.(field{1}) = 2*real(ifft(S.rot.x.(field{1})));
+			R.rot.x.(field{1}) = 0.5*n(1)/L(1)*real(ifft(S.rot.x.(field{1})));
+
 			% autocorrelation in direction parallel to bands
-			R.rot.y.(field{1}) = 2*real(ifft(S.rot.y.(field{1})));
+			R.rot.y.(field{1}) = 0.5*n(2)/L(1)*real(ifft(S.rot.y.(field{1})));
 
 			% density maxima
 			%fdx   = (obj.f.r >= f_min) & (obj.fr<= f_max);
@@ -194,96 +195,86 @@ function analyze_grid(obj)
 		end
 
 		% fit parametric density models in direction perpendicular to bands
-		try
+%		try
 
 			% without mean component
-			[par(1),par(2)] = spectral_density_brownian_phase_mode2par(fc.rr.gauss,Sc.x.gauss);
-			par(2) = 0.1;
+			[par(1),par(2)] = spectral_density_brownian_phase_mode2par(fc.x.gauss,Sc.x.gauss);
+			% TODO no magic numbers
 			nf  = 3;
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.raw,par,L(1),'brownian-phase','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.raw);
+			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'brownian-phase','ls',w.f.x,nf);
+			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
 			S.rot.x.brownian_phase = Sfit;
 			stat.fit.x.brownian_phase.par  = par;
 			stat.fit.x.brownian_phase.stat = fitstat;
 
 			par(3) = 5./fc.rr.gauss;
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.raw,par,L(1),'brownian-phase-mean','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.raw);
+			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'brownian-phase-mean','ls',w.f.x,nf);
+			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
 			S.rot.x.brownian_phase_mean = Sfit;
 			stat.fit.x.brownian_phase_mean.par  = par;
 			stat.fit.x.brownian_phase_mean.stat = fitstat;
 
 			% without mean component
-			par = [fc.rr.gauss,20];
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.raw,par,L(1),'bandpass-continuous','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.raw);
+			par0 = [fc.rr.gauss, spectral_density_bandpass_continuous_max2par(fc.x.gauss,Sc.x.gauss,10)]
+			%par = [fc.rr.gauss,20];
+			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par0,L(1),'bandpass-continuous','ls',w.f.x,nf);
+			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
 			S.rot.x.bandpass         = Sfit;
 			stat.fit.x.bandpass.par  = par;
 			stat.fit.x.bandpass.stat = fitstat;
 
 			% with mean
 			par(3) = [10./fc.rr.gauss];
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.raw,par,L(1),'bandpass-continuous-mean','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.raw);
+			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'bandpass-continuous-mean','ls',w.f.x,nf);
+			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
 			S.rot.x.bandpass_mean = Sfit;
 			stat.fit.x.bandpass_mean.par  = par;
 			stat.fit.x.bandpass_mean.stat = fitstat;
 
 			%cS_ = cS_/sum(cS_)*sum(cS);
 			%plot(f.rc/fc(kdx),cS_/sqrt(cSc)*fc(kdx),'linewidth',1.5);
-%		catch e
-%			e
-%		end
 
-		% fit parametric density models in the direction perpendicular to the bands
-%		try
-			par3 = 1;
+			% fit parametric density models in the direction perpendicular to the bands
 			fa = obj.f.y;
-			[par3,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.y,S.rot.y.raw,par3,L(2),'brownian-phase-across','ls',w.f.y);
+			pary = spectral_density_brownian_phase_across_mode2par(S.rot.y.hat(1));
+			[pary,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.y,S.rot.y.hat,pary,L(2),'brownian-phase-across','ls',w.f.y);
 			S.rot.y.brownian_phase_across = Sfit;
-			stat.fit.y.brownian_phase_across.par  = par3;
+			stat.fit.y.brownian_phase_across.par  = pary;
 			stat.fit.y.brownian_phase_across.stat = fitstat;
 			%aS_ = aS_/(sum(aS_)*(fa(2)-fa(1)));
-%		catch e
-%			e
-%		end
 	
 	% fit parametric density models to the radial density
+		% TODO no magic numbers
 		nf = 1;
-		par = [fc.rr.gauss,0.1];
+		par = [];
+		[par(1),par(2)] = spectral_density_brownian_phase_mode2par(fc.r.gauss,Sc.r.gauss);
 		Lr = 1./(obj.f.r(2)-obj.f.r(1));
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.raw,par,Lr,'brownian-phase','ls',w.f.r,nf);
+		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'brownian-phase','ls',w.f.r,nf);
 		%cS_ = cS_/sum(cS_)*sum(cS);
 		S.radial.brownian_phase = Sfit;
 		stat.fit.radial.brownian_phase.par  = par;
 		stat.fit.radial.brownian_phase.stat = fitstat;
 
-%	try
 		par(3) = 5./fc.rr.gauss;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.raw,par,Lr,'brownian-phase-mean','ls',w.f.r,nf);
+		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'brownian-phase-mean','ls',w.f.r,nf);
 		%cS_ = cS_/sum(cS_)*sum(cS);
 		S.radial.brownian_phase_mean = Sfit;
 		stat.fit.radial.brownian_phase_mean.par  = par;
 		stat.fit.radial.brownian_phase_mean.stat = fitstat;
 
-		par = [fc.rr.gauss,10];
+		%par = [fc.rr.gauss,10];
+		par = [fc.r.gauss, spectral_density_bandpass_continuous_max2par(fc.r.gauss,Sc.r.gauss,10)];
 		nf = 1;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.raw,par,Lr,'bandpass-continuous','ls',w.f.r,nf);
+		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'bandpass-continuous','ls',w.f.r,nf);
 		S.radial.bandpass = Sfit;
 		stat.fit.radial.bandpass.par  = par;
 		stat.fit.radial.bandpass.stat = fitstat;
-%	try
+
 		par(3) = 10./fc.rr.gauss;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.raw,par,Lr,'bandpass-continuous-mean','ls',w.f.r,nf);
+		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'bandpass-continuous-mean','ls',w.f.r,nf);
 		S.radial.bandpass_mean = Sfit;
 		stat.fit.radial.bandpass_mean.par  = par;
 		stat.fit.radial.bandpass_mean.stat = fitstat;
-		%plot(f.rc/fc(kdx),cS_/sqrt(cSc)*fc(kdx),'linewidth',1.5);
-%	catch e
-%		e
-%	end
-	% central frequency, radius and angle
-	end
 
 	stat.Sc	     = Sc;
 	stat.fc      = fc;

@@ -14,8 +14,18 @@ function [Sc] = spectral_density_bandpass_continuous_scale(fc,p,pp,numeric)
 
 	if (isempty(pp) && ~numeric)
 		kc = 2*pi*fc;
-		IS = kc./(2*pi) * 4.^(1-p)./(2*p-1).*pi.*p.*binom(2*p-1,p-1);
-		Sc = 1./IS;
+		% IS = kc./(2*pi) * 4.^(1-p)./(2*p-1).*pi.*p.*binom(2*p-1,p-1)
+		IS = kc* 2.^(1-2*p).*binom(2*(p-1),p-1);
+		if (isnan(IS))
+			% stirlings approximation
+			IS = kc./sqrt(4*pi*(p-1));
+		end
+		if (0 == IS)
+			[fc,p]
+			Sc = realmax;
+		else
+			Sc = 1./IS;
+		end
 	else
 		% avoid overflow
 		% TODO these limits are for q = 1

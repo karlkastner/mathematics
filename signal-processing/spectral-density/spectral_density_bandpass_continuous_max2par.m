@@ -13,5 +13,8 @@ function [p] = spectral_density_bandpass_continuous_max2par(fc,Sc,p0,pp)
 	end
 	p  = fzero(@(p) spectral_density_bandpass_continuous_scale(fc,abs(p),pp) - Sc, p0);
 	p  = abs(p);
+	if (isnan(p))
+		p = 500;
+	end
 end
 
