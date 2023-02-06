@@ -23,18 +23,15 @@ function [s2, s2_mu, dof] = wvar(w,x,fullpop,varargin)
 	end
 	wx     = w.*x;
 
-	p      = 1;
-
 	sw     = sum(w);
-	swp    = sum(w.^p);
 
 	% weighted mean
 	mu     = sum(wx)./sw;
 
 	% weighted squared residuals
-	w2dx2  = w.^p.*bsxfun(@minus,x,mu).^2;
+	w2dx2  = w.*bsxfun(@minus,x,mu).^2;
 
-	s2      = sum(w2dx2)./swp;
+	s2      = sum(w2dx2)./sw;
 %	s2       = dof.*s2;
 
 	if (nargin()<3 || ~fullpop)

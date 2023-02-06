@@ -1,16 +1,20 @@
 % 2021-06-23 16:22:53.456353906 +0200
 % Fri 15 Jul 17:45:22 CEST 2022
+% function [Rr,ri,count] = autocorr_radial(R,L)
 function [Rr,ri,count] = autocorr_radial(R,L)
 	n = size(R);
 	if (nargin()<2)
 		L = n;
 	end
-	x = fftshift(linspace(-L(1)/2,L(1)/2,n(1)));
-	y = fftshift(linspace(-L(2)/2,L(2)/2,n(2)))';
-	
+%	x = fftshift(linspace(-L(1)/2,L(1)/2,n(1)));
+%	y = fftshift(linspace(-L(2)/2,L(2)/2,n(2)))';
+	x = fourier_axis(1,n(1))*L(1)/n(1);
+	y = fourier_axis(1,n(2))'*L(2)/n(2);
+
 	r    = hypot(x,y);
 	rmax = hypot(L(1)/2,L(2)/2); 
-	dri   = hypot(L(1)/n(1),L(2)/n(2));
+	%rmax = min(L(1),L(2))/2;
+	dri  = hypot(L(1)/n(1),L(2)/n(2));
 	ri   = (0:dri:ceil(rmax+dri))';
 
 	% integer part

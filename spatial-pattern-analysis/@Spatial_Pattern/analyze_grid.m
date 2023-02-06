@@ -1,9 +1,10 @@
 % Wed 18 May 13:50:47 CEST 2022
-function analyze_grid(obj)
+% 2022-12-02 00:25:33.449376625 +0100
+function obj = analyze_grid(obj)
 	% output
-	S    = struct();
-	R    = struct();
-	stat = struct();
+	S    = obj.S;
+	R    = obj.R;
+	stat = obj.stat;
 
 	n = obj.n;
 	L = obj.L;
@@ -14,9 +15,10 @@ function analyze_grid(obj)
 		bmsk = true(size(b));
 	end
 
-	% images might be of integer type and have to be converted 
+	% convert image to double
 	b    = double(b);
-	bmsk = bmsk > 0;
+	% convert mask to logical
+	bmsk = (bmsk > 0);
 
 	% fraction of ground coverged
 	% there is a matlab bug that double images need to be scaled
@@ -24,11 +26,11 @@ function analyze_grid(obj)
 
 	thresh_b      = graythresh(bscaled(bmsk));
 	stat.coverage = sum(bscaled(bmsk)<thresh_b)/sum(bmsk(:));
-	
+
 	% resample, to make dx identical to dy
 	% (depending on the grid projection, this might not be the case)
-	dxy = L./n;
-	n_ = round(L./min(dxy));
+	dx = L./n;
+	n_ = round(L./min(dx));
 	if (n_(1)>n(1))
 		% TODO implement
 		% note : this is not necessary as the current input files have dx=dy	
@@ -44,13 +46,21 @@ function analyze_grid(obj)
 	% resize, to make domain square
 	nmax = max(n);
 	L    = L.*nmax./n;
+ 	if (n(1) < nmax)
+		n(1) = nmax;
+		b(nmax,1) = 0;
+		bmsk(nmax,1) = false;
+	end
+	if (n(1) > n(2))
+		nmax = n(1);
+		b(1,nmax) = 0;
+		bmsk(1,nmax) = 0;
+	end
 	df   = 1./L;
-	n    = [n,n];
-	b(end+1:nmax,:)   = 0;
-	b(:,end+1:nmax)   = 0;
-	bmsk(end+1:nmax,:) = false;
-	bmsk(:,end+1:nmax) = false;
-	n = size(b);
+	n    = [nmax,nmax];
+	dx   = L./nmax;
+	stat.L_square = L;
+	stat.n_square = n;
 
 	% grid in real space
 	% note : x an y do not match original figure when the figure was resampled or or resized
@@ -59,231 +69,251 @@ function analyze_grid(obj)
 	rr      = hypot(obj.x',obj.y);
 
 	% grid in frequency space
-	[obj.f.x,obj.f.y,obj.f.rr,f.tt] = fourier_axis_2d(L,n);
+	[obj.f.x,obj.f.y,frr,ftt] = fourier_axis_2d(L,n);
 
-	% remove offset from 0
-	wbmsk = double(bmsk);
-	%b_ = (b - mean(flat(wbmsk.*b)));
-	b_ = (b -  wmean(wbmsk(:),b(:)));
+	% statistics of the masked area
+	area_msk = sum(bmsk(:))*dx(1)*dx(2);
+	% extend approximation by an ellipsis
+	nmsk = sum(bmsk(:));
+	centroid.x = sum(bmsk*cvec(obj.x))./nmsk;
+	centroid.y = sum(rvec(obj.y)*bmsk)./nmsk;
+	sx2 = sum(bmsk*(cvec(obj.x)-centroid.x).^2)./nmsk;
+	sy2 = sum(bmsk*(cvec(obj.y)-centroid.y).^2)./nmsk;
+	sxy = sum(bmsk*((cvec(obj.x)-centroid.x).*(cvec(obj.y)-centroid.y)))./nmsk;
+	centroid.C = [sx2,sxy,
+        	      sxy,sy2];
+%	centroid.Crot = rotmat(-angle_deg)*centroid.C;
+%	centroid.L = sqrt([centroid.Crot(1,1),centroid.Crot(2,2)]); 
+% anti rotation for area
+%r = sxy./sqrt(sx2*sy2)
+%Rot = [1,sxy;
+%       -sxy,1];
+%centroid.sr = sqrt(sx2 + 2*sxy + sy2);
+
+
+	% the weighted mean allows for feathering the transition
+	mu  = wmean(double(bmsk(:)),b(:));
+
+	% subtract mean
+	b  = (b - mu);
 
 	% normalize
-	b_ = b_/wrms(wbmsk(:),b_(:));
+	b = b/wrms(bmsk(:),b(:));
 
-	% periodogram
-	S.hat  = abs(fft2(wbmsk.*b_)).^2;
+	% 2D periodogram, not yet normalized
+	S.hat  = abs(fft2(bmsk.*b)).^2;
+
+	% removal of spurious low frequency components
+	% we assume that spurious low frequency components are predominantly isotropic
+	[S.clip, whp, fhp, shp] = suppress_low_frequency_lobe(S.hat,bmsk,L);
+	%[S.clip, w] = suppress_low_frequency_components_1(obj,S.hat)
+
+
+	% radial density (radial periodogram)
+	[Sr, obj.f.r] = periodogram_radial(S.hat,L);
+	S.r = Sr.normalized;
+
+	% cumulative distribution
+	iSr = cumsum(S.r);
+	iSr = iSr/iSr(end);
+	% make values unique (quick hack)
+	iSr = cvec(iSr) + (0:length(iSr)-1)'*1e-12; 
+	% quantiles
+	f_05 = interp1(iSr,obj.f.r,0.05,'linear');
+	f_50 = interp1(iSr,obj.f.r,0.50,'linear');
+	f_95 = interp1(iSr,obj.f.r,0.95,'linear');
+
+	% 2D spectral density estimate by periodogram smoothing
+	dfr   = frr(1,2);
+	nf    = round(sqrt(f_50/dfr));
+	S.bar = gaussfilt2(S.clip,nf);
+
+	% smoothing window radius for frequency test
+	% TODO no magic numbers
+	nf_test  = round(0.25*f_50/dfr);
+	nf_test  = max(nf_test,2);
+
+	% restrict test to region containing the upper 20% of spectral energy
+	[Ssort,sdx] = sort(S.bar(:));
+	iSsort = cumsum(Ssort);
+	% TODO no magic numbers
+	fdx = (iSsort >= 0.2*iSsort(end));
+ 	fmsk = false(n);
+	fmsk(sdx(fdx)) = true;
+%clf
+%subplot(2,2,1)
+%imagesc(fmsk)
+%max(frr(:))
+%fhp
+	% exlude spurious low-frequency components from the test
+	fmsk = fmsk & (frr > fhp);
+%subplot(2,2,2)
+%imagesc(fmsk)
+	% by symmetry, excluded the symmetric half plane
+	fmsk = fmsk & cvec(obj.f.x) >= 0;
+
+	obj.w.x = 1-normpdf(obj.f.x,0,shp)/normpdf(0,0,shp);	
+	obj.w.y = 1-normpdf(obj.f.y,0,shp)/normpdf(0,0,shp);	
+	obj.w.r = 1-normpdf(obj.f.r,0,shp)/normpdf(0,0,shp);
+%subplot(2,2,3)
+%imagesc(fmsk)
+%pause
+	% periodicity test
+	%if (numel(bmsk)*obj.opt.ns < obj.opt.n_max_test)
+		try
+		if (any(bmsk~=bmsk(1,1)>0,'all'))
+			bmsk_ = bmsk;
+		else
+			bmsk_ = [];
+		end
+		[p_periodic, stati] = periodogram_test_periodicity_2d(b, ...
+								L, nf_test, bmsk_, fmsk, obj.opt.ns);
+		fr_periodic = stati.fr_max;
+		catch e
+			e
+			p_periodic= NaN;
+			fr_periodic = NaN;
+		end
+%	else
+%		fprintf('not testing, too large');
+%		p_periodic = NaN;
+%		fr_periodic = NaN;
+%	end
 
 	% determine if pattern is isotropic (spotted, gapped, labyrinthic)
 	% or anisotropic (banded)
-	obj.stat.isisotropic = isisotropic(S.hat,L);		
+	% note: presmoothed with Sbar works better than with Shat
+	nf_s = [];
+	[isisotropic,stati] = separate_isotropic_from_anisotropic_density(S.bar,fmsk,L,'max',nf_s);
+	angle_deg = stati.angle_deg;
+	p_isotropic = stati.p_iso;
 
-	% mean frequency component
-	fr_mean = wmean(S.hat(:),obj.f.rr(:))
+	L_eff = effective_mask_size(bmsk,L,-angle_deg);
 
-	f_min = obj.opt.fminscale*fr_mean;
-	f_max = obj.opt.fmaxscale*fr_mean;
-
-	% remove spurious low-frequency components by lowpass filtering (truncation)
-%	S.hat = fftshift(S.hat);
-
-	% windows for frequency range of interest
-	w.frr = ones(size(obj.f.rr));
-	w.f.x  = ones(size(obj.f.x));
-	w.f.y  = ones(size(obj.f.y));
-
-	% mask spurious low-frequency components
-	s = sqrt(-log(0.25));
-	if (~isempty(f_min) && f_min > 0)
-		w.frr = w.frr   .* (1-normpdf(s*obj.f.rr/f_min)/normpdf(0));
-		w.f.x  = w.f.x  .* (1-normpdf(s*obj.f.x/f_min)/normpdf(0));
-		w.f.y  = w.f.y  .* (1-normpdf(s*obj.f.y/f_min)/normpdf(0));
+	% for patterns with known direction, such as computer generated patterns, the direction angle_deg can be specified
+	if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
+		angle_deg = obj.opt.angle;
+	%else
+		%angle = rad2deg(atan2(fc.yy.bar,fc.xx.bar));
 	end
 
-	% mask high pass frequencies beyond range of interest
-	if (~isempty(f_max) && f_max < inf)
-		w.frr = w.frr .* ( normpdf(s*obj.f.rr/f_max)/normpdf(0));
-		w.f.x  = w.f.x  .* ( normpdf(s*obj.f.x/f_max)/normpdf(0));
-		w.f.y  = w.f.y  .* ( normpdf(s*obj.f.y/f_max)/normpdf(0));
-	end
-	rmax        = 5/fr_mean;
-	w.fsmooth   = radial_window(ifftshift(rr),rmax);
-
-	% restrict to frequency range of interest
-	S.clip = w.frr.*S.hat;
-
-	% spectral density through smoothing
-	S.gauss = real(fft2(w.fsmooth.*ifft2(S.clip)));
-
-	for field = {'hat','clip','gauss'}
+	for field = {'clip','hat','bar'}
 		% normalize volume of density to 1
 		S.(field{1})   = 2*S.(field{1})/(sum(sum(S.(field{1})))*df(1)*df(2));
 		% autocorrelaton
 		R.(field{1})   = 0.5*(n(1)*n(2))./(L(1)*L(2))*real(ifft2(S.(field{1})));
-		% normalize autocorrelation to 1
-		%R.(field{1}) = R.(field{1})/R.(field{1})(1,1);
+
+
 		% radial periodogram
-		[S_,obj.f.r] = periodogram_radial(S.(field{1}),L);
+		[S_,fr_] = periodogram_radial(S.(field{1}),L);
 		S.radial.(field{1}) = S_.normalized;
-		% radial autocorrelation
-		[R.radial.(field{1}),obj.r] = autocorr_radial(R.(field{1}),L);
+	
 		% maximum of the periodogram / density
 		[Sc.(field{1}),cdx] = max(S.(field{1}),[],'all');
 		%[stat.(field{1}).imax,stat.(field{1}).jmax] = ind2sub(n,cdx);
 		[imax,jmax]    = ind2sub(n,cdx);
 		% maximum frequency
-		fc.rr.(field{1}) = obj.f.rr(cdx);
-		fc.tt.(field{1}) = f.tt(cdx);
+		fc.rr.(field{1}) = frr(cdx);
+		fc.tt.(field{1}) = ftt(cdx);
 		fc.xx.(field{1}) = obj.f.x(imax);
 		fc.yy.(field{1}) = obj.f.y(jmax);
+
+		% rotate periodogram/density
+		S.rot.(field{1}) = fft_rotate(S.(field{1}),-angle_deg);
+		R.rot.(field{1}) = fft_rotate(R.(field{1}),-angle_deg);
+
+		[S.angular.(field{1}),obj.f.angle] = periodogram_angular(S.rot.(field{1}),L); 
+
+		% radial autocorrelation
+		[R.radial.(field{1}),obj.r] = autocorr_radial(R.(field{1}),L);
+
+		% density perpendicular to bands
+		S.rot.x.(field{1}) = mean(S.rot.(field{1}),2);
+		% density parallel to bands
+		S.rot.y.(field{1}) = mean(S.rot.(field{1}),1)';
+
+		% normalize the area of density to 1 over the positive half-axis
+		S.rot.x.(field{1}) = 2*S.rot.x.(field{1}) / (sum(S.rot.x.(field{1}))*df(1));
+		% normalize area under density to 1 over the entire axis
+		S.rot.y.(field{1}) = 2*S.rot.y.(field{1}) / (sum(S.rot.y.(field{1}))*df(2));
+		% angular is normalized, but over the whole circle
+		S.angular.(field{1}) = 2*S.angular.(field{1});
+
+		% autocorrelation in direction perpendictular to bands
+		R.rot.x.(field{1}) = mean(R.rot.(field{1}),2);
+		R.rot.x.(field{1}) = R.rot.x.(field{1})/R.rot.x.(field{1})(1);
+		%R.rot.x.(field{1}) = 0.5*n(1)/L(1)*real(ifft(S.rot.x.(field{1})));
+
+		% autocorrelation in direction parallel to bands
+		%R.rot.y.(field{1}) = 0.5*n(2)/L(1)*real(ifft(S.rot.y.(field{1})));
+		R.rot.y.(field{1}) = mean(R.rot.(field{1}),1)';
+		R.rot.y.(field{1}) = R.rot.y.(field{1})/R.rot.y.(field{1})(1);
+
+		% density maxima
+		[Sc.radial.(field{1}),id]  = max(S.radial.(field{1}));
+		fc.radial.(field{1})       = obj.f.r(id);
+		[Sc.x.(field{1}),id]       = max(cvec(S.rot.x.(field{1})).*(obj.f.x>=0));
+		fc.x.(field{1})            = obj.f.x(id);
+		[Sc.y.(field{1}),id]       = max(cvec(S.rot.y.(field{1})).*(obj.f.y>=0));
+		% this should be the first field for anisotropic patterns, but we compute it anyway
+		fc.y.(field{1})            = obj.f.y(id);
+		[Sc.angular.(field{1}),id] = max(S.angular.(field{1}));
+		fc.angular.(field{1})      = obj.f.angle(id);
+
+		if (isisotropic)
+			lc = 1./fc.radial.clip;
+		else
+			lc = 1./fc.x.clip;
+		end
+		if (~isfinite(lc))
+			lc = 1./f_50;	
+		end
+		%m = 2*round(pi/(dfr*lc))+1;
 	end % for field
 
-	w.f.r  = ones(size(obj.f.r));
-	w.f.r  = w.f.r  .* (1 - normpdf(s*obj.f.r/f_min)/normpdf(0));
-	w.f.r  = w.f.r  .* (normpdf(s*obj.f.r/f_max)/normpdf(0));
+	fmsk_rot = fft_rotate(fmsk,-angle_deg);
 
-	%stat.nf = 10;
-	% TODO dynamic
-	% TODO, this is related to the gaussiam density estimate (also smoothing)
-	stat.nf_test = 10;
-	% = max(7,ceil(0.3*fcr./df));
-
-	% periodicity test
-	% TODO the periodicity test has a deviating threshold when the bmask is not everywhere 1
-	[stat.pt, stat_, ratio, stat.qq] = periodogram_test_periodicity_2d(b, obj.L, stat.nf_test, bmsk, f_min, f_max);
-
-	%stat.f_radial = f_radial;
-
-	% this is computed anyway for all patterns, but only meaningfull for banded patterns
-	if (1)
-		% for patterns with known direction, such as computer generated patterns, the direction angle can be specified
-		if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
-			angle = obj.opt.angle;
-		else
-			angle = rad2deg(atan2(fc.yy.gauss,fc.xx.gauss));
-		end
-
-		for field = {'hat','clip','gauss'}
-			% rotate periodogram/density
-			S.rot.(field{1})   = ifftshift(imrotate(fftshift(S.(field{1})),  -angle,'bilinear','crop'));
-			%S.rot.gauss = ifftshift(imrotate(fftshift(S.gauss),-stat.angle,'bilinear','crop'));
-			%R.rot.(field{1})   = ifftshift(imrotate(fftshift(R.(field{1})),  -angle,'bilinear','crop'));
-
-			% density perpendicular to bands
-			S.rot.x.(field{1}) = mean(S.rot.(field{1}),2);
-			% density parallel to bands
-			S.rot.y.(field{1}) = mean(S.rot.(field{1}),1)';
-
-			% normalize area of density to 1
-			S.rot.x.(field{1}) = 2*S.rot.x.(field{1}) / (sum(S.rot.x.(field{1}))*df(1));
-			S.rot.y.(field{1}) = 2*S.rot.y.(field{1}) / (sum(S.rot.y.(field{1}))*df(2));
-
-			% autocorrelation in direction perpendictular to bands
-			R.rot.x.(field{1}) = 0.5*n(1)/L(1)*real(ifft(S.rot.x.(field{1})));
-
-			% autocorrelation in direction parallel to bands
-			R.rot.y.(field{1}) = 0.5*n(2)/L(1)*real(ifft(S.rot.y.(field{1})));
-
-			% density maxima
-			%fdx   = (obj.f.r >= f_min) & (obj.fr<= f_max);
-			[Sc.r.(field{1}),id]   = max(S.radial.(field{1}));
-			fc.r.(field{1})   = obj.f.r(id);
-			%fdx   = (obj.f.x>= f_min) & (obj.f.x<= f_max);
-			[Sc.x.(field{1}),id]   = max(cvec(S.rot.x.(field{1})).*(obj.f.x>=0));
-			fc.x.(field{1})   = obj.f.x(id);
-			%fdx   = (obj.f.y>= f_min) & (obj.f.y<= f_max);
-			[Sc.y.(field{1}),id]   = max(cvec(S.rot.y.(field{1})).*(obj.f.y>=0));
-			fc.y.(field{1})   = obj.f.y(id);
-		end
-
-		% fit parametric density models in direction perpendicular to bands
-%		try
-
-			% without mean component
-			[par(1),par(2)] = spectral_density_brownian_phase_mode2par(fc.x.gauss,Sc.x.gauss);
-			% TODO no magic numbers
-			nf  = 3;
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'brownian-phase','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-			S.rot.x.brownian_phase = Sfit;
-			stat.fit.x.brownian_phase.par  = par;
-			stat.fit.x.brownian_phase.stat = fitstat;
-
-			par(3) = 5./fc.rr.gauss;
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'brownian-phase-mean','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-			S.rot.x.brownian_phase_mean = Sfit;
-			stat.fit.x.brownian_phase_mean.par  = par;
-			stat.fit.x.brownian_phase_mean.stat = fitstat;
-
-			% without mean component
-			par0 = [fc.rr.gauss, spectral_density_bandpass_continuous_max2par(fc.x.gauss,Sc.x.gauss,10)]
-			%par = [fc.rr.gauss,20];
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par0,L(1),'bandpass-continuous','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-			S.rot.x.bandpass         = Sfit;
-			stat.fit.x.bandpass.par  = par;
-			stat.fit.x.bandpass.stat = fitstat;
-
-			% with mean
-			par(3) = [10./fc.rr.gauss];
-			[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,par,L(1),'bandpass-continuous-mean','ls',w.f.x,nf);
-			Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-			S.rot.x.bandpass_mean = Sfit;
-			stat.fit.x.bandpass_mean.par  = par;
-			stat.fit.x.bandpass_mean.stat = fitstat;
-
-			%cS_ = cS_/sum(cS_)*sum(cS);
-			%plot(f.rc/fc(kdx),cS_/sqrt(cSc)*fc(kdx),'linewidth',1.5);
-
-			% fit parametric density models in the direction perpendicular to the bands
-			fa = obj.f.y;
-			pary = spectral_density_brownian_phase_across_mode2par(S.rot.y.hat(1));
-			[pary,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.y,S.rot.y.hat,pary,L(2),'brownian-phase-across','ls',w.f.y);
-			S.rot.y.brownian_phase_across = Sfit;
-			stat.fit.y.brownian_phase_across.par  = pary;
-			stat.fit.y.brownian_phase_across.stat = fitstat;
-			%aS_ = aS_/(sum(aS_)*(fa(2)-fa(1)));
+	if (isisotropic)
+		regularity = Sc.radial.clip .* fc.radial.clip;
+		%[Sc.ref,ldx] = S.radial.clip);
+		%lc       = 1./obj.f.r(ldx);
+	else
+		regularity = Sc.x.clip .* fc.x.clip;
+		%[Sc,ldx] = max(Sx);
+		%lc       = 1./abs(obj.f.x(ldx));
+	end
 	
-	% fit parametric density models to the radial density
-		% TODO no magic numbers
-		nf = 1;
-		par = [];
-		[par(1),par(2)] = spectral_density_brownian_phase_mode2par(fc.r.gauss,Sc.r.gauss);
-		Lr = 1./(obj.f.r(2)-obj.f.r(1));
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'brownian-phase','ls',w.f.r,nf);
-		%cS_ = cS_/sum(cS_)*sum(cS);
-		S.radial.brownian_phase = Sfit;
-		stat.fit.radial.brownian_phase.par  = par;
-		stat.fit.radial.brownian_phase.stat = fitstat;
+%	regularity = Sc./lc;
 
-		par(3) = 5./fc.rr.gauss;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'brownian-phase-mean','ls',w.f.r,nf);
-		%cS_ = cS_/sum(cS_)*sum(cS);
-		S.radial.brownian_phase_mean = Sfit;
-		stat.fit.radial.brownian_phase_mean.par  = par;
-		stat.fit.radial.brownian_phase_mean.stat = fitstat;
-
-		%par = [fc.rr.gauss,10];
-		par = [fc.r.gauss, spectral_density_bandpass_continuous_max2par(fc.r.gauss,Sc.r.gauss,10)];
-		nf = 1;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'bandpass-continuous','ls',w.f.r,nf);
-		S.radial.bandpass = Sfit;
-		stat.fit.radial.bandpass.par  = par;
-		stat.fit.radial.bandpass.stat = fitstat;
-
-		par(3) = 10./fc.rr.gauss;
-		[par,Sfit_,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,par,Lr,'bandpass-continuous-mean','ls',w.f.r,nf);
-		S.radial.bandpass_mean = Sfit;
-		stat.fit.radial.bandpass_mean.par  = par;
-		stat.fit.radial.bandpass_mean.stat = fitstat;
-
-	stat.Sc	     = Sc;
-	stat.fc      = fc;
-	stat.frr_mean = fr_mean;
-	%stat.mask     = mask;
+	% store reasults
+	stat.L_eff         = L_eff;
+	stat.Sc	           = Sc;
+	stat.angle_deg         = angle_deg;
+	stat.area_msk      = area_msk;
+	stat.f_50          = f_50;
+	stat.fc            = fc;
+	% TODO fmsk is not a scalar and should not be stored in stat
+	stat.fmsk          = fmsk;
+	stat.fmsk_rot          = fmsk_rot;
+	stat.fr_periodic   = fr_periodic;
+	%stat.frr_mean      = fr_mean;
+	stat.isisotropic   = isisotropic;
+	stat.fhp           = fhp;
+	stat.nf            = nf;
+	stat.nf_test       = nf_test;
+	stat.p_isotropic   = p_isotropic;
+	stat.p_periodic    = p_periodic;
+	stat.qfr_05        = f_05;
+	stat.qfr_50        = f_50;
+	stat.qfr_95        = f_95;
+	stat.regularity    = regularity;
+	stat.siz = n;
+	stat.centroid = centroid;
+%	stat.wavelength_c  = lc;
 
 	obj.R = R;
 	obj.S = S;
-	obj.w = w;
+	%obj.w = w;
 	obj.stat = stat;
 end % analyze_grid
 

@@ -1,7 +1,8 @@
 % 2022-12-02 00:25:33.449376625 +0100
-function [Shat, wlp, lp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
+function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	siz = size(Shat);
 	[fx_i,fy_i,frr_i] = fourier_axis_2d([1,1],siz);
+	[fx,fy,frr] = fourier_axis_2d(L,siz);
 
 	% radial density, including low-frequency components
 	[Sr, fr] = periodogram_radial(Shat,L);
@@ -36,24 +37,24 @@ function [Shat, wlp, lp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	% the frequency of the minimum is used for separating the densities
 	[mindx,maxdx] = minmax(Sr_smooth.normalized(2:end));
 	mindx = mindx+1;	
-	lp = mindx;
+	fhp = fr(mindx);
 
 	% remove spurious low-frequency components by multiplication
 	% with Fourier window
 	if(0)
 		dfrr = hypot(fx(2)-fx(1),fy(2)-fy(1));
-		slp = (dfrr*lp)/sqrt(2*log(2));
-		wf = 1-normpdf(frr,0,slp)/normpdf(0,0,slp);
+		shp = (fhp)/sqrt(2*log(2));
+		wf = 1-normpdf(frr,0,shp)/normpdf(0,0,shp);
 	else
 		%dfrr = hypot(fx(2)-fx(1),fy(2)-fy(1));
-		slp_i  = (lp)/sqrt(2*log(2));
-		wlp   = 1-normpdf(frr_i,0,slp_i)/normpdf(0,0,slp_i);	
+		shp  = (fhp)/sqrt(2*log(2));
+		whp  = 1-normpdf(frr,0,shp)/normpdf(0,0,shp);	
 	end
 
-	%Shat(frr_i<=lp(idx)) = 0;
-	%s = (lp(idx))/sqrt(2*log(2))
+	%Shat(frr_i<=hp(idx)) = 0;
+	%s = (hp(idx))/sqrt(2*log(2))
 	%w = 1-normpdf(frr_i,0,s)/norm;
-	Shat = wlp.*Shat;
+	Shat = whp.*Shat;
 
 end
 

@@ -7,7 +7,7 @@ function [f0, s] = spectral_density_brownian_phase_mode2par(fc,Sc)
 
 	%r = root(z^3 - z^2 + z*(4*Sc^2*fc^2*pi^2 - 2) - 4*Sc^2*fc^2*pi^2, z, 1)
 	rp = [1, -1, (4*Sc^2*fc^2*pi^2 - 2), -4*Sc^2*fc^2*pi^2];
-	r = roots3(rp)
+	r = roots3(rp);
 	% choose real root
 	r = r(1);
 	p2 = (  pi^2*((4*Sc^2*fc^2*pi^2 - 1)*r^2 ...

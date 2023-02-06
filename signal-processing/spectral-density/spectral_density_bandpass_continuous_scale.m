@@ -11,11 +11,13 @@ function [Sc] = spectral_density_bandpass_continuous_scale(fc,p,pp,numeric)
 	if (nargin()<4)
 		numeric = false;
 	end
-
+	if (~issym(p) && (p<0.5))
+		Sc = NaN;
+	else
 	if (isempty(pp) && ~numeric)
 		kc = 2*pi*fc;
 		% IS = kc./(2*pi) * 4.^(1-p)./(2*p-1).*pi.*p.*binom(2*p-1,p-1)
-		IS = kc* 2.^(1-2*p).*binom(2*(p-1),p-1);
+		IS = kc*2.^(1-2*p).*binom(2*(p-1),p-1);
 		if (isnan(IS))
 			% stirlings approximation
 			IS = kc./sqrt(4*pi*(p-1));
@@ -34,5 +36,6 @@ function [Sc] = spectral_density_bandpass_continuous_scale(fc,p,pp,numeric)
 		fr = fc*(1+sqrt(1 - tol^2))/tol;
 		Sc = 1./quad(@(fx) spectral_density_bandpass_continuous(fx,fc,p,0,pp),fl,fr);
 	end	
+	end
 end
 

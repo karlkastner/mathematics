@@ -28,26 +28,17 @@
 %%	        so that the dof of the filter window is not nf^2
 %%
 %% TODO make frmin, frmax an fmask
-function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns)
+function [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns)
 	mode = 'inclusive';
 	if (isempty(L))
 		L = [1,1];
 	end
-%	if (length(nf)<2)
-%		nf = [nf,nf];
-%	end
 	if (nargin()<4)
 		bmsk = [];
 	end
 	if (nargin()<5)
 		fmsk = [];
 	end
-%	if (nargin()<5||isempty(frmin))
-%		frmin = 0;
-%	end
-%	if (nargin()<6||isempty(frmax))
-%		frmax = inf;
-%	end
 	n = size(b);	
 	[fx, fy, fr, ft] = fourier_axis_2d(L,n);
 
@@ -65,12 +56,12 @@ function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fms
 	Shat  = abs(1/n*fft2(b)).^2;
 
 	% estimate the spectral density by smoothing
-	% S     = ifftshift(meanfilt2(fftshift(Shat), nf));
-	if (isempty(bmsk))
+%	if (isempty(bmsk))
 		[Sbar,nf2] = circfilt2(Shat,nf);
-	else
-		[Sbar,nf2] = gaussfilt2(Shat,nf);
-	end
+%	else
+%		note: if this is chosen, the quantiles have to be differently estimated
+%		[Sbar,nf2] = gaussfilt2(Shat,nf);
+%	end
 
 	% ratio of periodogram and density
 	ratio = Shat./Sbar;
@@ -79,6 +70,7 @@ function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fms
 %	fmsk = (fx >= 0) & (fr >= frmin) & (fr <= frmax);
 
 %	% number of tested bins
+	% TODO mask symmetric half automatically
 	nt  = sum(sum(fmsk));
 
 	% maximum ratio
@@ -90,8 +82,17 @@ function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fms
 		a = 1;
 		b = (nf2-1);
 		p1 = 1-betacdf(ratio_max/nf2,a,b);
+
 		% correct for repeated testing
-		p  = 1-(1-p1)^nt;
+		pn  = 1-(1-p1)^nt;
+
+		if (nargout()>2)
+			np = 1000;
+			out.pr1 = (1:np)'/(np+1);
+			out.qr1 = nf2*betainv(out.pr1,a,b);
+			out.prn = 1-(1-out.pr1).^nt;
+			out.qrn = out.qr1;
+		end
 	else
 		[pr,qr1,qrn]   = approximate_ratio_distribution(bmsk,nf,ns,fmsk,mdx);
 		if (ratio_max > qr1(end))
@@ -102,10 +103,14 @@ function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fms
 		end
 		if (ratio_max > qrn(end))
 			% extrapolate
-			p = 0.5/ns;
+			pn = 0.5/ns;
 		else
-			p = 1-interp1(qrn,pr,ratio_max,'linear');
+			pn = 1-interp1(qrn,pr,ratio_max,'linear');
 		end
+		out.pr1 = pr;
+		out.prn = pr;
+		out.qr1 = qr1;
+		out.qrn = qrn;
 	end
 
 	stat.ratio_max = ratio_max;
@@ -113,10 +118,14 @@ function [p,stat,ratio,qq] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fms
 	% stat.Shat_max  = Shat(mdx); this is not passed, as unscaled
 	stat.p1 = p1;
 
-	if (nargout()>3)
-		qq.p = (1:nt)'/(nt+1);
-		qq.q(:,1) = sort(flat(ratio(fmsk)));
+	if (nargout()>2)
+		out.p = (1:nt)'/(nt+1);
+		out.q(:,1) = sort(flat(ratio(fmsk)));
 		%qq.q(:,2) = nf2*betainv(qq.p,a,b);
+		
+		out.Shat = Shat;
+		out.Sbar = Sbar;
+		out.ratio = ratio;
 	end
 end % periodogram_test_periodicity_2d
 

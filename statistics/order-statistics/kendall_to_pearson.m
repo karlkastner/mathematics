@@ -4,7 +4,7 @@
 %% convert kendall rank correlation coefficient to the person product moment
 %% correlation coefficient
 %%
-%% c.f. Kruska, 1985
+%% c.f. Kruskal, 1958, p. 823
 function rho = kendall_to_pearson(tau)
 	rho = sin(pi*tau/2);
 end

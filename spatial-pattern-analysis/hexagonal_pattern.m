@@ -8,7 +8,7 @@
 %	   y : y-coordinate
 % 
 % Note : z_gap = 1 - z_spot
-function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
+function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
 	if (nargin()<4 || isempty(a0))
 		% rotation of pattern
 		a0=0;
@@ -41,6 +41,8 @@ function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
 			ny=n(2);
 		end
 	else
+		Lx = L(1);
+		Ly = Lx;
 		s = 1;
 		nx = n(1);
 		if (length(n)>1)
@@ -68,9 +70,11 @@ function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
 	z= 0;
 	siz = [nx,ny];
 	for idx=1:3
+		% n.b. when a is randomly perturbed, then there are brighter and darker stripes
 		a  = (idx-1)*pi/3+a0;
 		R  = full(rot2(a));
 		xy = R*[xx(:),yy(:)]';
+		% n.b when xr is randomly perturbed then there are also brighter and darker stripes
 		xr  = reshape(xy(1,:),siz);
  		%yr  = reshape(xy(2,:),siz);
 
@@ -88,6 +92,7 @@ function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
 		end
 
 		% cosine shifted and scaled to [0,1]
+		% nb a large perturbation of the amplitude is going to introduce stripes of connected points
 		zi = 1/2*(1+cos(o*xr));
 
 		% transformation (harmonics)

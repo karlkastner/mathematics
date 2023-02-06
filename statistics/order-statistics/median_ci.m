@@ -1,5 +1,7 @@
 % Di 2. Feb 11:55:44 CET 2016
-% ref: david lane, hojo 
+% ref: david lane (hyperstat)
+% hojo 1931, 1933
+% page 144, eq 21 in conover 3rd ed 
 %
 %% median and its confidence intervals under assumption of normality
 %% se_me = sqrt(1/2 pi) 1.25331 * sd/sqrt(n)
