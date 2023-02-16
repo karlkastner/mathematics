@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 20M
+mathematics\protect\\Revision 23M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -174,6 +174,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{derive\_arc\_length}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_brownian\_phase\_inv}
 ${}$
 \begin{lstlisting}
 
@@ -373,6 +378,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gbm\_bridge}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gbm\_cdf}
 ${}$
 \begin{lstlisting}
@@ -399,6 +409,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{gbm\_median}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbm\_momemt2par}
 ${}$
 \begin{lstlisting}
 
@@ -540,6 +555,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fft2\_cartesian2radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{fft\_man}
 ${}$
 \begin{lstlisting}
@@ -552,6 +572,11 @@ ${}$
 
  F : fourier transformation of F
 
+
+\end{lstlisting}
+\subsection{fft\_rotate}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{fftsmooth}
@@ -581,6 +606,16 @@ ${}$
  fix periodic data series with fourier interpolation
  longest gap should not exceed 1/2 of the shortest time span of interest (1/cutoff frequency)
   note: this limit equals the position of first side lobe of the ft of a rectangular window with gap length
+
+\end{lstlisting}
+\subsection{fourier\_2d\_padd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fourier\_2d\_quadrants}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{fourier\_axis}
@@ -723,6 +758,11 @@ ${}$
 \begin{lstlisting}
  fit a fourier series to a set of sample points that are not spaced in
  equal intervals
+
+\end{lstlisting}
+\subsection{fourier\_freq2ind}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{fourier\_interpolate}
@@ -3249,6 +3289,11 @@ ${}$
 mathematical functions of various kind
 
 \end{lstlisting}
+\subsection{monotoneous\_indices}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{nearest\_fractional\_timestep}
 ${}$
 \begin{lstlisting}
@@ -4475,6 +4520,12 @@ ${}$
 ${}$
 \begin{lstlisting}
  cumulative integral from right to left
+
+\end{lstlisting}
+\subsection{cumint\_trapezoidal}
+${}$
+\begin{lstlisting}
+ integrate y along x with the trapezoidal rule
 
 \end{lstlisting}
 \subsection{int\_trapezoidal}
@@ -5813,6 +5864,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{autocorr\_angular}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{autocorr\_bandpass}
 ${}$
 \begin{lstlisting}
@@ -5887,6 +5943,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{autocorr\_radial\_hexagonal\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{autocorrelation\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{signal-processing}
 \subsection{average\_wave\_shape}
 ${}$
@@ -5898,6 +5964,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  bandpass filter
+
+\end{lstlisting}
+\subsection{bandpass\_continuous\_cdf}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{bartlett}
@@ -5932,6 +6003,16 @@ ${}$
 ${}$
 \begin{lstlisting}
  generate two correlated normally distributed vectors
+
+\end{lstlisting}
+\subsection{brownian\_phase\_cdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{brownian\_phase\_inv}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{coherence}
@@ -6052,6 +6133,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  double sum of r^i
+
+\end{lstlisting}
+\subsection{effective\_mask\_size}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{effective\_sample\_size\_to\_ar1}
@@ -6238,7 +6324,7 @@ ${}$
 \subsection{fit\_spectral\_density}
 ${}$
 \begin{lstlisting}
- fit spectral densities
+ fit (spectral) densities
 
 \end{lstlisting}
 \subsection{fit\_spectral\_density\_2d}
@@ -6274,7 +6360,7 @@ ${}$
 \subsection{gaussfilt1}
 ${}$
 \begin{lstlisting}
- filter data series with a gaussian window
+ filter data series with a gaussian window, assumes periodic bc
 
 \end{lstlisting}
 \subsection{hanchangewin}
@@ -6608,7 +6694,12 @@ ${}$
  compute the normalized periodogram in two dimensions
 
 \end{lstlisting}
-\subsection{periodogram\_annular}
+\subsection{periodogram\_align}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{periodogram\_angular}
 ${}$
 \begin{lstlisting}
 
@@ -6845,6 +6936,46 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing/spectral-density}
+\subsection{gampdf\_man}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{hex\_angular\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{hex\_angular\_pdf\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{hex\_angular\_pdf\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lognpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{misespdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{normpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skewpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{spectral\_density\_ar2}
 ${}$
 \begin{lstlisting}
@@ -7224,6 +7355,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gausswin1}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gausswin2}
 ${}$
 \begin{lstlisting}
@@ -7355,6 +7491,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fit\_parametric\_densities}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{imread}
 ${}$
 \begin{lstlisting}
@@ -7365,17 +7506,27 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{plot\_transect}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{report}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{resample\_functions}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{tabulate}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \section{spatial-pattern-analysis}
-\subsection{analyze\_grid2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{approximate\_ratio\_distribution}
 ${}$
 \begin{lstlisting}
@@ -7396,17 +7547,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{isisotropic}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{patch\_size\_1d}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \subsection{patch\_size\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{reconstruct\_isotropic\_density}
 ${}$
 \begin{lstlisting}
 
@@ -7426,6 +7577,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  spherical Bessel function of the first kind
+
+\end{lstlisting}
+\subsection{besseliln\_large\_x}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{beta\_man}
@@ -7600,6 +7756,11 @@ ${}$
  c.f. Rao 2010
 
 \end{lstlisting}
+\subsection{exppdf\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gam\_moment2param}
 ${}$
 \begin{lstlisting}
@@ -7642,6 +7803,21 @@ ${}$
 ${}$
 \begin{lstlisting}
  log normal distribution called by modes rather than parameters
+
+\end{lstlisting}
+\subsection{normpdf\_wrapped}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{normpdf\_wrapped\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{normpdf\_wrapped\_mode2par}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{pdfsample}
@@ -7711,7 +7887,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{gamma\_mode\_to\_parameter}
+\subsection{gamma\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_moments\_to\_parameter}
 ${}$
 \begin{lstlisting}
  transform modes (mu,sd) to parameters of the gamma distribution
@@ -8477,7 +8663,7 @@ ${}$
  convert kendall rank correlation coefficient to the person product moment
  correlation coefficient
 
- c.f. Kruska, 1985
+ c.f. Kruskal, 1958, p. 823
 
 \end{lstlisting}
 \subsection{mad2sd}
@@ -9081,6 +9267,12 @@ mathematical functions of various kind
 
 \end{lstlisting}
 \subsection{ternary\_diagram}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/fourier}
+\subsection{test\_fourier\_freq2ind}
 ${}$
 \begin{lstlisting}
 
@@ -9796,6 +9988,27 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{test/signal-processing}
+\subsection{test\_autocorrelation\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_cdf\_bandpass\_continuous}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_cdf\_brownian\_phase}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_fit\_spectral\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{test/spatial-pattern-analysis}
 \subsection{test\_approximate\_ratio\_distribution}
 ${}$
@@ -9807,7 +10020,13 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_spearate\_isotropic\_density}
+\subsection{test\_separate\_isotropic\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions}
+\subsection{test\_normpdf\_wrapped}
 ${}$
 \begin{lstlisting}
 
@@ -9820,6 +10039,11 @@ ${}$
 \end{lstlisting}
 \section{test/statistics}
 \subsection{test\_fisher\_moment2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gamma\_mode}
 ${}$
 \begin{lstlisting}
 
@@ -10027,6 +10251,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_gamma\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gampdf\_man}
 ${}$
 \begin{lstlisting}
 
