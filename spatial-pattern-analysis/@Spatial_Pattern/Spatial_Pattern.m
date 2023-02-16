@@ -6,9 +6,10 @@ classdef Spatial_Pattern < handle
 	properties
 		% pattern in real space
 		b
+		b_square
 
 		% mask of pattern in real space
-		msk
+		msk = struct('b',[],'f',[],'rot',[]);
 		%b_hp;
 		
 		% domain size in m	
@@ -49,6 +50,7 @@ classdef Spatial_Pattern < handle
 			     , 'ns', 100 ...
 			     , 'n_mem_blk', 2.5e8 ...
 			     , 'objective', 'mise-cramer' ...
+			     , 'xlim', [0, 2.5] ...
 		);
 		% analysis results
 		stat = struct( );
@@ -70,5 +72,14 @@ classdef Spatial_Pattern < handle
 			% frequency interval (spacing of frequency bins)
 			df = 1./obj.L;
 		end
+		function lambda_c = lambda_c(obj)
+			if (obj.stat.isisotropic)
+				Sc = obj.stat.Sc.radial.clip;
+				lambda_c = 1./obj.stat.fc.radial.clip;	
+			else
+				Sc = obj.stat.Sc.x.clip;
+				lambda_c = 1./obj.stat.fc.x.clip;
+			end % else of isiso
+		end % lambda_c
 	end % methods
 end % classdef Spatial_Pattern

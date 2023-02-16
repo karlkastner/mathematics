@@ -28,7 +28,7 @@ function [S_bp,Sc] = spectral_density_bandpass_continuous(fx,fc,order,normalize,
 	if (isempty(pp))
 		% this is identical to pp = [2,1/2,1]
 		% S     = (1-S_lp).*S_lp;
-		S_bp = (2*fc*fx./(fx.^2 + fc.^2)).^2;
+		S_bp = (2*fc.*fx./(fx.^2 + fc.^2)).^2;
 	else
 		% lowpass density
 		S_lp1 = spectral_density_lowpass_continuous(fx,fc,1,false);
@@ -38,7 +38,7 @@ function [S_bp,Sc] = spectral_density_bandpass_continuous(fx,fc,order,normalize,
 		S_bp     = ((1-T_lp1.^pp(1)).^pp(2).*T_lp1.^pp(3)).^2;
 	end
 
-	if (order ~= 1)
+	if (length(order)>1 || order ~= 1)
 		S_bp = S_bp.^order;
 	end
 	

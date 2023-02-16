@@ -20,10 +20,19 @@ function [img, alpha, obj] = imread(obj,filename)
 	% Try to load pgw from file
 	try
 		pgw = csvread([filename(1:end-4),'.pgw']);
-		dxy = [pgw(1),abs(pgw(4))];
+		obj.stat.pgw = pgw;
+		% A    D  B   -E C F
+		% wc ws   hs hc
+		dxy   = [hypot(pgw(1),pgw(2)),hypot(pgw(3),pgw(4))];
+		angle = -pi/2+atan2(pgw(1)/dxy(1),pgw(2)/dxy(2));
+		obj.stat.dxy = dxy;
+		obj.stat.bangle_rad = angle;
 	catch
 		disp('Unable to read pgw file, assuming pixel size of 1 m x 1 m')
 		dxy = 1;
+		obj.stat.pgw = [];
+		obj.stat.dxy = NaN;
+		obj.stat.bangle_rad = NaN;
 	end
 
 	if (~isempty(alpha))
@@ -42,6 +51,6 @@ function [img, alpha, obj] = imread(obj,filename)
 
 	obj.L   = n.*dxy;
 	obj.b   = b;
-	obj.msk = msk;
+	obj.msk.b = msk;
 end
 

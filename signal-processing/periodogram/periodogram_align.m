@@ -1,11 +1,12 @@
 % Mon  5 Dec 14:28:58 CET 2022
-function [Shat, angle_deg] = periodogram_align(Shat,L,mode,nf)
-	if (nargin()<3)
-		mode = 'max';
+function [Shat, angle_deg,out] = periodogram_align(Shat,L,mode,nf)
+	if (nargin()<3||isempty(mode))
+		%mode = 'max';
+		mode = 'angular';
 	end
 
 	n = size(Shat);
-	[fx,fy,fr] = fourier_axis_2d(L,n);
+	[fx,fy] = fourier_axis_2d(L,n);
 	fxx = repmat(cvec(fx),1,n(2));
 	fyy = repmat(rvec(fy),n(1),1);
 
@@ -18,7 +19,7 @@ function [Shat, angle_deg] = periodogram_align(Shat,L,mode,nf)
 	case {'ls'}
 		% least squares
 		A = [ones(numel(Shat),1),fxx(:)];
-		w = Shat(:);
+		%w = Shat(:);
 		W = diag(sparse(Shat(:)));
 		c = (A'*W*A) \ (A'*W*fyy(:));
 		slope = c(2);
@@ -30,25 +31,36 @@ function [Shat, angle_deg] = periodogram_align(Shat,L,mode,nf)
 			c = (A'*W*A) \ (A'*W*fxx(:));
 			slope = 1./c(2);
 		end
-	case {'po'}
+       		angle_deg = atand(slope);
+	case {'po','perpendicular-offset'}
 		% this somethins yields incorrectly 0
 	        slope = least_squares_perpendicular_offset(fxx(:),fyy(:),Shat(:));
+        	angle_deg = atand(slope);
 	case {'max'}
 		if (nargin()>3 && ~isempty(nf))
 			Shat_ = ifftshift(trifilt2(fftshift(Shat),nf));
 		else
 			Shat_ = Shat;
 		end
-		[Shatc,mdx] = max(Shat_,[],'all');
+		[~,mdx] = max(Shat_,[],'all');
 		
 		if (fxx(mdx)==0)
 			slope = inf;
 		else
 		slope = fyy(mdx)./fxx(mdx);
 		end
+        	angle_deg = atand(slope);
+	case {'angular'}
+		[Sa,angle] = periodogram_angular(Shat,L,nf);
+		[~,mdx] = max(Sa);
+		angle_rad    = angle(mdx);
+		angle_deg    = rad2deg(angle_rad);
+		out.Sa = Sa;
+		out.angle = angle;
+	otherwise
+		error('unknown mode');
 	end
 
-        angle_deg = atand(slope);
 	%n = size(Shat);
 	Shat = fft_rotate(Shat,-angle_deg);
 end

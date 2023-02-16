@@ -12,15 +12,25 @@ function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	iS = iS/iS(end);
 
 	% smoothing window size ensuring convergence	
-	nf = round(sqrt(find(iS>0.5,1,'first')))
+	nf = round(sqrt(find(iS>0.5,1,'first')));
 
 	% provisional estimate of the density including the spurious low-frequency
 	% components by smoothing the periodogram
 	Shat_smooth = Shat;
-	l_ = ceil(sqrt(numel(msk)./sum(msk(:))))+1
-	% proxy for mean (4 point averge, reduced to 2 points due to symmetry)
 	%Shat_smooth(1,1) = 0.5*(Shat(1,2)+Shat(2,1));
-	Shat_smooth(frr_i <= l_) = max(Shat_smooth(frr_i>l_ & frr_i<=l_+1));
+	L_eff = effective_mask_size(msk,L,0);
+
+	l_ = round(sqrt(L(1)*L(2))./L_eff.r);
+	%l_ = ceil(sqrt(numel(msk)./sum(msk(:))))+1;
+	% the zero at the origin has to be filled for the min-max algorithm to work
+	% masking can smooth the zero across several pixels, so several pixels have to be filled
+	Shat_smooth(frr_i <= l_) = max(Shat_smooth(frr_i<=l_+1));
+	%Shat_smooth(frr_i <= l_) = max(Shat_smooth(frr_i>l_ & frr_i<=l_+1));
+%	else
+		% proxy for mean (4 point averge, reduced to 2 points due to symmetry)
+		
+%	end
+	Sr_ = periodogram_radial(Shat_smooth);
 
 	% TODO gaussian smoothing window
 	%Shat_smooth = circfilt2(Shat_smooth,nf);

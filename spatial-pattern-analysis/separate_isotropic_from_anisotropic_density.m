@@ -28,7 +28,7 @@ function [isisotropic,stat,S,f] = separate_isotropic_from_anisotropic_density(Sh
 	% initial guess
 	S.hat_iso   = S.hat;
 	S.hat_aniso = S.hat;
-	p = 0;
+	%p = 0;
 
 	% fixed point iteration
 	for kdx=1:kmax

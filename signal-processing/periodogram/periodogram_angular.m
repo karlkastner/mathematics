@@ -1,47 +1,60 @@
 % 2021-06-21 22:52:10.758702394 +0200
-function [St,theta,A] = periodogram_angular2(Shat,L)
-	n     = size(Shat);
-	if (abs(L(1)-L(2))>sqrt(L(1)*L(2)*eps) || n(2) ~= n(1))
-		error('matrix must be square')
+% Sxy : nxn
+% Sra : n/2*(pi*n/2)
+function [Sa,angle,A] = periodogram_angular(Sxy,L,nf)
+
+	if (nargin()<3)
+		nf = [];
 	end
 
-	% discretizing the maximum circumference ensures that sectors
-	% are only 1 pixel wide
-	m     = round(pi*n(1));
+	[Sra,fr,angle,out] = fft2_cartesian2radial(Sxy,L);
 	
-	theta = 2*pi*(0:m-1)'/m-pi;
-	nr    = floor(n(1)/2);
-	r     = (1:nr)';
-	s     = sin(theta);
-	c     = cos(theta);
-	ind_Sr = [];
-	buf = [];
-	% the low frequency bins are part of several sectors and thus are weighted down in proportion
-	w   = r./(pi*sum(r));
-	x = cvec(r)*rvec(c);
-	y = cvec(r)*rvec(s);
-	% bilinear interpolation
-	% note, this really has to be floor not fix
-	i = floor(x);
-	p = 1-(x-i);
-	j = floor(y);
-	q = 1-(y-j);
 
-	buf = [  i(:),j(:)  ,flat(p.*q.*w),
-                i(:)+1,j(:)  ,flat((1-p).*q.*w),
-		i(:)  ,j(:)+1,flat(p.*(1-q).*w),
-                i(:)+1,j(:)+1,flat((1-p).*(1-q).*w)];
-	ind_Sr = repmat(flat(repmat((1:m),nr,1)),4,1);
-	% this translates indices in the same mannler like ifftshift
-	buf(:,1) = fourier_freq2ind(buf(:,1),n(1));
-	buf(:,2) = fourier_freq2ind(buf(:,2),n(2));
+	% density estimate, smooth along angles
+	if (~isempty(nf))
+		Sra = gaussfilt1(Sra',nf)';
+	end
+
+	% the low frequency bins are part of several sectors and thus are weighted down in proportion
+	Sa = Sra'*fr;
+
+	% matrix output
+	if (nargout()>2)
+	nxy = size(Sxy);
+	%nra = size(Sra);
+	i = out.i;
+	j = out.j;
+	p = out.p;
+	q = out.q;
+	nra = out.nra;
+
+	buf = [ i(:),j(:)  ,flat(p.*q.*fr);
+                i(:)+1,j(:)  ,flat((1-p).*q.*fr);
+		i(:)  ,j(:)+1,flat(p.*(1-q).*fr);
+                i(:)+1,j(:)+1,flat((1-p).*(1-q).*fr)
+	      ];
+	ind_Sa   = repmat(flat(repmat(1:nra(2),nra(1),1)),4,1);
+
+	% translate indices in the same manner like ifftshift
+	buf(:,1) = fourier_freq2ind(buf(:,1),nxy(1));
+	buf(:,2) = fourier_freq2ind(buf(:,2),nxy(2));
+
 	% indices in flattened matrix
-	ind_S2d = sub2ind(n,buf(:,1),buf(:,2));	
+	ind_Sxy  = sub2ind(nxy,buf(:,1),buf(:,2));	
 	% averaging matrix
-	A = sparse(ind_Sr,ind_S2d,buf(:,3),m,n(1)*n(2));
+	A        = sparse(ind_Sa,ind_Sxy,buf(:,3),nra(2),nxy(1)*nxy(2));
+if (0)
+	% normalize, note this is up to round-off already done
+	% TODO normalize columns
+	s = sum(A,2);
+	A = A .*(1./(pi*s));
+end
 	% average spectrum
-	St = A*flat(Shat);
-	dt = 2*pi/m;
-	St = St./(sum(St)*dt);
+	if (0)
+		Sa = A*flat(Sxy);
+	end
+	end
+	% normalize spectrum over the half-circle
+	Sa = 2*Sa./(sum(Sa)*out.da);
 end
 

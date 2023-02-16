@@ -13,16 +13,6 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% resample 1d-densities
 	% for computing the joint normalized density of.pdf patterns, the patterns
 	% are resampled to a common grid interval
-	Si.x.pdf = NaN(1,length(fi.x));
-	Si.x.cdf = NaN(1,length(fi.x));
-	Si.y.pdf = NaN(1,length(fi.y));
-	Si.y.cdf = NaN(1,length(fi.y));
-	Si.radial.cdf = NaN(1,length(fi.x));
-	Si.radial.pdf = NaN(1,length(fi.x));
-	Si.angular.cdf = NaN(1,length(fi.angular));
-	Si.angular.pdf = NaN(1,length(fi.angular));
-	Ri.x          = NaN(1,length(xi));
-	Ri.radial     = NaN(1,length(xi));
 
 	if (obj.stat.isisotropic)
 		lc = 1./obj.stat.fc.radial.clip;
@@ -30,43 +20,46 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 		lc = 1./obj.stat.fc.x.clip;
 	end
 	
-% TODO repeat for hat and bar
-	if (isfinite(lc))
-		% isotropic
-		iSr      = cumint_trapezoidal(obj.f.r,obj.S.radial.clip);
-		% Note that when the cdf is scaled, iSr is implicitely scaled and there is no explicit division by lc!!!
-		% extrapolation is at the right hand with 1 as lim F->inf = 1
-		Si.radial.cdf = interp1(obj.f.r*lc,iSr,fi.x,imethod,1);
-		Si.radial.pdf = derivative1(fi.x,Si.radial.cdf);
-		%iSa = [0;cumsum([obj.S.angular.clip; obj.S.angular.clip(1)])];
-		%Si.angular = interp1(f,S,fi.angular,'linear');
-		iSa = cumint_trapezoidal(obj.f.angle,obj.S.angular.clip);
-		Si.angular.cdf = interp1(obj.f.angle,iSa,fi.angular,'linear');
-		Si.angular.pdf = derivative1(fi.angular,Si.angular.cdf);
-		%Si.angular.pdf = diff(Si.angular.cdf)./diff(cvec(fi.angle));
-		%Si.angular.pdf = 2*Si.angular.pdf./sum(mid(Si.angular).*diff(fi.angle));
-	
-		Ri.radial  = interp1(obj.r/lc,obj.R.radial.clip,xi,imethod,0); 
+	for field={'hat','clip','bar'}
+		if (isfinite(lc))
+			% isotropic
+			iSr      = cumint_trapezoidal(obj.f.r,obj.S.radial.(field{1}));
+			% Note that when the cdf is scaled, iSr is implicitely scaled and there is no explicit division by lc!!!
+			% extrapolation is at the right hand with 1 as lim F->inf = 1
+			Si.radial.cdf.(field{1}) = interp1(obj.f.r*lc,iSr,fi.x,imethod,1);
+			Si.radial.pdf.(field{1}) = derivative1(fi.x,Si.radial.cdf.(field{1}));
+			iSa = cumint_trapezoidal(obj.f.angle,obj.S.rot.angular.(field{1}));
+			Si.angular.cdf.(field{1}) = interp1(obj.f.angle,iSa,fi.angular,'linear');
+			Si.angular.pdf.(field{1}) = derivative1(fi.angular,Si.angular.cdf.(field{1}));
+		
+			Ri.radial.(field{1})  = interp1(obj.r/lc,obj.R.radial.(field{1}),xi,imethod,0); 
 
-		%  obj.S.angular.clip;
-		% anisotropic
-		%fx       = obj.f.x;
-		fdx      = (obj.f.x>=0);
-		iSx      = cumint_trapezoidal(obj.f.x(fdx), obj.S.rot.x.clip(fdx));
-		%[0;cumsum(obj.S.rot.x.clip(fdx))*(fx(2)-fx(1))];
-		%Si.x.cdf = interp1(inner2outer(fx(fdx))*lc,iSx/lc,inner2outer(fi.x),imethod,0);
-		Si.x.cdf = interp1(obj.f.x(fdx)*lc,iSx,fi.x,imethod,1);
-		Si.x.pdf = derivative1(fi.x,Si.x.cdf);
-		%./(fi.x(2)-fi.x(1));
-		n        = length(obj.R.rot.x.clip);
-		x_       = fourier_axis(1,n);
-		Ri.x     = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.clip),xi,imethod,0);
-		fdx      = (obj.f.y>=0);
-		iSy      = cumint_trapezoidal(obj.f.y(fdx), obj.S.rot.y.clip(fdx));
-		%yi      = linspace(0,3.5,length(obj.S.rot.y.clip));
-		Si.y.cdf = interp1(obj.f.y(fdx)*lc,iSy,fi.y,imethod,1);
-		Si.y.pdf = derivative1(fi.y,Si.y.cdf);
-
-	end % if isfinite lc
+			% anisotropic
+			fdx      = (obj.f.x>=0);
+			iSx      = cumint_trapezoidal(obj.f.x(fdx), obj.S.rot.x.(field{1})(fdx));
+			Si.x.cdf.(field{1}) = interp1(obj.f.x(fdx)*lc,iSx,fi.x,imethod,1);
+			Si.x.pdf.(field{1}) = derivative1(fi.x,Si.x.cdf.(field{1}));
+			n        = length(obj.R.rot.x.(field{1}));
+			x_       = fourier_axis(1,n);
+			Ri.x     = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.(field{1})),xi,imethod,0);
+			fdx      = (obj.f.y>=0);
+			iSy      = cumint_trapezoidal(obj.f.y(fdx), obj.S.rot.y.(field{1})(fdx));
+			Si.y.cdf.(field{1}) = interp1(obj.f.y(fdx)*lc,iSy,fi.y,imethod,1);
+			Si.y.pdf.(field{1}) = derivative1(fi.y,Si.y.cdf.(field{1}));
+		else
+			Si.x.pdf.(field{1})       = NaN(1,length(fi.x));
+			Si.x.cdf.(field{1})       = NaN(1,length(fi.x));
+			Si.y.pdf.(field{1})       = NaN(1,length(fi.y));
+			Si.y.cdf.(field{1})       = NaN(1,length(fi.y));
+			Si.radial.cdf.(field{1})  = NaN(1,length(fi.x));
+			Si.radial.pdf.(field{1})  = NaN(1,length(fi.x));
+			Si.angular.cdf.(field{1}) = NaN(1,length(fi.angular));
+			Si.angular.pdf.(field{1}) = NaN(1,length(fi.angular));
+			Ri.x.(field{1})           = NaN(1,length(xi));
+			Ri.radial.(field{1})      = NaN(1,length(xi));
+		end % else of if isfinite lc
+		[obj.stat.Sc.angular_resampled.pdf.(field{1}),id] = max(Si.angular.pdf.(field{1}));
+	        obj.stat.fc.angular_resampled.pdf.(field{1})      = fi.angular(id);
+	end % for field
 end % function
 

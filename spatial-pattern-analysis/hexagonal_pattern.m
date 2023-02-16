@@ -1,6 +1,6 @@
 % 2021-06-23 21:35:41.688025320 +0200
 %
-% function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
+% function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
 %
 % spot pattern of unit amplitude
 % output : z : pattern
@@ -8,10 +8,10 @@
 %	   y : y-coordinate
 % 
 % Note : z_gap = 1 - z_spot
-function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,sbm,p,q)
-	if (nargin()<4 || isempty(a0))
+function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
+	if (nargin()<4 || isempty(angle0_rad))
 		% rotation of pattern
-		a0=0;
+		angle0_rad=0;
 	end
 	if (nargin()<5 || isempty(scale))
 		scale = true;
@@ -71,7 +71,7 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,a0,scale,s
 	siz = [nx,ny];
 	for idx=1:3
 		% n.b. when a is randomly perturbed, then there are brighter and darker stripes
-		a  = (idx-1)*pi/3+a0;
+		a  = (idx-1)*pi/3+angle0_rad;
 		R  = full(rot2(a));
 		xy = R*[xx(:),yy(:)]';
 		% n.b when xr is randomly perturbed then there are also brighter and darker stripes

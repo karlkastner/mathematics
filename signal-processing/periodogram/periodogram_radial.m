@@ -1,84 +1,106 @@
 % 2021-06-21 15:53:50.278752860 +0200
 %
-% radial "periodogram", this is actually a density estimate, for fr that are not too small
+%function [Sr,fri,se,count] = periodogram_radial(S2d,L)
 %
-%function [S,fri,se,count] = periodogram_radial(Shat,L)
+% compute the radially averaged density
 %
-% Shat : 2-dimensional periodogram
-% L    : domain length
-% 
-% S.mu : Radially averaged periodogram
-%       S_mu(k)  = 1/k int_0^{2 pi} Shat(k,theta) d theta
-% S.normalized :  normalized radially averaged periodogram,
-%       i.e. the radial density estimate
-%       Sn  = S/int_0^inf S df
-% rS  : k*S = int Shat dtheta = k S
+% input:
+% S2d : 2-dimensional density or periodogram
+% L =[Lx,Ly] : domain length
+%
+% output:
+%
+% S_r.mu         : radially averaged periodogram
+% S_r.normalized : normalized radially averaged periodogram
+% A              : matris operator s that Sr = (A*A')^-1 A'*S2d
+%
+% f_r : radial freqeuncies, at which radial periodogram is determined
+%       discretized in same interval as the 2d-density : f = 1/L
+%
+% Definitions:
+%        radial wavenumber, identical to circumferences of circles centred at origin with radial frequency fr
+%	       k_r = 2*pi*f_r
+%
+% 	 radially averaged periodogram:
+%        S_r(k_r)  = 1/k_r int_0^{k_r} S2d(k_r,s) d s
+%                  = 1/(2 pi) int_0^{2 pi} S2d(k_r,theta) d theta
+%                  ~ 1/(2 pi) sum^nt S2d(k_r,theta) * (2*pi/nt)
+%                  ~ 1/nt sum^nt S2d(k_r,theta)
+%                   
+%                nt ~ k_r/df = k_r*L
+% normalization:
+%       S_r.normalize  = S_r/int_0^inf S_r dfr
+%                      ~ S_r/(sum_0^nr S_r Delta fr)
+%
+% note : the radially averaged "periodogram", is actually a density estimate,
+%        for radial frequencies fr hat are not small
 %
 % when S is flattened into a vector, the isotropic part of the 2D density can be recovered with:
 % S_iso     = (A*S_radial)
 % S_radial  = A^-1 S_hat
 %
-function [S, fri, count, A] = periodogram_radial(Shat,L)
-	n = size(Shat);
+function [Sr, fri, count, A] = periodogram_radial(S2d,L)
+	n = size(S2d);
 	if (nargin()<2)
 		L = n;
 	end
-	fx = fourier_axis(L(1),n(1));
-	fy = fourier_axis(L(2),n(2));
-	fmax = max(max(fx),max(fy)); 
-	df   = 1./L;
-	dfi  = sqrt(df(1).*df(2));
-	fr   = hypot(fx,fy');
+	S     = struct();
+	% input axes
+	fx    = fourier_axis(L(1),n(1));
+	fy    = fourier_axis(L(2),n(2));
+	fr    = hypot(fx,fy');
+	df    = 1./L;
+	% note: this does not limit extend of radial density to circles which are entirely located inside of the rectangular domain
 	frmax = hypot(max(fx),max(fy));
-	fri = (0:dfi:ceil(frmax+dfi))';
-%	fri  = (0: 
 
-	% this is a linear interpolation
+	% output axis
+	dfi   = sqrt(df(1).*df(2));
+	fri = (0:dfi:ceil(frmax+dfi))';
+
+	% (bi-linear) interpolation
 	% each value is proportionally split between the next lower and next larger bin
-	% integer part
+	% bin index
 	rat = fr/dfi;
-	% index into 1D radial density
+	% integer part, index into 1D radial density
 	id_Sr = floor(rat);
+	% fractional part
 	p   = 1-(rat-id_Sr);
-	% 0 is id_Sr 1
+	% account for 1-based indices in matlab, bin of fr=0 has index 1
 	id_Sr = id_Sr+1;
 
 	s = [length(fri)+1,1];
-	S  = struct();
 
-	% half-sum
-	sumS = 0.5*( accumarray(id_Sr(:),p(:).*Shat(:),s,@sum) ...
-	         + accumarray(id_Sr(:)+1,(1-p(:)).*Shat(:), s, @sum) );
-	% number of id_Srs
-	count = ( accumarray(id_Sr(:),p(:),s,@sum) ...
-	        + accumarray(id_Sr(:)+1,(1-p(:)), s, @sum) );
+	% half-sum of 2d-bins per 1d-bin
+	sumS = 0.5*( accumarray(id_Sr(:),p(:).*S2d(:),s,@sum) ...
+	           + accumarray(id_Sr(:)+1,(1-p(:)).*S2d(:), s, @sum) );
+	% nt : number of 2d-bins per 1d-bin
+	count = (   accumarray(id_Sr(:),p(:),s,@sum) ...
+	          + accumarray(id_Sr(:)+1,(1-p(:)), s, @sum) );
+	% strip successor of last bin
 	sumS  = sumS(1:end-1);
 	count = count(1:end-1);
 
-	%n  = accumarray(flat(r),ones(numel(f),1),[],@sum);
-	S.mu = sumS./count;
-	S.mu(count==0) = 0;
-	% normalized
-	S.normalized = S.mu./(sum(mid(S.mu)).*dfi);
+	% integral
+	Sr.mu = sumS./count;
+	Sr.mu(count==0) = 0;
+	
+	% normalize
+	Sr.normalized = Sr.mu./(sum(mid(Sr.mu)).*dfi);
 
 	% matrix
 	if (nargout()>3)
 		nr = length(fri);
-		nn = numel(Shat);
+		nn = numel(S2d);
 		% index into 2D periodogram
 		id_S     = (1:nn)';
-%		id_S = reshape(id_S,size(Shat));
-%		id_S = id_S';
-%		id_S = id_S(:);
 		
 		A        = sparse(  [id_S; id_S] ...
 				  , [id_Sr(:); id_Sr(:)+1] ...
                                   , [p(:); 1-p(:)], nn,nr+1);
+		% strip successor of last bin
 		A(:,end) = [];
-%		Smu_  = A \ Shat(:);
+		%Smu_  = A \ S2d(:);
 	end
 
-	% TODO interpolate for sd to
-	%se = accumarray(flat(r),flat(f),[],@(x) std(x)/sqrt(length(x)));
 end % periodogram_radial
 
