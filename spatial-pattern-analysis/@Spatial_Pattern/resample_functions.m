@@ -1,12 +1,21 @@
 % 2023-01-11 14:15:11.060721307 +0100
-% TODO:
-%	compute cdf (with fourier?)
-%	Fourier interpolation of cdf
-%	restore monotonicity by sorting
-%	compute pdf as Fourier derivative -> can this still result in negative values?
-% non-fourier:
-%	compute integral as trapezoidal rule (1/2 U + 1/2L) and derivative with central differences
-%	as mid-point and lower/upper induce a phase shift!!
+% Karl Kastner, Berlin
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% resample empirical densities to a comman grid
+%
 function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% n.b. for higher than linear, posisitivty of density can be violated
 	imethod = 'linear';

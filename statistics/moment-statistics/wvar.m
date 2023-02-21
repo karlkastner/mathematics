@@ -1,6 +1,19 @@
 % So 19. Jul 12:45:11 CEST 2015
 % Karl Kastner, Berlin
 %
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
 %% weighted variance of columns, corrected for degrees of freedom (bessel)
 %% variance of the weighted sample mean of samples with same mean (but not necessarily same variance)
 %% s^2 = sum (w^2(x-sum(wx)^2))

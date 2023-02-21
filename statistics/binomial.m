@@ -1,5 +1,5 @@
-% Mon 19 Dec 17:03:02 CET 2022
-% Karl Kästner, Berlin
+% Tue 21 Feb 14:16:29 CET 2023
+% Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -17,25 +17,15 @@
 % demonstration, that averaging densities with the same distribution
 % but different regularity results in a density that is more pointed
 % and has heavier tales than the underlying distribution
-% gaussian window in 1D
-function [w, dof] = gausswin1(n, nf)
-	fx = fourier_axis(1,n);
-
-	% Gaussian window
-	% 0.5 = exp(-1/2*(nf/2)^2/s^2)
-	% -2*log(0.5) = (nf/2)^2/s^2
-	% -8*log(0.5) = nf^2/s^2
-	% s^2 = -nf^2/(8*log(0.5))
-	% s^2 =  nf^2/(8*log(2))
-	% s   =  nf/sqrt(8*log(2))
-	s = nf/sqrt(8*log(2));
-	w = normpdf(fx,0,s);
-
-	% normalize sum of weigths to 1
-	w = w/sum(w(:));
-
-	% degrees of freedom of window
-	% when values are uncorrelated
-	dof = sum(w(:)).^2./(sum(w(:).^2));
+%
+%
+%% generalized binomial coefficient, working for non-integer arguments,
+%% in contrast to the matlab buildin function nchoosek
+function b = binomial(n,k)
+	if (n+1 < 0 || k+1<0 | n-k+1<0)
+		b = NaN;
+	else
+		b = exp(gammaln(n+1)-gammaln(k+1)-gammaln(n-k+1));
+	end
 end
 

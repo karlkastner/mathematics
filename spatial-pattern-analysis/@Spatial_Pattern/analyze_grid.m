@@ -1,5 +1,21 @@
 % Wed 18 May 13:50:47 CEST 2022
-% 2022-12-02 00:25:33.449376625 +0100
+% Karl Kästner, Berlin
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% analyze a 2D spatial pattern, estimate regularity and test for periodicity
+%
 function obj = analyze_grid(obj)
 	% output
 	S    = obj.S;
@@ -67,7 +83,6 @@ function obj = analyze_grid(obj)
 	% note : x an y do not match original figure when the figure was resampled or or resized
 	obj.x   = linspace(-L(1)/2,L(1)/2,n(1))';
 	obj.y   = linspace(-L(2)/2,L(2)/2,n(2))';
-	%rr      = hypot(obj.x',obj.y);
 
 	% grid in frequency space
 	[obj.f.x,obj.f.y,frr,ftt] = fourier_axis_2d(L,n);
@@ -83,14 +98,6 @@ function obj = analyze_grid(obj)
 	sxy = sum(bmsk*((cvec(obj.x)-centroid.x).*(cvec(obj.y)-centroid.y)))./nmsk;
 	centroid.C = [sx2,sxy;
         	      sxy,sy2];
-%	centroid.Crot = rotmat(-angle_deg)*centroid.C;
-%	centroid.L = sqrt([centroid.Crot(1,1),centroid.Crot(2,2)]); 
-% anti rotation for area
-%r = sxy./sqrt(sx2*sy2)
-%Rot = [1,sxy;
-%       -sxy,1];
-%centroid.sr = sqrt(sx2 + 2*sxy + sy2);
-
 
 	% the weighted mean allows for feathering the transition
 	mu  = wmean(double(bmsk(:)),b(:));
@@ -139,51 +146,33 @@ function obj = analyze_grid(obj)
 	nf_test  = max(nf_test,2);
 
 	% restrict test to region containing the upper 20% of spectral energy
-	[Ssort,sdx] = sort(S.bar(:));
+	[Ssort,sdx] = sort(S.bar(:),'descend');
 	iSsort = cumsum(Ssort);
-	% TODO no magic numbers
-	fdx = (iSsort >= 0.2*iSsort(end));
+	fdx = (iSsort <= obj.opt.pfmsk*iSsort(end));
  	fmsk = false(n);
 	fmsk(sdx(fdx)) = true;
-%figure(1)
-%subplot(2,2,1)
-%[Sr_, obj.f.r] = periodogram_radial(S.clip,L);
-%plot(obj.f.r,[S.r,Sr_.normalized,obj.w.r*10]);
-%vline(fhp)
-%plot(obj.f.r,S.r);
-%imagesc(fftshift(fmsk))
-%imagesc(fftshift(S.clip))
 
 	% exlude spurious low-frequency components from the test
 	fmsk = fmsk & (frr > fhp);
-%subplot(2,2,2)
-%imagesc(fftshift(fmsk))
-%pause
+
 	% by symmetry, excluded the symmetric half plane
 	fmsk = fmsk & cvec(obj.f.x) >= 0;
 
-
 	% periodicity test
-	%if (numel(bmsk)*obj.opt.ns < obj.opt.n_max_test)
-		try
-		if (any((bmsk~=bmsk(1,1)),'all'))
-			bmsk_ = bmsk;
-		else
-			bmsk_ = [];
-		end
-		[p_periodic, stati] = periodogram_test_periodicity_2d(b, ...
-								L, nf_test, bmsk_, fmsk, obj.opt.ns);
-		fr_periodic = stati.fr_max;
-		catch e
-			disp(e);
-			p_periodic= NaN;
-			fr_periodic = NaN;
-		end
-%	else
-%		fprintf('not testing, too large');
-%		p_periodic = NaN;
-%		fr_periodic = NaN;
-%	end
+	try
+	if (any((bmsk~=bmsk(1,1)),'all'))
+		bmsk_ = bmsk;
+	else
+		bmsk_ = [];
+	end
+	[p_periodic, stati] = periodogram_test_periodicity_2d(...
+				b, nf_test, bmsk_, fmsk, obj.opt.ns);
+	%fr_periodic = stati.fr_max;
+	catch e
+		disp(e);
+		p_periodic= NaN;
+		%fr_periodic = NaN;
+	end
 
 	% determine if pattern is isotropic (spotted, gapped, labyrinthic)
 	% or anisotropic (banded)
@@ -295,7 +284,7 @@ function obj = analyze_grid(obj)
 	stat.area_msk      = area_msk;
 	stat.f_50          = f_50;
 	stat.fc            = fc;
-	stat.fr_periodic   = fr_periodic;
+	%stat.fr_periodic   = fr_periodic;
 	stat.isisotropic   = isisotropic;
 	stat.fhp           = fhp;
 	stat.nf            = nf;
@@ -316,6 +305,5 @@ function obj = analyze_grid(obj)
 	obj.R = R;
 	obj.S = S;
 	obj.f.rr = frr;
-	%obj.w = w;
 end % analyze_grid
 

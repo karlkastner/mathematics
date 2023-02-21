@@ -2,6 +2,20 @@
 % changed  Sat Nov 27 04:39:21 MSK 2010
 % Karl Kästner, Berlin
 %
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%
 %% finite difference matrix of first derivative in one dimensions
 %% n : number of grid points
 %% h = L/(n+1) constant step with

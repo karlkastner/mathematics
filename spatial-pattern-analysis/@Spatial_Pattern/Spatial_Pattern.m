@@ -1,6 +1,20 @@
 % Mon 10 Jan 11:11:55 CET 2022
+% Karl Kastner, Berlin
 %
-% class for analysis of remotely sensed and model generated vegetation patterns
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% class for analysis of remotely sensed and model generated vegetation patterns
 %
 classdef Spatial_Pattern < handle
 	properties
@@ -51,6 +65,7 @@ classdef Spatial_Pattern < handle
 			     , 'n_mem_blk', 2.5e8 ...
 			     , 'objective', 'mise-cramer' ...
 			     , 'xlim', [0, 2.5] ...
+			     , 'pfmsk', 0.8 ...
 		);
 		% analysis results
 		stat = struct( );
