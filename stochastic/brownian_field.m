@@ -71,7 +71,7 @@
 % 6) clip the RxR domain into a rectangle within the first quadrant of the circle
 %    i.e. sqrt(x1^2+x2^2) < 1, x1>=0, x2>=0
 %
-function [FF,field2,tx,ty]=brownian_field(H,n,n3)
+% function [FF,field2,tx,ty]=brownian_field(H,n,n3)
 %% simulate Fractional Brownian field on unit disk, with Hurst parameter 'H';
 %  Note that the covariance function is isotropic, see reference below.
 % INPUTS:
@@ -93,13 +93,16 @@ function [FF,field2,tx,ty]=brownian_field(H,n,n3)
 % Kroese, D. P., & Botev, Z. I. (2015). Spatial Process Simulation.
 % In Stochastic Geometry, Spatial Statistics and Random Fields(pp. 369-404)
 % Springer International Publishing, DOI: 10.1007/978-3-319-10064-7_12
+%
+function [FF,field2,tx,ty]=brownian_field(H,n,n3)
 if (H>1)|(H<0) % Hurst parameter error check
     error('Hurst parameter must be between 0 and 1');
 end
 % only the first quadrant of the circular section is kept
-% so we need to set n = sqrt(2)*2*n
+% so we need to set n = sqrt(2)*2*n = sqrt(8)*n
 n0 = n;
-n = 2^(1/4)*2*n;
+n = 2^(1/2)*2*n;
+%n = 2^(1/4)*2*n;
 if nargin<2
     n=2^8; % default value of points
 else

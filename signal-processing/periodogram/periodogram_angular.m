@@ -13,8 +13,13 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-% Sxy : nxn
-% Sra : n/2*(pi*n/2)
+%
+%% input:
+%% 	Sxy : nxn
+%% ouput:
+%% 	Sra : n/2*(pi*n/2)
+%%	angle
+%% function [Sa,angle,A] = periodogram_angular(Sxy,L,nf)
 function [Sa,angle,A] = periodogram_angular(Sxy,L,nf)
 
 	if (nargin()<3)

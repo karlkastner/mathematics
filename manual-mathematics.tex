@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 23M
+mathematics\protect\\Revision 25M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -178,11 +178,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{derive\_brownian\_phase\_inv}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{derive\_fourier\_power}
 ${}$
 \begin{lstlisting}
@@ -204,6 +199,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{derive\_logtripdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_phase\_drift\_inv}
 ${}$
 \begin{lstlisting}
 
@@ -378,6 +378,26 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gbb\_geostd\_entire\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbb\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbb\_simulate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbb\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gbm\_bridge}
 ${}$
 \begin{lstlisting}
@@ -398,6 +418,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gbm\_geomean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbm\_geostd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gbm\_inv}
 ${}$
 \begin{lstlisting}
@@ -408,12 +438,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{gbm\_mean\_entire\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gbm\_median}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{gbm\_momemt2par}
+\subsection{gbm\_moment2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbm\_moment2par\_entire\_series}
 ${}$
 \begin{lstlisting}
 
@@ -434,6 +474,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{gbm\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gbm\_std\_entire\_series}
 ${}$
 \begin{lstlisting}
 
@@ -640,6 +685,7 @@ ${}$
 \subsection{fourier\_axis\_2d}
 ${}$
 \begin{lstlisting}
+ function [fx, fy, fr, ft, Tx, Ty, mask, N] = fourier_axis_2d(L,n)
 
 \end{lstlisting}
 \subsection{fourier\_cesaro\_correction}
@@ -5874,21 +5920,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{autocorr\_brownian\_phase}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{autocorr\_brownian\_phase\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{autocorr\_brownian\_phase\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{autocorr\_decay\_rate}
 ${}$
 \begin{lstlisting}
@@ -6003,16 +6034,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  generate two correlated normally distributed vectors
-
-\end{lstlisting}
-\subsection{brownian\_phase\_cdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{brownian\_phase\_inv}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{coherence}
@@ -6165,7 +6186,6 @@ ${}$
 \subsection{circfilt2}
 ${}$
 \begin{lstlisting}
- Mon 19 Dec 17:03:02 CET 2022
  smooth (filter) the  2D image z with a circular disk of radius nf
  apply periodic boundary conditions
 
@@ -6702,6 +6722,12 @@ ${}$
 \subsection{periodogram\_angular}
 ${}$
 \begin{lstlisting}
+ input:
+ 	Sxy : nxn
+ ouput:
+ 	Sra : n/2*(pi*n/2)
+	angle
+ function [Sa,angle,A] = periodogram_angular(Sxy,L,nf)
 
 \end{lstlisting}
 \subsection{periodogram\_bartlett}
@@ -6787,22 +6813,26 @@ ${}$
 \begin{lstlisting}
  test a periodogram for hidden periodic frequency components
  
- [p,stat,ratio] = periodogram_test_periodicity_2d(b, L, nf, frmin, frmax)
- input:
-	fx : frequengcies
-	b    : image to test for presence of hidden periodicities,
-             i.e. periodicities where the frequency is not known a priori
-      nf   : radius of circular disk (in number of bins) used for smoothing
-             the periodogram to estimate the spectral density
-      bmsk : mask determining parts of the image to include in the analysis
-             default is entire image
-	fmin, fmax : (radial) frequency range limits to test (fmask)
+ [p,stat,ratio] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns)
 
-	mode : automatically set to "exact", when S given
-	       inclusive : estimate density by smoothing including the central bin
-	       exclusive : estimate density by smoothing  excluding the central bin
-	note: inclusive and exclusive lead to different distribution
-	      but identical p-values
+ input:
+	b    (nx * ny): image to test for presence of hidden periodicities,
+             i.e. periodicities where the frequency is not known a priori
+      nf   = nfr or [nfx, nfy]
+	       radius of circular disk (in number of bins) used for smoothing
+             the periodogram to estimate the spectral density,
+	       or axes of ellipses for smoothing
+	       when b is not square a good choice is nfx/nfy ~ Lx/Ly
+      bmsk : mask in real space selecting parts of the image to include in
+	       the analysis default is entire image
+	       the mask can have non-integer values to feather the borders of the mask
+	fmsk : mask in frequency selecting frequencies to test for periodicity
+	       default is all frequencies
+	       note: when b is real, one half plane can always be excluded
+	       because of symmetry. This slightly increases the significance
+	ns   : number of samples for the monte-carlo determination of
+	       the test statistics, mc is only used when parts of the image are masked
+	       otherwise the analytic test statistic is used 
 
  influence of masking the input file:
  	      - the root-mean-square energy of the ordinates is proportional
@@ -6810,7 +6840,6 @@ ${}$
 	      - values in the periodogram are not any more linearly independent
 	        so that the dof of the filter window is not nf^2
 
- TODO make frmin, frmax an fmask
 
 \end{lstlisting}
 \subsection{periodogram\_test\_stationarity}
@@ -6936,11 +6965,6 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing/spectral-density}
-\subsection{gampdf\_man}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{hex\_angular\_pdf}
 ${}$
 \begin{lstlisting}
@@ -6956,26 +6980,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{lognpdf\_entropy}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{misespdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{normpdf\_entropy}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{skewpdf\_entropy}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{spectral\_density\_ar2}
 ${}$
 \begin{lstlisting}
@@ -6985,127 +6989,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  integrate the spectral density
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass2d\_ideal}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_2d\_max2par}
-${}$
-\begin{lstlisting}
- transform mode (maxima) of the bandpass spectral density into the paramter
- of the underlying distribution 
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_2d\_scale}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_2d\_scale\_old}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_continuous}
-${}$
-\begin{lstlisting}
-
- function [S_bp,Sc] = spectral_density_bandpass_continous(fx,fc,order,normalize,pp)
-
- output :
- S_bp : spectral density of the bandpass filter in continuos space
-     limit case of the discrete bandpass for dx -> 0
- Sc   : scale factor to normalize area to 1, if noramlize = true
-
- input :
- f     : frequency (abszissa)
- fc    : central freqeuncy, location of maximum on abszissa
- order : number of times filter is applied iteratively, not necessarily integer
- normalize : normalize area under curve int_0^inf S(f) df = 1, if not maximum S(fc) = 1
- pp    : powers for recombination of the lowpass filter 
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_continuous\_max}
-${}$
-\begin{lstlisting}
- maximum of the bandpass spectral density
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_continuous\_max2par}
-${}$
-\begin{lstlisting}
- transform mode (maxima) of the bandpass spectral density into the paramter
- of the underlying distribution 
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_continuous\_scale}
-${}$
-\begin{lstlisting}
- normaliztation scale of the spatial bandpass density
-
-\end{lstlisting}
-\subsection{spectral\_density\_bandpass\_discrete}
-${}$
-\begin{lstlisting}
- spectral density of the discrete spatial (two-sided) bandpass filter
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase}
-${}$
-\begin{lstlisting}
- spectral density of a fourier series where the phase undergoes brownian motion
- with standard deviation s per unit distance
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_across\_max}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_across\_max2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_across\_mode2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_mode}
-${}$
-\begin{lstlisting}
- mode (maximum) of the spectral density of the fourier series with brownian phase
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_mode2par}
-${}$
-\begin{lstlisting}
- transform mode to parameters of the brownian phase spectral density
-
-\end{lstlisting}
-\subsection{spectral\_density\_brownian\_phase\_scale}
-${}$
-\begin{lstlisting}
- normalization scale of the brownian phase spectral density
 
 \end{lstlisting}
 \subsection{spectral\_density\_estimate\_2d}
@@ -7127,27 +7010,6 @@ ${}$
 \subsection{spectral\_density\_gausswin}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_highpass}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_highpass2d\_ideal}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_highpass\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_highpass\_cos}
-${}$
-\begin{lstlisting}
- consine shaped spectral density of a highpass filter
 
 \end{lstlisting}
 \subsection{spectral\_density\_lorentzian}
@@ -7174,36 +7036,6 @@ ${}$
  normalization scale of the lorentzian spectral density
 
 \end{lstlisting}
-\subsection{spectral\_density\_lowpass2d\_ideal}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_lowpass\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_lowpass\_continuous}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_lowpass\_continuous\_scale}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_lowpass\_discrete}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{spectral\_density\_lowpass\_one\_sided}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{spectral\_density\_maximum\_bias\_corrected}
 ${}$
 \begin{lstlisting}
@@ -7225,11 +7057,6 @@ ${}$
 
 \end{lstlisting}
 \section{signal-processing}
-\subsection{spectral\_density\_brownian\_phase\_reg2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{spectrogram}
 ${}$
 \begin{lstlisting}
@@ -7474,56 +7301,62 @@ ${}$
 \subsection{Spatial\_Pattern}
 ${}$
 \begin{lstlisting}
+ class for analysis of remotely sensed and model generated vegetation patterns
 
 \end{lstlisting}
 \subsection{analyze\_grid}
 ${}$
 \begin{lstlisting}
+ analyze a 2D spatial pattern, estimate regularity and test for periodicity
 
 \end{lstlisting}
 \subsection{analyze\_transect}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{extract\_improfile}
-${}$
-\begin{lstlisting}
+ analyze 1D transect through a spatial pattern,
+ either remotely sensed or model generated
 
 \end{lstlisting}
 \subsection{fit\_parametric\_densities}
 ${}$
 \begin{lstlisting}
+ fit parametric spectral densities to the empirical density
 
 \end{lstlisting}
 \subsection{imread}
 ${}$
 \begin{lstlisting}
+ read an image file containing a pattern, mask and geospatial data
 
 \end{lstlisting}
 \subsection{plot}
 ${}$
 \begin{lstlisting}
+ plot the pattern or densities 
 
 \end{lstlisting}
 \subsection{plot\_transect}
 ${}$
 \begin{lstlisting}
+ plot 1D pattern
 
 \end{lstlisting}
 \subsection{report}
 ${}$
 \begin{lstlisting}
+ report statistics of analysis
 
 \end{lstlisting}
 \subsection{resample\_functions}
 ${}$
 \begin{lstlisting}
+ resample empirical densities to a comman grid
 
 \end{lstlisting}
 \subsection{tabulate}
 ${}$
 \begin{lstlisting}
+ summarize properties of multiple patterns in a single struct
 
 \end{lstlisting}
 \section{spatial-pattern-analysis}
@@ -7537,14 +7370,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{brownian\_phase\_patch\_size\_distribution}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{hexagonal\_pattern}
 ${}$
 \begin{lstlisting}
+ function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
+
+ spot pattern of unit amplitude
+ output : z : pattern
+	   x : x-coordinate
+	   y : y-coordinate
+ 
+ Note : z_gap = 1 - z_spot
 
 \end{lstlisting}
 \subsection{patch\_size\_1d}
@@ -7568,6 +7404,12 @@ ${}$
 
 \end{lstlisting}
 \subsection{suppress\_low\_frequency\_lobe}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{spatial-statistics}
+\subsection{average\_corr\_2d}
 ${}$
 \begin{lstlisting}
 
@@ -7626,6 +7468,12 @@ ${}$
 
 
 \end{lstlisting}
+\subsection{lambertw\_numeric}
+${}$
+\begin{lstlisting}
+ lambert-w function
+
+\end{lstlisting}
 \subsection{legendre\_man}
 ${}$
 \begin{lstlisting}
@@ -7646,50 +7494,11 @@ ${}$
  stadard deviation of the arcus tangens by means of taylor expansion
 
 \end{lstlisting}
-\subsection{beta\_kurt}
+\subsection{binomial}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{beta\_mean}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{beta\_moment2param}
-${}$
-\begin{lstlisting}
- transform central moments (mean and sd) to parameters of the beta function
-
-\end{lstlisting}
-\subsection{beta\_skew}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{beta\_std}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{chi2\_kurt}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{chi2\_mean}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{chi2\_skew}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{chi2\_std}
-${}$
-\begin{lstlisting}
+ generalized binomial coefficient, working for non-integer arguments,
+ in contrast to the matlab buildin function nchoosek
 
 \end{lstlisting}
 \subsection{coefficient\_of\_determination}
@@ -7716,6 +7525,34 @@ ${}$
  class for quasi-distributions from a set of sampling points
 
 \end{lstlisting}
+\section{statistics/distributions/beta}
+\subsection{beta\_kurt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{beta\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{beta\_moment2param}
+${}$
+\begin{lstlisting}
+ transform central moments (mean and sd) to parameters of the beta function
+
+\end{lstlisting}
+\subsection{beta\_skew}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{beta\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/bivariate-normal}
 \subsection{binorm\_separation\_coefficient}
 ${}$
 \begin{lstlisting}
@@ -7739,6 +7576,36 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{statistics/distributions/chi2}
+\subsection{chi2\_kurt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{chi2\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{chi2\_skew}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{chi2\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/circular-normal}
+\subsection{wnormpdf}
+${}$
+\begin{lstlisting}
+ wrapped normal distribution to the unit circle
+ c.f. stephens
+
+\end{lstlisting}
+\section{statistics/distributions}
 \subsection{edgeworth\_cdf}
 ${}$
 \begin{lstlisting}
@@ -7761,11 +7628,205 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{gam\_moment2param}
+\section{statistics/distributions/fisher}
+\subsection{fisher\_mean}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fisher\_moment2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fisher\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/gamma}
+\subsection{gamma\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_moment2param}
+${}$
+\begin{lstlisting}
+ transform modes (mu,sd) to parameters of the gamma distribution
+
+\end{lstlisting}
+\subsection{gamma\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gamma\_stirling}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{gampdf\_man}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{generalized\_gamma\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/hotelling-t2}
+\subsection{t2cdf}
+${}$
+\begin{lstlisting}
+ Hotelling's T-squared cumulative distribution
+
+\end{lstlisting}
+\subsection{t2inv}
+${}$
+\begin{lstlisting}
+ inverse of Hotelling's T-squared cumulative distribution
+
+\end{lstlisting}
+\section{statistics/distributions/kurt-normal}
+\subsection{kurtncdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{kurtnpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/log-triangular}
+\subsection{logtrialtcdf}
+${}$
+\begin{lstlisting}
+ pdf of a logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtrialtinv}
+${}$
+\begin{lstlisting}
+ inverse of the logarithmic triangular distribution
+ = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
+x = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
+
+\end{lstlisting}
+\subsection{logtrialtmean}
+${}$
+\begin{lstlisting}
+ mean of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtrialtpdf}
+${}$
+\begin{lstlisting}
+ density of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtrialtrnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{logtricdf}
+${}$
+\begin{lstlisting}
+ cumulative distribution of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtriinv}
+${}$
+\begin{lstlisting}
+ invere of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtrimean}
+${}$
+\begin{lstlisting}
+ mean of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtripdf}
+${}$
+\begin{lstlisting}
+ probability density of the logarithmic triangular distribution
+
+\end{lstlisting}
+\subsection{logtrirnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/log-uniform}
+\subsection{logu\_median}
+${}$
+\begin{lstlisting}
+ median of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{logucdf}
+${}$
+\begin{lstlisting}
+ probability density of the logarithmic uniform distribution
+
+\end{lstlisting}
+\subsection{logucm}
+${}$
+\begin{lstlisting}
+ central moments of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{loguinv}
+${}$
+\begin{lstlisting}
+ inverse of the log-uniform distribution  
+
+\end{lstlisting}
+\subsection{logumean}
+${}$
+\begin{lstlisting}
+ mean of the log-uniform distribution
+
+\end{lstlisting}
+\subsection{logupdf}
+${}$
+\begin{lstlisting}
+ pdf of the log uniform distribution
+
+\end{lstlisting}
+\subsection{logurnd}
+${}$
+\begin{lstlisting}
+ random numbers following a log-uniform distribution
+
+\end{lstlisting}
+\subsection{loguvar}
+${}$
+\begin{lstlisting}
+ variance of the log-uniform distribution
+
+\end{lstlisting}
+\section{statistics/distributions/loglog}
+\subsection{loglogpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/lognormal}
 \subsection{logn\_mean}
 ${}$
 \begin{lstlisting}
@@ -7794,6 +7855,11 @@ ${}$
  transform parameters to mode (mu, sd) for the log normal distribution
 
 \end{lstlisting}
+\subsection{logn\_skewness}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{logn\_std}
 ${}$
 \begin{lstlisting}
@@ -7805,6 +7871,322 @@ ${}$
  log normal distribution called by modes rather than parameters
 
 \end{lstlisting}
+\subsection{lognpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/logskew}
+\subsection{logskewcdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{logskewpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/mise}
+\subsection{misespdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions}
+\subsection{ncx2\_moment2param}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/normal}
+\subsection{normpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/passes}
+\subsection{bandpass1d\_continuous\_pdf}
+${}$
+\begin{lstlisting}
+
+ function [S_bp,Sc] = spectral_density_bandpass_continous(fx,fc,order,normalize,pp)
+
+ output :
+ S_bp : spectral density of the bandpass filter in continuos space
+     limit case of the discrete bandpass for dx -> 0
+ Sc   : scale factor to normalize area to 1, if noramlize = true
+
+ input :
+ f     : frequency (abszissa)
+ fc    : central freqeuncy, location of maximum on abszissa
+ order : number of times filter is applied iteratively, not necessarily integer
+ normalize : normalize area under curve int_0^inf S(f) df = 1, if not maximum S(fc) = 1
+ pp    : powers for recombination of the lowpass filter 
+
+\end{lstlisting}
+\subsection{bandpass1d\_continuous\_pdf\_max}
+${}$
+\begin{lstlisting}
+ maximum of the bandpass spectral density
+
+\end{lstlisting}
+\subsection{bandpass1d\_continuous\_pdf\_max2par}
+${}$
+\begin{lstlisting}
+ transform mode (maxima) of the bandpass spectral density into the paramter
+ of the underlying distribution 
+
+\end{lstlisting}
+\subsection{bandpass1d\_continuous\_pdf\_scale}
+${}$
+\begin{lstlisting}
+ normaliztation scale of the spatial bandpass density
+
+\end{lstlisting}
+\subsection{bandpass1d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+ spectral density of the discrete spatial (two-sided) bandpass filter
+
+\end{lstlisting}
+\subsection{bandpass2d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_pdf\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_pdf\_mode2par}
+${}$
+\begin{lstlisting}
+ transform mode (maxima) of the bandpass spectral density into the paramter
+ of the underlying distribution 
+
+\end{lstlisting}
+\subsection{bandpass2d\_pdf\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{highpass1d\_discrete\_cos\_pdf}
+${}$
+\begin{lstlisting}
+ consine shaped spectral density of a highpass filter
+
+\end{lstlisting}
+\subsection{highpass1d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{highpass2d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{highpass2d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass1d\_continuous\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass1d\_continuous\_pdf\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass1d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass1d\_one\_sided\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass2d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass2d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions}
+\subsection{pdfsample}
+${}$
+\begin{lstlisting}
+ pdf from sample distribution
+ Note: better use kernal density estimates
+
+\end{lstlisting}
+\section{statistics/distributions/phase\_drift}
+\subsection{phase\_drift\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_acf\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_acf\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_cdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_inv}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_patch\_size\_distribution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf}
+${}$
+\begin{lstlisting}
+ spectral density of a fourier series where the phase undergoes brownian motion
+ with standard deviation s per unit distance
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_across\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_across\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_across\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_mode}
+${}$
+\begin{lstlisting}
+ mode (maximum) of the spectral density of the fourier series with brownian phase
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_mode2par}
+${}$
+\begin{lstlisting}
+ transform mode to parameters of the brownian phase spectral density
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_reg2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_pdf\_scale}
+${}$
+\begin{lstlisting}
+ normalization scale of the brownian phase spectral density
+
+\end{lstlisting}
+\section{statistics/distributions/skew-normal}
+\subsection{skew\_generalized\_normal\_fit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skew\_generalized\_normpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skewcdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skewparam\_to\_central\_moments}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{skewpdf}
+${}$
+\begin{lstlisting}
+ skew-normal distribution
+ c.f. Azzalini 1985
+
+\end{lstlisting}
+\subsection{skewpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics/distributions/triangular}
+\subsection{tricdf}
+${}$
+\begin{lstlisting}
+ cumulative distribution of the log-triangular distribution
+
+\end{lstlisting}
+\subsection{triinv}
+${}$
+\begin{lstlisting}
+ inverse of the triangular distribution
+
+\end{lstlisting}
+\subsection{trimedian}
+${}$
+\begin{lstlisting}
+ median of the triangular distribution
+
+\end{lstlisting}
+\subsection{tripdf}
+${}$
+\begin{lstlisting}
+ probability density of the triangular distribution
+
+\end{lstlisting}
+\subsection{trirnd}
+${}$
+\begin{lstlisting}
+ random numbers of the triangular distribution
+
+\end{lstlisting}
+\section{statistics/distributions/wrapped-normal}
 \subsection{normpdf\_wrapped}
 ${}$
 \begin{lstlisting}
@@ -7818,25 +8200,6 @@ ${}$
 \subsection{normpdf\_wrapped\_mode2par}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{pdfsample}
-${}$
-\begin{lstlisting}
- pdf from sample distribution
- Note: better use kernal density estimates
-
-\end{lstlisting}
-\subsection{t2cdf}
-${}$
-\begin{lstlisting}
- Hotelling's T-squared cumulative distribution
-
-\end{lstlisting}
-\subsection{t2inv}
-${}$
-\begin{lstlisting}
- inverse of Hotelling's T-squared cumulative distribution
 
 \end{lstlisting}
 \section{statistics}
@@ -7860,52 +8223,6 @@ ${}$
 \begin{lstlisting}
  reduction of variance when sampling from a finite population
  without replacement
-
-\end{lstlisting}
-\subsection{fisher\_mean}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{fisher\_moment2param}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{fisher\_std}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{gam\_mean}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{gam\_std}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{gamma\_mode}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{gamma\_mode2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{gamma\_moments\_to\_parameter}
-${}$
-\begin{lstlisting}
- transform modes (mu,sd) to parameters of the gamma distribution
-
-\end{lstlisting}
-\subsection{gamma\_stirling}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{gaussfit3}
@@ -7978,16 +8295,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{kurtncdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{kurtnpdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{kurtosis\_bias\_corrected}
 ${}$
 \begin{lstlisting}
@@ -8006,177 +8313,11 @@ ${}$
  approximate log of the factorial
 
 \end{lstlisting}
-\subsection{loglogpdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{lognfit\_quantile}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{logskewcdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{logskewpdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\section{statistics/logu}
-\subsection{lambertw\_numeric}
-${}$
-\begin{lstlisting}
- lambert-w function
-
-\end{lstlisting}
-\subsection{logtrialtcdf}
-${}$
-\begin{lstlisting}
- pdf of a logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtrialtinv}
-${}$
-\begin{lstlisting}
- inverse of the logarithmic triangular distribution
- = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
-x = (d F log(a) log(b) + a log(b) - b log(a) - d F log(a) log(c) - a log(c) + d F log(b) log(c) + b log(c) - d F log^2(b))/((log(a) - log(b)) W((a^(-1/(log(a) - log(b))) (b^(-log(c)/log(a) - 1/log(a)) c)^(-log(a)/(log(a) - log(b))) (-d F log^2(b) + a log(b) + d F log(a) log(b) + d F log(c) log(b) - b log(a) - a log(c) + b log(c) - d F log(a) log(c)))/(log(a) - log(b))))
-
-\end{lstlisting}
-\subsection{logtrialtmean}
-${}$
-\begin{lstlisting}
- mean of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtrialtpdf}
-${}$
-\begin{lstlisting}
- density of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtrialtrnd}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{logtricdf}
-${}$
-\begin{lstlisting}
- cumulative distribution of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtriinv}
-${}$
-\begin{lstlisting}
- invere of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtrimean}
-${}$
-\begin{lstlisting}
- mean of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtripdf}
-${}$
-\begin{lstlisting}
- probability density of the logarithmic triangular distribution
-
-\end{lstlisting}
-\subsection{logtrirnd}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{logucdf}
-${}$
-\begin{lstlisting}
- probability density of the logarithmic uniform distribution
-
-\end{lstlisting}
-\subsection{logucm}
-${}$
-\begin{lstlisting}
- central moments of the log-uniform distribution
-
-\end{lstlisting}
-\subsection{loguinv}
-${}$
-\begin{lstlisting}
- inverse of the log-uniform distribution  
-
-\end{lstlisting}
-\subsection{logumean}
-${}$
-\begin{lstlisting}
- mean of the log-uniform distribution
-
-\end{lstlisting}
-\subsection{logupdf}
-${}$
-\begin{lstlisting}
- pdf of the log uniform distribution
-
-\end{lstlisting}
-\subsection{logurnd}
-${}$
-\begin{lstlisting}
- random numbers following a log-uniform distribution
-
-\end{lstlisting}
-\subsection{loguvar}
-${}$
-\begin{lstlisting}
- variance of the log-uniform distribution
-
-\end{lstlisting}
-\subsection{medlogu}
-${}$
-\begin{lstlisting}
- median of the log-uniform distribution
-
-\end{lstlisting}
-\subsection{test\_logurnd}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{tricdf}
-${}$
-\begin{lstlisting}
- cumulative distribution of the log-triangular distribution
-
-\end{lstlisting}
-\subsection{triinv}
-${}$
-\begin{lstlisting}
- inverse of the triangular distribution
-
-\end{lstlisting}
-\subsection{trimedian}
-${}$
-\begin{lstlisting}
- median of the triangular distribution
-
-\end{lstlisting}
-\subsection{tripdf}
-${}$
-\begin{lstlisting}
- probability density of the triangular distribution
-
-\end{lstlisting}
-\subsection{trirnd}
-${}$
-\begin{lstlisting}
- random numbers of the triangular distribution
-
-\end{lstlisting}
-\section{statistics}
 \subsection{max\_exprnd}
 ${}$
 \begin{lstlisting}
@@ -8196,7 +8337,12 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{mean\_generalized\_gampdf}
+\subsection{mean\_max\_n}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mean\_min\_n}
 ${}$
 \begin{lstlisting}
 
@@ -9052,44 +9198,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{skew\_generalized\_normal\_fit}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{skew\_generalized\_normpdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{skewcdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{skewparam\_to\_central\_moments}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{skewpdf}
-${}$
-\begin{lstlisting}
- skew-normal distribution
- c.f. Azzalini 1985
-
-\end{lstlisting}
 \subsection{spatialrnd}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_mean\_generalized\_gampdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_skew\_generalized\_normpdf}
 ${}$
 \begin{lstlisting}
 
@@ -9158,13 +9267,6 @@ ${}$
 \subsection{wharvar}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{wnormpdf}
-${}$
-\begin{lstlisting}
- wrapped normal distribution to the unit circle
- c.f. stephens
 
 \end{lstlisting}
 \section{stochastic}
@@ -9261,12 +9363,73 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{ornstein\_uhlenbeck\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{ornstein\_uhlenbeck\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{ornstein\_uhlenbeck\_spectral\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{ornstein\_uhlenbeck\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{mathematics}
 \begin{lstlisting}
 mathematical functions of various kind
 
 \end{lstlisting}
 \subsection{ternary\_diagram}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/finance}
+\subsection{test\_gbb\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbb\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_mean\_entire\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_moment2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_moment2par\_entire\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gbm\_std\_entire\_series}
 ${}$
 \begin{lstlisting}
 
@@ -9734,11 +9897,6 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_acf\_brownian\_phase}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{test\_acfar1\_2}
 ${}$
 \begin{lstlisting}
@@ -9790,6 +9948,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_ar2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_acf}
 ${}$
 \begin{lstlisting}
 
@@ -9862,6 +10025,41 @@ ${}$
 
 \end{lstlisting}
 \section{test/signal-processing/spectral-density}
+\subsection{test\_phase\_drift\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_across}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_across\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_pdf\_scale}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_spectral\_density\_2}
 ${}$
 \begin{lstlisting}
@@ -9909,41 +10107,6 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_spectral\_density\_bp\_approx}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_across\_mode2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_mode}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_mode2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_spectral\_density\_brownian\_phase\_scale}
 ${}$
 \begin{lstlisting}
 
@@ -9999,12 +10162,12 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_cdf\_brownian\_phase}
+\subsection{test\_fit\_spectral\_density}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{test\_fit\_spectral\_density}
+\subsection{test\_phase\_drift\_cdf}
 ${}$
 \begin{lstlisting}
 
@@ -10021,6 +10184,30 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_separate\_isotropic\_density}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/gamma}
+\subsection{test\_generalized\_gamma\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/log-uniform}
+\subsection{test\_logurnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/passes}
+\subsection{test\_bandpass2d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/skew-normal}
+\subsection{test\_skew\_generalized\_normpdf}
 ${}$
 \begin{lstlisting}
 

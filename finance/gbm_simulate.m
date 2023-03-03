@@ -11,12 +11,18 @@
 % S0 : start price
 % n  : number of parallel simulations
 function S = gbm_simulate(t,r,sigma1,S0,n)
+	if (nargin()<5)
+		n = 1;
+	end
+	t  = cvec(t);
 	nt = length(t);
-	e  = [0; randn(nt-1,n)];
+	e  = randn(nt,n);
 	dt = diff(t);
-	
-	W  = cumsum(dt.*(e-0.5*e0));
-	S  = S0*exp( r*(t(2:end)-t(1)) + sqrt(dt).*sigma1.*W);
+
+	% that is a stochastic integral, so the step is sqrt(dt)!
+	W = [zeros(1,size(e,2)); 0.5*cumsum((e(1:end-1,:)+e(2:end,:)).*sqrt(dt))];
+
+	S  = S0*exp( r*(t-t(1)) + sigma1.*W);
 	% for skewed : 
 %	sqrt(1-delta^2)*W1 + delta*abs(W2) 
 end

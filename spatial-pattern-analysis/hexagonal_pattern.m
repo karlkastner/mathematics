@@ -14,14 +14,14 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-% function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
-%
-% spot pattern of unit amplitude
-% output : z : pattern
-%	   x : x-coordinate
-%	   y : y-coordinate
-% 
-% Note : z_gap = 1 - z_spot
+%% function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
+%%
+%% spot pattern of unit amplitude
+%% output : z : pattern
+%%	   x : x-coordinate
+%%	   y : y-coordinate
+%% 
+%% Note : z_gap = 1 - z_spot
 function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
 	if (nargin()<4 || isempty(angle0_rad))
 		% rotation of pattern
@@ -71,13 +71,27 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad
 
 	xx = repmat(x,1,ny);
 	yy = repmat(y,1,nx)';
-	if (1)
 	if (~isempty(sbm))
-		xe = brownian_noise_2d_fft(Lx,[nx,ny]);
-		ye = brownian_noise_2d_fft(Ly,[nx,ny]);
-		xx = xx+sbm*xe;
-		yy = yy+sbm*ye;
-	end
+		%xe = brownian_noise_2d_fft(Lx,[nx,ny]);
+		%ye = brownian_noise_2d_fft(Ly,[nx,ny]);
+		%xx = xx+sbm*xe;
+		%yy = yy+sbm*ye;
+		nxy = max(nx,ny);
+		if (1)
+		dx  = brownian_field(0.5,nxy);
+		dy  = brownian_field(0.5,nxy);
+		dx  = dx(1:nx,1:ny); 
+		dy  = dy(1:nx,1:ny); 
+		xx = xx+sbm*dx;
+		yy = yy+sbm*dy;
+		d={0,0,0};
+		else
+			for idx=1:3
+				d_  = brownian_field(0.5,nxy);
+				d_  = d_(1:nx,1:ny); 
+				d{idx} = sbm*d_;
+			end
+		end
 	end
 
 	o = 2*pi*fc;
@@ -107,7 +121,7 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad
 
 		% cosine shifted and scaled to [0,1]
 		% nb a large perturbation of the amplitude is going to introduce stripes of connected points
-		zi = 1/2*(1+cos(o*xr));
+		zi = 1/2*(1+cos(o*(xr+d{idx})));
 
 		% transformation (harmonics)
 		zi = (1-zi.^p).^q;
