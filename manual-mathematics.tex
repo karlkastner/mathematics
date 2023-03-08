@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 25M
+mathematics\protect\\Revision 25:26M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -3896,6 +3896,12 @@ ${}$
 \subsection{int\_1d\_gauss\_1}
 ${}$
 \begin{lstlisting}
+ w : weights
+	2/(1-xi^2)(P'_n(xi))^2
+ b : baricentric coordinates
+     ith-root of legendre polynomial of order n
+ second order, midpoint rule
+ function [w, b, flag] = int_1d_gauss_1()
 
 \end{lstlisting}
 \subsection{int\_1d\_gauss\_2}
@@ -4572,6 +4578,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  integrate y along x with the trapezoidal rule
+
+\end{lstlisting}
+\subsection{int\_1d\_gauss\_laguerre}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{int\_trapezoidal}
@@ -6344,7 +6355,7 @@ ${}$
 \subsection{fit\_spectral\_density}
 ${}$
 \begin{lstlisting}
- fit (spectral) densities
+ fit spectral densities (probability distributions)
 
 \end{lstlisting}
 \subsection{fit\_spectral\_density\_2d}
@@ -6988,7 +6999,7 @@ ${}$
 \subsection{spectral\_density\_area}
 ${}$
 \begin{lstlisting}
- integrate the spectral density
+ integrate the spectral density over the positive half axis
 
 \end{lstlisting}
 \subsection{spectral\_density\_estimate\_2d}
@@ -7468,6 +7479,11 @@ ${}$
 
 
 \end{lstlisting}
+\subsection{laguerre\_roots}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{lambertw\_numeric}
 ${}$
 \begin{lstlisting}
@@ -7536,7 +7552,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{beta\_moment2param}
+\subsection{beta\_moment2par}
 ${}$
 \begin{lstlisting}
  transform central moments (mean and sd) to parameters of the beta function
@@ -7634,7 +7650,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{fisher\_moment2param}
+\subsection{fisher\_moment2par}
 ${}$
 \begin{lstlisting}
 
@@ -7660,7 +7676,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{gamma\_moment2param}
+\subsection{gamma\_moment2par}
 ${}$
 \begin{lstlisting}
  transform modes (mu,sd) to parameters of the gamma distribution
@@ -7838,12 +7854,12 @@ ${}$
  mode (maximum) of the log-normal density
 
 \end{lstlisting}
-\subsection{logn\_mode2param}
+\subsection{logn\_mode2par}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{logn\_moment2param}
+\subsection{logn\_moment2par}
 ${}$
 \begin{lstlisting}
  transform the mode (mu,sd) to parameters of the log normal distribution
@@ -7894,13 +7910,23 @@ ${}$
 
 \end{lstlisting}
 \section{statistics/distributions}
-\subsection{ncx2\_moment2param}
+\subsection{ncx2\_moment2par}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \section{statistics/distributions/normal}
 \subsection{normpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{normpdf\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{normpdf\_mode2par}
 ${}$
 \begin{lstlisting}
 
@@ -7958,6 +7984,13 @@ ${}$
 \subsection{bandpass2d\_pdf}
 ${}$
 \begin{lstlisting}
+ function Sb = bandpass2d_pdf(fr,a,order)
+ not normalized, max (S) = 1;
+
+\end{lstlisting}
+\subsection{bandpass2d\_pdf\_hankel}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{bandpass2d\_pdf\_mode}
@@ -7998,6 +8031,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{highpass2d\_pdf\_hankel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{lowpass1d\_continuous\_pdf}
 ${}$
 \begin{lstlisting}
@@ -8024,6 +8062,28 @@ ${}$
 
 \end{lstlisting}
 \subsection{lowpass2d\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass2d\_pdf\_hankel}
+${}$
+\begin{lstlisting}
+ spectral density of the two-dimensional lowpass filter with autocorrelation
+
+ r = exp(-a*sqrt(x^2 + y^2))
+
+ efficiently estimated with gauss-laguerre integration and 1D-FFT:
+
+ for a radially symmetric function, the radial density is
+ Sr(r) = S2d(r,0) = S2d(0,r)
+ with density S2d and autocorrelation R2d
+ S2d = F_2d^-1 (R2d)
+ by the slicing theorem:
+ S2d(r,0) = F_1d^-1 (int R2d(x,y) dy)
+
+\end{lstlisting}
+\subsection{lowpass2d\_pdf\_series}
 ${}$
 \begin{lstlisting}
 
@@ -8062,6 +8122,26 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{phase\_drift\_parallel\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_parallel\_pdf\_max}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_parallel\_pdf\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_parallel\_pdf\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{phase\_drift\_patch\_size\_distribution}
 ${}$
 \begin{lstlisting}
@@ -8075,26 +8155,6 @@ ${}$
 
 \end{lstlisting}
 \subsection{phase\_drift\_pdf\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{phase\_drift\_pdf\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{phase\_drift\_pdf\_across\_max}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{phase\_drift\_pdf\_across\_max2par}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{phase\_drift\_pdf\_across\_mode2par}
 ${}$
 \begin{lstlisting}
 
@@ -10025,22 +10085,22 @@ ${}$
 
 \end{lstlisting}
 \section{test/signal-processing/spectral-density}
+\subsection{test\_phase\_drift\_parallel\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_drift\_parallel\_pdf\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_phase\_drift\_pdf}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \subsection{test\_phase\_drift\_pdf\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_phase\_drift\_pdf\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_phase\_drift\_pdf\_across\_mode2par}
 ${}$
 \begin{lstlisting}
 
@@ -10206,6 +10266,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_bandpass2d\_pdf\_hankel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_bandpass2d\_pdf\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{test/statistics/distributions/skew-normal}
 \subsection{test\_skew\_generalized\_normpdf}
 ${}$
@@ -10225,7 +10295,7 @@ ${}$
 
 \end{lstlisting}
 \section{test/statistics}
-\subsection{test\_fisher\_moment2param}
+\subsection{test\_fisher\_moment2par}
 ${}$
 \begin{lstlisting}
 

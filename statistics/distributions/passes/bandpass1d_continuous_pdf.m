@@ -60,7 +60,7 @@ function [S_bp,Sc] = bandpass1d_continuous_pdf(fx,fc,order,normalize,pp)
 		case {0}
 			Sc  = 1; % do not normalize
 		otherwise % analytic, for limit case df = 1/L = 0
-			Sc = spectral_density_bandpass_continuous_scale(fc, order, pp);
+			Sc = bandpass1d_continuous_pdf_scale(fc, order, pp);
 			S_bp = Sc.*S_bp;
 	end % switch
 end % spectral_density_bandpass_continuous

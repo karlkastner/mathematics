@@ -25,10 +25,7 @@ function [p] = bandpass1d_continuous_pdf_max2par(fc,Sc,p0,pp)
 	if (nargin()<4)
 		pp = [];
 	end
-%	p  = fzero(@(p) spectral_density_bandpass_continuous_scale(fc,abs(p),pp) - Sc, p0);
 	% n.b: lsqnonlin works much more reliable than fzero
-	p  = lsqnonlin(@(p) bandpass1d_pdf_continuous_scale(fc,abs(p),pp) - Sc, p0);
-%	p  = fzero(@(p) log(spectral_density_bandpass_continuous_scale(fc,abs(p),pp)) - log(Sc), p0);
-	p  = abs(p);
+	p  = lsqnonlin(@(p) bandpass1d_continuous_pdf_scale(fc,abs(p),pp) - Sc, p0,0);
 end
 

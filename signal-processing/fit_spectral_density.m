@@ -1,4 +1,5 @@
 % Tue 20 Jul 22:40:41 CEST 2021
+% Karl Kästner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -12,9 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-% Karl Kästner, Berlin
 %
-%% fit (spectral) densities
+%% fit spectral densities (probability distributions)
 %
 % output :	par   : parameters of fitted density
 %		Sp    : fitted density
@@ -23,7 +23,7 @@
 %		       only the positive half-axis (f>=0) is used for the fit
 %		S     : 1D density or periodogram
 %		par0  : initial parameter for fit
-%		density_model : density model
+%		Sfun  : density model function (propobility distribution)
 %		method: objective to optimize
 %		w     : weight certain frequency components,
 %		       can be used to suppress frequency components when w(f) = 0
@@ -36,7 +36,7 @@
 %			- converges even when S is nearly discrete
 %			- does not require smoothing
 %
-%	log-likelyhood : maximize log(whatS/wS(p))
+%	log-likelihood : maximize log(whatS/wS(p))
 %			 not recommended, as not robust against added noise to hat S
 %			 can fail to converge when distribution becomes discrete
 %
@@ -47,82 +47,118 @@
 %			 - can fail to converge when distribution becomes discrete
 %
 % function [par,Sp] = fit_spectral_density(f,S,w,density_model,par0,method,nf)
-function [par,Sp,stat] = fit_spectral_density(f,S,w,density_model,par0,method,nf)
-	if (nargin()<3 || isempty(par0))
-		error('Initical parameters has to be provided');
-		%par = [0.6,1]; 
+function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
+	if (nargin()<3)
+		w = 1;
 	end
-	if (nargin()<4)
-		L = 1;
+	if (nargin()<4 || isempty(par0))
+		error('Initial parameters has to be provided');
 	end
 	if (nargin()<6)
 		method = 'mise-cramer';
 	end
-	if (nargin()<7)
-		w = 1;
+	if (nargin()<7||isempty(nf))
+		nf = 1;
 	end
 	if (nargin()<8)
-		nf = 3;
+		lb = [];
 	end
+	% exclude negative part, as it is redundant
+	% note that ther is otherwise a jump without shifting the fft
+	fdx = f>=0;
+	f_   = cvec(f(fdx));
+	S_   = cvec(S(fdx));
+	df_  = diff(f_);
+	sqrt_df = sqrt(df_);
 
-	S   = cvec(S);
-	n   = length(f);
+	%n   = length(f);
 	
 	% store initial f	
-	f_ = f;
-	% restrict fit to positive half of the plane
-	fdx = f>0;
-	f = f(fdx);
-	S = S(fdx);
-	if (~isscalar(w))
-		w = w(fdx);
-	end
-	IS_    = spectral_density_area(f,S);
-	S_  = S/IS_;
-	
-%	w = w.*(f>=0);
+	%f = f;
 
+	if (isa(w,'function_handle'))
+		w = w(f);
+	else
+		if (~isscalar(w))
+			w_ = w(fdx);
+		end
+	end
+
+	% restrict fit to positive half of the plane
+	%fdx  = f>0;
+	%fpos = f(fdx);
+	%Spos = S(fdx);
+	%if (~isscalar(w))
+	%	w = w(fdx);
+	%end
+	
+	% normalize
+	%int_S = spectral_density_area(f,S);
+	%S     = S/int_S;
+	
 	% weigh input distribution
 	% (mainly for suppression of spurious-low frequency components)
-	wS  = w.*S;
+	wS_  = w_.*S_;
 
-	%df = 1./L;
-	% renormalize
-	wS = wS/sum(mid(wS).*diff(f));
+	% normalize
+	int_wS_ = spectral_density_area(f_,wS_);
+	wS_ = wS_/int_wS_;
+	%sum(mid(wS).*diff(f));
 
-	%fdx   = f>fmin & f < fmax;
-	%IS    = spectral_density_area(f(fdx),wS(fdx));
-	%wS    = wS./IS;
-	%Sflat = 2*L/n;
-	
+	iwS_ = cumint_trapezoidal(f_,wS_);
+
 	switch (method)
-	case {'mise-cramer','mc'}
-		iwS = cumint_trapezoidal(f,wS);
+	case {'cdf_l1'}
 		opt = optimset();
 		opt.Display = 'off';
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_mise_cramer(Sfun(par)), par0,[],[],opt); 
-	case {'least-sqares','ls'}
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_cdf_l1(wSfun(par)), par0,lb,[],opt); 
+	case {'cdf_l2','cramer-von-mises','mvc'}
+		%iwS = cumint_trapezoidal(f,wS);
+		opt = optimset();
+		opt.Display = 'off';
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_mise_cramer(wSfun(par)), par0,lb,[],opt); 
+	case {'least-squares','ls'}
 		opt = optimset();
 		opt.Display = 'off';
 		%opt.Algorithm = 'levenberg-marquardt';
 		lb = sqrt(eps)*zeros(size(par0));
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_least_squares(Sfun(par)),par0,lb,[],opt); 
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_least_squares(wSfun(par)),par0,lb,[],opt); 
 	case {'log-likelihood','ll'}
-		par  = fminsearch(@(par) res_log_likelyhood(par),par0); 
+		par  = fminsearch(@(par) log_likelihood(par),par0); 
 		resn = 0;
 	otherwise
 		error('Undefined objective function')
 	end
 
+	parc   = num2cell(par);
+	Sp     = Sfun(f,parc{:});
+	int_Sp = spectral_density_area(f,Sp);
+	Sp     = Sp/int_Sp;
+	wSp_    = wSfun(par);
+
+	% goodness of fit measures
+	% root mean square error
+	res_sqrt_df          = res_least_squares(wSp_);
+	stat.goodness.rmse   = sum(res_sqrt_df.*res_sqrt_df);
+	stat.goodness.r2     = 1.0 - stat.goodness.rmse.^2./wvar(w_.*inner2outer(df_),S_);
+
+	% l2 in difference of cdf von Mise - Cramer distance
+	stat.goodness.mise_cramer = res_mise_cramer(wSp_);
+
+	% l1 of difference in cdf
+	stat.goodness.cdf_l1 = res_cdf_l1(wSp_);
+
+	% log-likelihood
+	stat.goodness.log_likelihood = log_likelihood(wSp_);
+
 	% compute the r2 of windowed smoothed density
 	% (n.b. : this is not a good measure, the mise-cramer distance is superior)
-	Sp = Sfun(par);
-	stat.r2 = 1 - wrms(w,Sp-S).^2./wvar(w,S);
+	%Sp = Sfun(par);
+	%stat.r2 = 1 - wrms(w,Sp-S).^2./wvar(w,S);
 
 	% predict density without smoothing
-	nf = 0;
-	f = f_;
-	Sp = Sfun(par);
+	%nf = 0;
+	%f = f_;
 
 	% unfiltered
 	%Sp = Sfun(par,0);
@@ -134,91 +170,70 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,density_model,par0,method,nf
 	%cS = Sp;
 	%end
 
-	function Sp = Sfun(par)
-		switch (density_model)
-		case {'bandpass-continuous'}
-			Sp = spectral_density_bandpass_continuous(f,par(1),par(2));
-		case {'bandpass-continuous-mean'}
-			Sbp = spectral_density_bandpass_continuous(f,par(1),par(2));
-			p0  = 2*(S_(2)-Sbp(2))-(S_(3)-Sbp(3));
-			p0  = max(p0,0);
-			Sm  = exp(-par(3)*abs(f));
-			Sp  = p0*Sm + (1-p0/par(3))*Sbp;                                                  
-		case {'bandpass-continuous-mean-old'}
-			Sp_bp   = spectral_density_bandpass_continuous(f,par(1),par(2));
-			Sp_mean = exp(-par(3)*abs(f));
-			Sp      = par(4)*Sp_bp + (1-par(4))*Sp_mean;
-		case {'bandpass-discrete'}
-			dx = L/n;
-			Sp = spectral_density_bandpass_discrete(f,par(1),par(2),dx);
-		case {'lorentzian'}
-			Sp = spectral_density_lorentzian(f,par(1),par(2));
-		case {'brownian-phase'}
-			Sp = spectral_density_brownian_phase(f,par(1),par(2));
-		case {'brownian-phase-mean'}
-			Sbm = spectral_density_brownian_phase(f,par(1),par(2));
-			%IS_    = spectral_density_area(f,S);
-			%S_  = S/IS_;
-			p0  = 2*(S_(2)-Sbm(2))-(S_(3)-Sbm(3));
-			p0  = max(p0,0);
-			Sm  = exp(-par(3)*abs(f));
-			Sp  = p0*Sm + (1-p0/par(3))*Sbm;                                                   
-		case {'brownian-phase-mean-old'}
-			Spbm   = spectral_density_brownian_phase(f,par(1),par(2));
-			Spbm   = Spbm/sum(Spbm);
-			Spmean = spectral_density_brownian_phase_across(f,par(3));
-			Spmean =Spmean/sum(Spmean);
-			Sp = par(4)*Spbm + (1-par(4))*Spmean;
-		case {'brownian-phase-across'}
-			Sp = spectral_density_brownian_phase_across(f,par(1));
-		case {'lognormal'}
-			Sp = lognpdf(abs(f),par(1),par(2));
-			Sp = lognpdf(abs(f),par(1),par(2));
-		otherwise
-			disp(density_model);
-			error('Undefined spectral density model')
-		end
-		Sp = real(Sp);
-		%if (nf > 1)
-		%	Sp = ifftshift(trifilt1(fftshift(Sp),nf));
-		%end
-		ISp = spectral_density_area(f,Sp);
-		Sp = Sp/ISp;
+	function wSp_ = wSfun(par)
+		parc = num2cell(par);
+		Sp_  = Sfun(f_,parc{:});
+		%Sp_  = abs(real(Sp_));
+		%ISp = spectral_density_area(f,Sp);
+		%Sp  = Sp/ISp;
+		% weigh
+		wSp_ = w_.*Sp_;
+		% normalize
+		int_wSp_ = spectral_density_area(f_,wSp_);
+		wSp_ = wSp_/int_wSp_;
 	end
 
 	% note that the residual does not need to squared and summed
 	% lsqnonlin does this implicitely and more efficient when doing so
-	function res = res_least_squares(Sp)
-		% weigh
-		wSp = w.*Sp;
-		% renormalize
-		wSp = wSp/sum(mid(wSp).*diff(f));	
+	function res = res_least_squares(wSp_)
+		%wSp = w.*Sp;
+		%wSp = wSp/sum(mid(wSp).*diff(f));	
 		% residual
-		res = wSp - wS;
+		res = wSp_ - wS_;
 		% smooth
-		res = trifilt1(res,nf);	
+		if (nf>1)
+		res = trifilt1(res,nf);
+		end
+		res = mid(res).*sqrt_df;
 	end
 
-	function res = res_log_likelyhood(Sp)
+	function ll = log_likelihood(wSp_)
 		% weigh
-		wSp = w.*Sp;
+		%wSp = w.*Sp;
 		% renormalize
-		wSp = wSp/sum(mid(wSp).*diff(f));	
-		% log-likelyhood
-		res   = log(wS./wSp);
+		%wSp = wSp/sum(mid(wSp).*diff(f));	
+		% log-likelihood
+		ll   = log(wS_./wSp_);
 		%res   = (log(Sp+Sflat) + S./(Sp+Sflat));
-		res(wSp==0) = 0;
-		res    = sum(res);
+		ll(wSp_==0) = 0;
+		ll  = sum(mid(ll).*df_);
 	end
 	
-	function res = res_mise_cramer(Sp)
+	function res = res_mise_cramer(wSp_)
 		% weigh
-		wSp = w.*Sp;
+		%wSp = w.*Sp;
 		% renormalize
-		wSp = wSp/sum(mid(wSp).*diff(f));
+		%wSp = wSp/sum(mid(wSp).*diff(f));
 		% cdf of weighed distribution
-		iwSp = cumint_trapezoidal(f,wSp);
-		res = iwSp - iwS;
+		iwSp_ = cumint_trapezoidal(f_,wSp_);
+		res  = iwSp_ - iwS_;
+%		res  = mid(res).*sqrt_df;
+%		res  = mid(res); %.*sqrt_df;
+%		res = sum(res.^2);
+		res = sum(mid(res.*res).*df_);
+	end
+	function res = res_cdf_l1(wSp_)
+		% weigh
+		%wSp = w.*Sp;
+		% renormalize
+		%wSp = wSp/sum(mid(wSp).*diff(f));
+		% cdf of weighed distribution
+		iwSp_ = cumint_trapezoidal(f_,wSp_);
+		res  = iwSp_ - iwS_;
+%		res  = mid(res).*sqrt_df;
+%		res  = mid(res); %.*sqrt_df;
+%		res = sum(res.^2);
+		res = sum(mid(abs(res)).*df_);
 	end
 end % fit_spectral_density
 

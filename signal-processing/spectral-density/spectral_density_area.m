@@ -14,19 +14,13 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% integrate the spectral density
+%% integrate the spectral density over the positive half axis
 %
-function I = spectral_density_area(fx,S)
+function int_S = spectral_density_area(fx,S)
 	if (isvector(S))
 		S = cvec(S);
 	end
-	df   = fx(2)-fx(1);
-	fdx  = fx>0;
-	fdx0 = fx==0;
-	if (sum(fdx0)>0)
-		I    = (0.5*S(fdx0,:)+sum(S(fdx,:),1))*df;
-	else
-		I    = sum(S(fdx,:),1)*df;
-	end
+	fdx = (fx>=0);
+	int_S = int_trapezoidal(fx(fdx),S(fdx,:));
 end
 

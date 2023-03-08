@@ -1,5 +1,5 @@
-% 2023-01-15 17:54:09.272681131 +0100
-% Karl Kästner, Berlin
+% 2023-03-08 11:44:05.203856723 +0100
+% Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -13,17 +13,9 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function [fc,Sc] = gamma_mode(a,b,flag)
-	if (a<1)
-		fc = eps^2;
-	else
-	%	fc = a-1/b;
-		fc = (a-1)*b;
-	end
-	if (nargin()<3 || ~flag)
-		Sc = gampdf(fc,a,b);
-	else
-		Sc = gampdf_man(fc,a,b)
-	end
+%
+function [fc,Sc] = normpdf_mode(mu,sd)
+	fc = mu;
+	Sc = 1/(sd*sqrt(2*pi));
 end
 

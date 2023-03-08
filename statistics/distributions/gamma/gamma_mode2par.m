@@ -13,10 +13,14 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
 function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 	
 	if (nargin()<3||isempty(p0))
-		p0 = [1.01,0.1];
+		% normal approximation
+		[mu,sd] = normpdf_mode2par(xm,ym);
+		% now we know that
+		[p0(1), p0(2)] = gamma_moment2par(mu,sd);
 	end
 	opt = optimset('MaxFunEvals',1e4,'MaxIter',1e3,'Display','notify');
 	l = lsqnonlin(@resfun,p0,[],[],opt);
@@ -37,7 +41,7 @@ function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 
 function res = resfun(l)
 	[xm_,ym_] = gamma_mode(l(1),l(2),varargin{:});
-	res       = [xm-xm_; log(ym)-log(ym_)];
+	res       = [xm-xm_; log(ym)-log(ym_+eps)];
 end
 
 end

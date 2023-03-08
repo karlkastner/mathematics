@@ -29,78 +29,87 @@ function fit_parametric_densities(obj)
 	% this is computed anyway for all patterns, but only meaningfull for banded patterns
 	%
 
-	% without mean component
-	[par0(1),par0(2)] = spectral_density_brownian_phase_mode2par(fc.x.bar,Sc.x.bar);
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,'brownian-phase',par0,obj.opt.objective,nf);
-	Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-	S.rot.x.brownian_phase = Sfit;
-	stat.fit.x.brownian_phase.par  = par;
-	stat.fit.x.brownian_phase.stat = fitstat;
+	% phase drift
+	[par0(1),par0(2)] = phase_drift_pdf_mode2par(fc.x.bar,Sc.x.bar);
+	Sfun = @phase_drift_pdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[0,0]);
+	S.rot.x.phase_drift = Sfit;
+	stat.fit.x.phase_drift.par  = par;
+	stat.fit.x.phase_drift.stat = fitstat;
 
-	% including mean component
-	par0 = [par, 5./fc.rr.bar];
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,'brownian-phase-mean',par0,obj.opt.objective,nf);
-	Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-	S.rot.x.brownian_phase_mean = Sfit;
-	stat.fit.x.brownian_phase_mean.par  = par;
-	stat.fit.x.brownian_phase_mean.stat = fitstat;
-
-	% without mean component
-	par0 = [fc.rr.bar, spectral_density_bandpass_continuous_max2par(fc.x.bar,Sc.x.bar,10)];
-	%par = [fc.rr.bar,20];
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,'bandpass-continuous',par0,obj.opt.objective,nf);
-	Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
+	% bandpass
+	par0 = [fc.rr.bar, bandpass1d_continuous_pdf_max2par(fc.x.bar,Sc.x.bar,10)];
+	Sfun = @bandpass1d_continuous_pdf;	
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[0,0.5]);
 	S.rot.x.bandpass         = Sfit;
 	stat.fit.x.bandpass.par  = par;
 	stat.fit.x.bandpass.stat = fitstat;
 
-	% with mean
-	par0 = [par,10./fc.rr.bar];
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,'bandpass-continuous-mean',par0,obj.opt.objective,nf);
-	Sfit = Sfit/sum(Sfit)*sum(S.rot.x.hat);
-	S.rot.x.bandpass_mean = Sfit;
-	stat.fit.x.bandpass_mean.par  = par;
-	stat.fit.x.bandpass_mean.stat = fitstat;
+	% log-normal
+	[par0(1),par0(2)] = logn_mode2par(fc.x.bar,Sc.x.bar);
+	Sfun = @lognpdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
+	S.rot.x.logn  = Sfit;
+	stat.fit.x.logn.par  = par;
+	stat.fit.x.logn.stat = fitstat;
+
+	% gamma
+	[par0(1),par0(2)] = gamma_mode2par(fc.x.clip,Sc.x.clip);
+	Sfun = @gampdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
+	S.rot.x.gamma  = Sfit;
+	stat.fit.x.gamma.par  = par;
+	stat.fit.x.gamma.stat = fitstat;
+
+	% wrapped-normal
+	% TODO
 
 	% fit parametric density models in the direction perpendicular to the bands
-	fa = obj.f.y;
-	par0 = spectral_density_brownian_phase_across_mode2par(S.rot.y.hat(1));
-	[pary,Sfit,fitstat] = fit_spectral_density(obj.f.y,S.rot.y.hat,obj.w.y,'brownian-phase-across',par0,obj.opt.objective,nf);
-	S.rot.y.brownian_phase_across = Sfit;
-	stat.fit.y.brownian_phase_across.par  = pary;
-	stat.fit.y.brownian_phase_across.stat = fitstat;
-	%aS_ = aS_/(sum(aS_)*(fa(2)-fa(1)));
+	fy = obj.f.y;
+	fdx = (fy>=0);
+	par0 = phase_drift_parallel_pdf_mode2par(S.rot.y.hat(1));
+	Sfun = @phase_drift_parallel_pdf;
+	[pary,Sfit,fitstat] = fit_spectral_density(obj.f.y,S.rot.y.hat,obj.w.y,Sfun,par0,obj.opt.objective,nf);
+	S.rot.y.phase_drift_parallel = Sfit;
+	stat.fit.y.phase_drift_parallel.par  = pary;
+	stat.fit.y.phase_drift_parallel.stat = fitstat;
+
+	% TODO gamma, exponential
 
 	% fit parametric density models to the radial density
+
+	% phase drift
 	par0 = [];
-	[par0(1),par0(2)] = spectral_density_brownian_phase_mode2par(fc.radial.bar,Sc.radial.bar);
-	%Lr = 1./(obj.f.r(2)-obj.f.r(1));
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,'brownian-phase',par0,obj.opt.objective,nf);
-	%cS_ = cS_/sum(cS_)*sum(cS);
-	S.radial.brownian_phase = Sfit;
-	stat.fit.radial.brownian_phase.par  = par;
-	stat.fit.radial.brownian_phase.stat = fitstat;
+	[par0(1),par0(2)] = phase_drift_pdf_mode2par(fc.radial.bar,Sc.radial.bar);
+	Sfun = @phase_drift_pdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf);
+	S.radial.phase_drift = Sfit;
+	stat.fit.radial.phase_drift.par  = par;
+	stat.fit.radial.phase_drift.stat = fitstat;
 
-	par0 = [par0,5./fc.rr.bar];
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,'brownian-phase-mean',par0,obj.opt.objective,nf);
-	%cS_ = cS_/sum(cS_)*sum(cS);
-	S.radial.brownian_phase_mean = Sfit;
-	stat.fit.radial.brownian_phase_mean.par  = par;
-	stat.fit.radial.brownian_phase_mean.stat = fitstat;
-
-	%par = [fc.rr.bar,10];
-	par0 = [fc.radial.bar, spectral_density_bandpass_continuous_max2par(fc.radial.bar,Sc.radial.bar,10)];
-	%nf = 1;
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,'bandpass-continuous',par0,obj.opt.objective,nf);
+	% bandpass
+	par0 = [fc.radial.bar, bandpass1d_continuous_pdf_max2par(fc.radial.bar,Sc.radial.bar,10)];
+	Sfun = @bandpass1d_continuous_pdf;	
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[0,0.5]);
 	S.radial.bandpass = Sfit;
 	stat.fit.radial.bandpass.par  = par;
 	stat.fit.radial.bandpass.stat = fitstat;
 
-	par0 = [par,10./fc.rr.bar];
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,'bandpass-continuous-mean',par0,obj.opt.objective,nf);
-	S.radial.bandpass_mean = Sfit;
-	stat.fit.radial.bandpass_mean.par  = par;
-	stat.fit.radial.bandpass_mean.stat = fitstat;
+	% log-normal
+	[par0(1),par0(2)] = logn_mode2par(fc.radial.bar,Sc.radial.bar);
+	Sfun = @lognpdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf);
+	S.radial.logn  = Sfit;
+	stat.fit.radial.logn.par  = par;
+	stat.fit.radial.logn.stat = fitstat;
+
+	% gamma
+	[par0(1),par0(2)] = gamma_mode2par(fc.radial.bar,Sc.radial.bar);
+	Sfun = @gampdf;
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf);
+	S.radial.gamma  = Sfit;
+	stat.fit.radial.gamma.par  = par;
+	stat.fit.radial.gamma.stat = fitstat;
 
 	obj.stat = stat;
 	obj.S    = S;

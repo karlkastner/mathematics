@@ -7,9 +7,10 @@ function [S,R,r] = bandpass2d_pdf_discrete(n,dx,Lf,p,q);
 	sS = S.^(1/q);
 	sS = sS.*(1-sS);
 	S  = sS.^q;
-	if (nargin()>3)
+	if (nargin()>3 && ~isempty(p))
 		S = S.^p;
 	end
+	% normalize
 	% note that the integral for p = 1 is 2 pi L^2
 	L_ = n.*dx;
 	df = 1./L_;
