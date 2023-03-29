@@ -23,11 +23,13 @@ function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
 		dt  = t(2)-t(1);
 
 		% quadratic vandermonde matrix
+		% TODO allow for changing time step
 		A = vander_1d([-dt; 0; dt],2);
 
 		% TODO extrapolate end-points linearly
 		val_ = [val(1); val; val(end)];
-		val3 = [val_(tdx); val_(tdx+1); val(tdx+2)];
+		% this has shifted by 1 due to padding one value
+		val3 = [val_(tdx); val_(tdx+1); val_(tdx+2)];
 		%val3 = [val(max(1,tdx-1)); val(tdx); val(min(nt,tdx+1))];
 
 		% TODO matrix mul is associative, just precompute pd*inv(A)
@@ -48,7 +50,7 @@ function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
 		ddv_dt2 = 2*c0(2,:);
 
 		% maximum value
-		val0 = c0(1,:) + c0(2,:).*dt0 + c0(2,:).*dt0.^2;
+		val0 = c0(1,:) + c0(2,:).*dt0 + c0(3,:).*dt0.^2;
 		t0   = t(tdx) + dt0;
 end
 

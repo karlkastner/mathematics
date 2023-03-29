@@ -17,7 +17,7 @@ if (0)
 	% scale, so that maximum is 1
 	S_bp1 = 4*(1-S_lp1).*S_lp1;
 else
-	r      = bandpass_arg(arg2,dx,varargin{:});
+	r      = bandpass_arg(arg2,dx,varargin{:})
 	% fourier transform of the autocorrelation function of a first order bandpass
 	%S_lp1  = (1 - 2*rho + rho.^2)./(1-2*rho*cos(2*pi*f)+rho.^2);
 	omega  = 2*pi*fx;

@@ -1,4 +1,4 @@
-% Fri 22 Apr 14:05:05 CEST 2022
+% Mon 13 Mar 14:54:28 CET 2023
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,21 +14,10 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-% unnormalized (radial) density of the pth-order lowpass in two dimensions
-% continuous space
-function S = lowpass2d_pdf(fr,a,order)
-	S = zeros(size(fr));
-	for idx=1:numel(fr)
-		S(idx) = integral(@(r) besselj(0,(2*pi)*r*fr(idx)).*r.*exp(-a*r),0,inf);
-	end
-	% S0 = int r S J0(r k) dk = 1/a^2
-	S0 = a^2;
-	% scale S(0) to 1
-	S = S/S0;
-	S=S/S(1);
-	if (nargin()>2 && ~isempty(order))
-		S = S.^order;
-	end
-	% TODO normalize
+function [R,x,y] = anisotropic_pattern_acf(L,n,f0,sxy)
+	x = fourier_axis(n(1)/L(1),n(1));
+	y = fourier_axis(n(2)/L(2),n(2));
+	k0 = 2*pi*f0;
+	R = cos(k0*rvec(x)).*exp(-pi*k0*hypot(sxy(1)^2*rvec(x),sxy(2)^2*cvec(y)));
 end
 

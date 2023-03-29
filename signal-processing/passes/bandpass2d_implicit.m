@@ -1,4 +1,15 @@
 % Thu 24 Jun 14:39:10 CEST 2021
+%
+%% bandpass filter the surface x by solving the implicit relation:
+
+% y[i] = rho*(y[i-1] + y[i+1]) + (1-2*rho)*x[i]
+% (1 - 2 rho)y = rho*[1,-2,1]*y
+% ((1-4*rho)*I - rho*D2)*y = (1-4*rho)*x
+% y = (1-4*rho)*(((1-4*rho)*I - rho*D2))^-1*x
+% lowpass:
+% A = (((1-2*(rhox+rhoy))*I - rhox*D2x - rhoy*D2y));
+
+%
 function [y] = bandpass2d_implicit(x,rho,a,order,direct)
 	if (any(rho>=1))
 		warning('rho must be smaller 1');
@@ -14,12 +25,6 @@ function [y] = bandpass2d_implicit(x,rho,a,order,direct)
 	maxit = 2*max(n);
 	[Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,n-1,2,'circular');
 	I = speye(prod(n));
-	% y[i] = rho*(y[i-1] + y[i+1]) + (1-2*rho)*x[i]
-	% (1 - 2 rho)y = rho*[1,-2,1]*y
-	% ((1-4*rho)*I - rho*D2)*y = (1-4*rho)*x
-	% y = (1-4*rho)*(((1-4*rho)*I - rho*D2))^-1*x
-	% lowpass
-	% A = (((1-2*(rhox+rhoy))*I - rhox*D2x - rhoy*D2y));
 
 	% TODO is the normalization correct?
 	r  = rho./(1 - 2*rho + rho.*rho)

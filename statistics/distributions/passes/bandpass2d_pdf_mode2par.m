@@ -26,24 +26,18 @@ function par = bandpass2d_pdf_mode2par(fc,Sc,par0,pp)
 	if (nargin()<4)
 		pp = [];
 	end
-	n = 20;
-	lc = 1/fc;
-	L = n*lc;
-	df = 1/L;
-	fx = fourier_axis(L,n)';
+	%n = 20;
+	%lc = 1/fc;
+	%L = n*lc;
+	%df = 1/L;
+	%fx = fourier_axis(L,n)';
 
-	opt.Algorithm = 'levenberg-marquardt';
+	opt = struct();
+%	opt.Algorithm = 'levenberg-marquardt';
 	par = lsqnonlin(@(par) fun(par) - [fc,Sc], par0,[0,0],[],opt);
 
 	function mode = fun(par)
-		%S = bandpass2d_pdf_hankel(fx,par(1),par(2));
-		S = bandpass2d_pdf(abs(fx),par(1),par(2));
-		S = 2*S./sum(S*df);
-		% TODO quadratic max
-		[Sc,mdx] = max(S);
-		fc = abs(fx(mdx));
-		par
-		mode = [fc,Sc]
+		[mode(1),mode(2)] = bandpass2d_pdf_mode(par(1),par(2));
 	end
 end
 

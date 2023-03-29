@@ -26,20 +26,31 @@
 %% with density S2d and autocorrelation R2d
 %% S2d = F_2d^-1 (R2d)
 %% by the slicing theorem:
-%% S2d(r,0) = F_1d^-1 (int R2d(x,y) dy)
-function [Sr,Rbar] = lowpass2d_pdf_hankel(fr,a,order,m);
-	if (nargin()<4)
+%% S2d(x,0) = F_1d^-1 (int R2d(x,y) dy)
+%%
+function [Sr,R2d_bar] = lowpass2d_pdf_hankel(L,n,a,order,m);
+	if (nargin()<5)
 		% this is about 4-digits arrurate
 		m = 20;
 	end
- 	[w,fy] = int_1d_gauss_laguerre(m);
-	fy    = fy/a;
+	L_ = a*L;
+	a_ = 1;
+	% the gauss-laguerre integration requires the exponent to decay with unit rate
+	% so the axes are scaled accodingly a
+ 	[w,y] = int_1d_gauss_laguerre(m);
+	x     = fourier_axis(n./L_,n);
 	% average aucorrelation
 	% the scaling with 2 pi a of the integral can be omitted,
 	% as the density is scaled/normalized later
-	Rbar = exp(-a*hypot(cvec(fr),rvec(fy)))*(exp(a*cvec(fy)).*w);
+	% int f exp(-x) dx = sum w f
+	% int g(x) dx = int g(x) exp(-x)*exp(+x) dx = sum w g(x)*exp(x)
+	% int g(a x) dx = int g(x') dx'*(dx/dx'), x'=a*x
+	% 1/a*int g(x') dx'
+	% TODO this has to be appropriately scaled, only works reasonably well when a ~ 1
+	R2d_bar = exp(-a_*hypot(cvec(x),rvec(y)))*(exp(cvec(y)).*w);
+	% interpolate from 0 .. a L to 0 .. L
 	% radial density
-	Sr = abs(real(fft(Rbar)));
+	Sr   = abs(real(fft(R2d_bar)));
 	% scale to 1
 	Sr = Sr/Sr(1);
 	if (nargin()>2 && ~isempty(order))

@@ -55,6 +55,7 @@ function fit_parametric_densities(obj)
 
 	% gamma
 	[par0(1),par0(2)] = gamma_mode2par(fc.x.clip,Sc.x.clip);
+	par0(1) = max(par0(1),1);
 	Sfun = @gampdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
 	S.rot.x.gamma  = Sfit;

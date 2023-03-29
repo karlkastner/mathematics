@@ -106,7 +106,12 @@ n = 2^(1/2)*2*n;
 if nargin<2
     n=2^8; % default value of points
 else
-    n=2^ceil(log2(n));
+    n_=2^ceil(log2(n));
+    if (n~=n_)
+	% TODO fix this
+	warning('scaling is wrong when domain size is not power of 2');
+    end
+    n = n_;
 end
 
 if (nargin()<3)

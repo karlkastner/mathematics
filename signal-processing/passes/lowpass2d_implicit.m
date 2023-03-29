@@ -1,4 +1,9 @@
 % Thu 24 Jun 16:27:03 CEST 2021
+%
+% lowpass filter the surface x by solving the implicit relation
+% note : this is computationally inefficient and serves demonstration
+%
+%
 function [y] = lowpass2d_implicit(x,rho,a,order,direct)
 	if (any(rho >= 1))
 		warning('rho must be smaller 1');

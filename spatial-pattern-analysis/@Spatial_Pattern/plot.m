@@ -100,9 +100,10 @@ function plot(obj,field_str,varargin)
 		plot(obj.f.angle(fdx),var(fdx),varargin{:});
 		xlabel('Angle $\theta / \pi$','interpreter','latex');
 		ylabel('Density $S_\theta$','interpreter','latex');
-		set(gca,'xtick',[0,1/4,1/2]*pi,'xticklabel',{'0','\pi/4','\pi/2'});
+		set(gca,'xtick',[-1/2,-1/4,0,1/4,1/2]*pi,'xticklabel',{'-\pi/2','-\pi/4','0','\pi/4','\pi/2'});
 		%xlim([-pi,pi]/2);
 		xlim([-1,1]*pi/2);
+		ylim([0,ceil(10.1*max(var(fdx)))/10]);
 	otherwise
 		error(['Unknown field ', field_str]);
 	end % switch field_C{end-1}

@@ -29,6 +29,8 @@ function report(obj)
 		fprintf('S_{cy}/lambda_c  %f\n',obj.stat.Sc.y.clip/lambda_c);
 		fprintf('L_{eff}/lambda_c %f\n',obj.stat.L_eff.r/lambda_c);
 	end
+	fprintf('\lambda_c        %f\n',lambda_c);
 	fprintf('p_{periodic} %f\n',obj.stat.p_periodic);
+	fprintf('L %f %f\n',obj.L);
 end
 
