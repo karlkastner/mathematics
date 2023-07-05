@@ -1,7 +1,23 @@
 % Sun 11 Jul 21:39:38 CEST 2021
-% note : this function is for testing purposes only,
-%        directly multiply the ft of the signal with the ft of the filter
-%        to obtain the filtered signal in a single step
+% Karl Kastner, Berlin
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% note : this function is for testing purposes only,
+%%        directly multiply the ft of the signal with the ft of the filter
+%%        to obtain the filtered signal in a single step
+%% function y = lowpass2d_fft(x,rho,a,order)
 function y = lowpass2d_fft(x,rho,a,order)
 	if (nargin()<4)
 		order = 1;

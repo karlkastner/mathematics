@@ -16,56 +16,70 @@
 %
 %% read an image file containing a pattern, mask and geospatial data
 function [img, alpha, obj] = imread(obj,filename)
-	[img, map, alpha] = imread(filename);
-	if (~isempty(map))
+	g = GeoImg();
+	g.read(filename);
+	%[img, map, alpha] = imread(filename);
+	if (~isempty(g.map))
 		error('Convert indexed images to grayscale or RGB first');
 	end
-	img = double(img);
+	switch (obj.opt.datatype)
+	case {'single'}
+		img = single(g.img);
+	case {'double'}
+		img = double(g.img);
+	otherwise
+		error('Dataype must be single or double');
+	end
 	if (3 == ndims(img))
 		% sloppy conversion to grayscale
 		img = mean(img,3);
 	end
 
 	% invert to get biomass proxy
-	b = max(img(:))-img;
+	b = max(img,[],'all')-img;
 	% stretch contrast to 1
-	b = b./max(b(:));
+	b = b./max(b,[],'all');
 
 	n = size(b);
 
-	% Try to load pgw from file
-	try
-		pgw = csvread([filename(1:end-4),'.pgw']);
-		obj.stat.pgw = pgw;
-		% A    D  B   -E C F
-		% wc ws   hs hc
-		dxy   = [hypot(pgw(1),pgw(2)),hypot(pgw(3),pgw(4))];
-		angle = -pi/2+atan2(pgw(1)/dxy(1),pgw(2)/dxy(2));
-		obj.stat.dxy = dxy;
-		obj.stat.bangle_rad = angle;
-	catch
-		disp('Unable to read pgw file, assuming pixel size of 1 m x 1 m')
-		dxy = 1;
-		obj.stat.pgw = [];
-		obj.stat.dxy = NaN;
-		obj.stat.bangle_rad = NaN;
-	end
+	%try
+		%out = readpgw([filename(1:end-4),'.pgw']);
+		%dxy = g.dxy;
+		obj.stat.pgw = g.pgw;
+		obj.stat.xy0 = g.xy0;
+		obj.stat.dxy = g.dxy;
+		obj.stat.bangle_rad = g.angle;
+	%catch
+	%	dxy = 1;
+	%	obj.stat.pgw = [];
+	%	obj.stat.dxy = NaN;
+	%	obj.stat.xy0 = [NaN,NaN];
+	%	obj.stat.bangle_rad = NaN;
+	%end
 
-	if (~isempty(alpha))
-		% note that we can even alias the maks, but we do not do this here
-		msk = alpha > 0;
-	else
-		% try to load mask from file
 	try
+		% try to load mask from file
 		mskfilename = [filename(1:end-4),'_mask.tif'];
 		msk = imread(mskfilename);
+		nmsk = size(msk);
+		if (rms(nmsk(1:2)-n(1:2))>0)
+			mskfilename
+			disp('mask size does not match');
+			error('msksize');
+		end
 	catch
-		disp('Unable to load mask, analyzing whole area');
+		% use alpha data
+		%disp('Unable to load mask, analyzing whole area');
+		if (~isempty(g.alpha))
+			% note that we can even alias the maks, but we do not do this here
+			msk = g.alpha > 0;
+		else
 		msk = true(n);
+		end
 	end % catch of try
-	end % else of ~ isempty alpha
+	%end % else of ~ isempty alpha
 
-	obj.L   = n.*dxy;
+	obj.L   = n.*obj.stat.dxy;
 	obj.b   = b;
 	obj.msk.b = msk;
 end

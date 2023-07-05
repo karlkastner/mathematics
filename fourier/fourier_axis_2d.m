@@ -14,11 +14,17 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+%% frequency axis of the 2d fourier transform as computed by Matlab
+%
 %% function [fx, fy, fr, ft, Tx, Ty, mask, N] = fourier_axis_2d(L,n)
 function [fx, fy, fr, ft, Tx, Ty, mask, N] = fourier_axis_2d(L,n)
 	[fx,Tx]=fourier_axis(L(1),n(1));
 	[fy,Ty]=fourier_axis(L(2),n(2));
-	fr = hypot(cvec(fx),rvec(fy));
-	ft = atan2(rvec(fy),cvec(fx));
+	if (nargout()>2)
+		fr = hypot(cvec(fx),rvec(fy));
+	end
+	if (nargout()>3)
+		ft = atan2(rvec(fy),cvec(fx));
+	end
 end
 

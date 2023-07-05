@@ -32,6 +32,9 @@ classdef Spatial_Pattern < handle
 		% spectral density
 		S = struct();
 
+		% cumulative spectral density
+		C = struct();
+
 		% autorrelatin
 		R = struct();
 		
@@ -55,8 +58,6 @@ classdef Spatial_Pattern < handle
 			     , 'normalize', true ...
 			     , 'r2_min', 0.5 ...
 			     , 'nf_radial', 3 ...
-			     ... % confidence level for periodicity
-			     , 'confidence_level', 0.05 ...
 			     , 'template', 'bartlett' ...
 			     , 'fminscale', 1/8 ...
 			     , 'fmaxscale', 4 ...
@@ -66,6 +67,11 @@ classdef Spatial_Pattern < handle
 			     , 'objective', 'least-squares' ...
 			     , 'xlim', [0, 2.5] ...
 			     , 'pfmsk', 0.8 ...
+			     , 'test_for_periodicity', true ...
+			     ... % confidence level for periodicity
+			     ... %, 'confidence_level', 0.05 ...
+			     , 'significance_level_a1',            0.05 ...
+			     , 'datatype', 'single' ...
 		);
 		% analysis results
 		stat = struct( );
@@ -89,11 +95,11 @@ classdef Spatial_Pattern < handle
 		end
 		function lambda_c = lambda_c(obj)
 			if (obj.stat.isisotropic)
-				Sc = obj.stat.Sc.radial.clip;
-				lambda_c = 1./obj.stat.fc.radial.clip;	
+				Sc = obj.stat.Sc.radial.hp;
+				lambda_c = 1./obj.stat.fc.radial.hp;	
 			else
-				Sc = obj.stat.Sc.x.clip;
-				lambda_c = 1./obj.stat.fc.x.clip;
+				Sc = obj.stat.Sc.x.hp;
+				lambda_c = 1./obj.stat.fc.x.hp;
 			end % else of isiso
 		end % lambda_c
 	end % methods

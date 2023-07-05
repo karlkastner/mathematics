@@ -71,6 +71,7 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad
 
 	xx = repmat(x,1,ny);
 	yy = repmat(y,1,nx)';
+	d={0,0,0};
 	if (~isempty(sbm))
 		%xe = brownian_noise_2d_fft(Lx,[nx,ny]);
 		%ye = brownian_noise_2d_fft(Ly,[nx,ny]);
@@ -85,7 +86,8 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad
 		xx = xx+sbm*dx;
 		yy = yy+sbm*dy;
 		d={0,0,0};
-		else
+		else	
+			d = {};
 			for idx=1:3
 				d_  = brownian_field(0.5,nxy);
 				d_  = d_(1:nx,1:ny); 

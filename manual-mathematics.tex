@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 25:26M
+mathematics\protect\\Revision 28M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -685,6 +685,7 @@ ${}$
 \subsection{fourier\_axis\_2d}
 ${}$
 \begin{lstlisting}
+ frequency axis of the 2d fourier transform as computed by Matlab
  function [fx, fy, fr, ft, Tx, Ty, mask, N] = fourier_axis_2d(L,n)
 
 \end{lstlisting}
@@ -923,14 +924,16 @@ ${}$
  at their support points
 
 \end{lstlisting}
-\subsection{fourier\_signed\_square}
+\subsection{fourier\_series\_signed\_square}
 ${}$
 \begin{lstlisting}
- coefficients of the fourier series of | cos a + cos t | (cos a + cos t)
- in general
+ coefficients of the Fourier series of Q|Q| 
+	Q|Q| = Q_a^2 y					(8.5)
+           = | cos a + cos t | (cos a + cos t)	(8.6)
+           = a0 + a1 cos t + ... + an cos n t		(8.7)
             cos a is midrange
             cos t is tidal variation
- c.f Dronkers
+ c.f Dronkers 1964, eq. 8.10
 
 \end{lstlisting}
 \subsection{fourier\_transform}
@@ -2966,7 +2969,9 @@ ${}$
 \subsection{chebychev}
 ${}$
 \begin{lstlisting}
+ c.f. Dronkers 1964, eq. 8.15, p. 300
  chebycheff polynomials
+ function c = chebychev(x,n)
 
 \end{lstlisting}
 \subsection{piecewise\_polynomial}
@@ -3888,6 +3893,16 @@ ${}$
 
 \end{lstlisting}
 \section{numerical-methods/finite-element/int}
+\subsection{int\_1d\_equal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{int\_1d\_equal\_exp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{int\_1d\_gauss}
 ${}$
 \begin{lstlisting}
@@ -5528,6 +5543,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{pdes}
+\subsection{heat\_equation\_fundamental\_solution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{heat\_equation\_width}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{heat\_equation\_width\_to\_time}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{regression/@PolyOLS}
 \subsection{PolyOLS}
 ${}$
@@ -6540,7 +6571,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{bandpass2d\_2}
+\subsection{bandpass2d\_convolution}
 ${}$
 \begin{lstlisting}
 
@@ -6558,6 +6589,7 @@ ${}$
 \subsection{bandpass2d\_implicit}
 ${}$
 \begin{lstlisting}
+ bandpass filter the surface x by solving the implicit relation:
 
 \end{lstlisting}
 \subsection{bandpass2d\_iso}
@@ -6652,29 +6684,40 @@ ${}$
  design low pass filter with cutoff-frequency f1
 
 \end{lstlisting}
-\subsection{lowpass2d\_2}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{lowpass2d\_anisotropic}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{lowpass2d\_convolution}
+${}$
+\begin{lstlisting}
+ this function is computationally inefficient and serves merely for illustration
+ and tests
+
+\end{lstlisting}
 \subsection{lowpass2d\_fft}
 ${}$
 \begin{lstlisting}
+ note : this function is for testing purposes only,
+        directly multiply the ft of the signal with the ft of the filter
+        to obtain the filtered signal in a single step
+ function y = lowpass2d_fft(x,rho,a,order)
 
 \end{lstlisting}
 \subsection{lowpass2d\_ideal}
 ${}$
 \begin{lstlisting}
+ lowpass filter the input x in the Frequency Domain
+
+ TODO no need to provide dx, follows from size of x
+ function [y,S,R,r]=lowpass2d_ideal(x,L,dx,varargin)
 
 \end{lstlisting}
 \subsection{lowpass2d\_implicit}
 ${}$
 \begin{lstlisting}
+ function [y] = lowpass2d_implicit(x,rho,a,order,direct)
 
 \end{lstlisting}
 \subsection{lowpass\_arg}
@@ -6768,6 +6811,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{periodogram\_normalize}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{periodogram\_normalize\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{periodogram\_p\_value}
 ${}$
 \begin{lstlisting}
@@ -6789,6 +6842,45 @@ ${}$
 \subsection{periodogram\_radial}
 ${}$
 \begin{lstlisting}
+function [Sr,fri,se,count] = periodogram_radial(S2d,L)
+
+ compute the radially averaged density
+
+ input:
+ S2d : 2-dimensional density or periodogram
+ L =[Lx,Ly] : domain length
+
+ output:
+
+ S_r.mu         : radially averaged periodogram
+ S_r.normalized : normalized radially averaged periodogram
+ A              : matris operator s that Sr = (A*A')^-1 A'*S2d
+
+ f_r : radial freqeuncies, at which radial periodogram is determined
+       discretized in same interval as the 2d-density : f = 1/L
+
+ Definitions:
+        radial wavenumber, identical to circumferences of circles centred at origin with radial frequency fr
+	       k_r = 2*pi*f_r
+
+ 	 radially averaged periodogram:
+        S_r(k_r)  = 1/k_r int_0^{k_r} S2d(k_r,s) d s
+                  = 1/(2 pi) int_0^{2 pi} S2d(k_r,theta) d theta
+                  ~ 1/(2 pi) sum^nt S2d(k_r,theta) * (2*pi/nt)
+                  ~ 1/nt sum^nt S2d(k_r,theta)
+                   
+                nt ~ k_r/df = k_r*L
+ normalization:
+       S_r.normalize  = S_r/int_0^inf S_r dfr
+                      ~ S_r/(sum_0^nr S_r Delta fr)
+
+ note : the radially averaged "periodogram", is actually a density estimate,
+        for radial frequencies fr hat are not small
+
+ when S is flattened into a vector, the isotropic part of the 2D density can be recovered with:
+ S_iso     = (A*S_radial)
+ S_radial  = A^-1 S_hat
+
 
 \end{lstlisting}
 \subsection{periodogram\_std}
@@ -6824,7 +6916,7 @@ ${}$
 \begin{lstlisting}
  test a periodogram for hidden periodic frequency components
  
- [p,stat,ratio] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns)
+ [p,stat,ratio] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 
  input:
 	b    (nx * ny): image to test for presence of hidden periodicities,
@@ -7328,6 +7420,16 @@ ${}$
  either remotely sensed or model generated
 
 \end{lstlisting}
+\subsection{clear\_1d\_properties}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{clear\_2d\_properties}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{fit\_parametric\_densities}
 ${}$
 \begin{lstlisting}
@@ -7352,6 +7454,11 @@ ${}$
  plot 1D pattern
 
 \end{lstlisting}
+\subsection{prepare\_analysis}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{report}
 ${}$
 \begin{lstlisting}
@@ -7370,10 +7477,73 @@ ${}$
  summarize properties of multiple patterns in a single struct
 
 \end{lstlisting}
+\section{spatial-pattern-analysis/@Spatial\_Pattern\_Array}
+\subsection{Spatial\_Pattern\_Array}
+${}$
+\begin{lstlisting}
+ container class for Spatial_Pattern objects
+
+\end{lstlisting}
+\subsection{analyze}
+${}$
+\begin{lstlisting}
+ analyze spatial patterns
+
+\end{lstlisting}
+\subsection{assign\_regions}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{export\_shp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fetch}
+${}$
+\begin{lstlisting}
+ determine the sampling interval for fetching images from the Google satellite
+ server and later processing
+
+
+\end{lstlisting}
+\subsection{generate\_filename}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{quality\_check}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{spatial-pattern-analysis}
 \subsection{approximate\_ratio\_distribution}
 ${}$
 \begin{lstlisting}
+ input :
+ bmsk : region selected for periodicity test (smoothes the periodogram)
+ nf   : radius of smoothing window (in bins) for estimating the spectral density
+ nsample : number of repetitions to estimate the ratio distribution
+           recommended at
+
+ output:
+	pr    : probabilities for quantiles
+	qr1   : quantiles of the distribution for bin m
+	qrn   : quantiles of the distribution for the maximum of bins selected by fmsk 
+ 	ratio : ratios for each frequency bin and iteration (only for last block, for testing)
+ intput: 
+	bmsk : mask region pattern/interest in the real domain
+	nf   : smoothing window radius in the frequency domain for density estimation
+	ns   : number of samples for the monte-carlo simulation
+	fmsk : mask frequencies of interest 
+	mdx  : selection of an a-priori known frequency bin
+
+ note the following complications:                        
+       - problem 1 : ratio locally differs near fr=0, fx,fy=fmax and fx,fy=fmax/2                             
+	- fits of the fisher or beta distribution are highly unstable
+
 
 \end{lstlisting}
 \subsection{banded\_pattern}
@@ -7404,6 +7574,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{pattern\_isotropic\_rotated}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{reconstruct\_isotropic\_density}
 ${}$
 \begin{lstlisting}
@@ -7420,9 +7595,40 @@ ${}$
 
 \end{lstlisting}
 \section{spatial-statistics}
-\subsection{average\_corr\_2d}
+\subsection{cov\_cell\_averages\_1d}
 ${}$
 \begin{lstlisting}
+ determine covariance between grid cell averged values of a stationary
+ stochastic process on an equispaced grid
+
+ cov(e_ij,e_kl) = E[ (e_ij - mu)*(e_kl - mu) ]
+                = 1/dx^2 E[ int (e(x1) - mu) dx1 int (e(x2)-mu) dx2 ]
+                = 1/dx^2 E[ int int (e(x1) - mu) (e(x2) - mu) dx1 dx2 ) ]
+                = 1/dx^2 int int cov(x2-x1) dx1 dx2
+
+ f_ij = int_(x_i - dx/2)^(x_i+dx/2) f(x) dx
+
+ integrals approximated by Gauss' method
+
+
+\end{lstlisting}
+\subsection{cov\_cell\_averages\_2d}
+${}$
+\begin{lstlisting}
+ determine covariance between grid cell averged values of a stationary
+ stochastic process on an equispaced grid
+
+ cov(e_ij,e_kl) = E[ (e_ij - mu)*(e_kl - mu) ]
+                = 1/dx^2 1/dy^2 E[ int int (e(x1,y1) - mu) dx1 dy1 int int (e(x2,y2)-mu) dx2 dy2 ]
+                = 1/dx^2 1/dy^2 E[ int int int int (e(x1,y1) - mu) (e(x2,y2) - mu) dx1 dy1 dx2 dy2) ]
+                = 1/dx^2 1/dy^2   int int int int cov(x2-x1,y2-y1) dx1 dy1 dx2 dy2
+
+ f_ij = int_(x_i - dx/2)^(x_i+dx/2) int_(y_i-dy/2)^(y_j+dy/2) f(x,y) dx dy
+
+ integrals approximated by equal spaced mid-point intervales,
+ this allows to reduce the double-integral along each dimension into a
+ single integral and hence to reduce the computational effort from m^4 to m^2
+
 
 \end{lstlisting}
 \section{special-functions}
@@ -7517,6 +7723,28 @@ ${}$
  in contrast to the matlab buildin function nchoosek
 
 \end{lstlisting}
+\section{statistics/circular}
+\subsection{circular\_fmoment}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{circular\_fquantile}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{circular\_fstd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{circular\_fvar}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{statistics}
 \subsection{coefficient\_of\_determination}
 ${}$
 \begin{lstlisting}
@@ -7539,6 +7767,22 @@ ${}$
 ${}$
 \begin{lstlisting}
  class for quasi-distributions from a set of sampling points
+
+\end{lstlisting}
+\section{statistics/distributions/anisotropic}
+\subsection{anisotropic\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{anisotropic\_pattern\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{anisotropic\_pattern\_pdf}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{statistics/distributions/beta}
@@ -7621,7 +7865,7 @@ ${}$
  c.f. stephens
 
 \end{lstlisting}
-\section{statistics/distributions}
+\section{statistics/distributions/edgeworth}
 \subsection{edgeworth\_cdf}
 ${}$
 \begin{lstlisting}
@@ -7639,6 +7883,7 @@ ${}$
  c.f. Rao 2010
 
 \end{lstlisting}
+\section{statistics/distributions/exp}
 \subsection{exppdf\_max2par}
 ${}$
 \begin{lstlisting}
@@ -7843,6 +8088,21 @@ ${}$
 
 \end{lstlisting}
 \section{statistics/distributions/lognormal}
+\subsection{logn\_corr}
+${}$
+\begin{lstlisting}
+ correlation of two log-normal random variables, where the log of the variables
+ is correlated with r
+
+\end{lstlisting}
+\subsection{logn\_cov}
+${}$
+\begin{lstlisting}
+ covariance of two log-normally distributed random variables,
+ cov(ea,eb) = cov(exp(mua + sa*za),exp(mub + sb*zb))
+ where za, zb are standard normal distributed and correlated
+
+\end{lstlisting}
 \subsection{logn\_mean}
 ${}$
 \begin{lstlisting}
@@ -7863,6 +8123,11 @@ ${}$
 ${}$
 \begin{lstlisting}
  transform the mode (mu,sd) to parameters of the log normal distribution
+
+\end{lstlisting}
+\subsection{logn\_moment2par\_correlated}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{logn\_param2moment}
@@ -7903,7 +8168,32 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\section{statistics/distributions/mise}
+\section{statistics/distributions/mises}
+\subsection{mises\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mises\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{mises\_var}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{misesn\_max2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{misesnpdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{misespdf}
 ${}$
 \begin{lstlisting}
@@ -7981,7 +8271,7 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{bandpass2d\_pdf}
+\subsection{bandpass2d\_pdf\_exact}
 ${}$
 \begin{lstlisting}
  function Sb = bandpass2d_pdf(fr,a,order)
@@ -8010,15 +8300,49 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{highpass1d\_continuous\_pdf}
+${}$
+\begin{lstlisting}
+
+ function [S_bp,Sc] = spectral_density_highpass_continous(fx,fc,order,normalize,pp)
+
+ output :
+ S_bp : spectral density of the highpass filter in continuos space
+     limit case of the discrete highpass for dx -> 0
+ Sc   : scale factor to normalize area to 1, if noramlize = true
+
+ input :
+ f     : frequency (abszissa)
+ fc    : central freqeuncy, location of maximum on abszissa
+ order : number of times filter is applied iteratively, not necessarily integer
+ normalize : normalize area under curve int_0^inf S(f) df = 1, if not maximum S(fc) = 1
+ pp    : powers for recombination of the lowpass filter 
+
+\end{lstlisting}
 \subsection{highpass1d\_discrete\_cos\_pdf}
 ${}$
 \begin{lstlisting}
  consine shaped spectral density of a highpass filter
 
 \end{lstlisting}
-\subsection{highpass1d\_pdf}
+\subsection{highpass1d\_disrete\_pdf}
 ${}$
 \begin{lstlisting}
+ spectral density of the pth-order high-pass
+
+ Note that there are two alternative definitions
+ S_hp = S_h1^p = (1 - S_l1)^p (recursive highpass-filtering)
+ or S_hp~ = (1 - S_lp^p) (1 - recursive lowpass-filtering)
+ here, recursive highpass filtering is represented
+
+ Sh = |F*Ah|^2p
+ Sh^(1/2p) = F Ah = F(I-Al)
+           = F(I - Al)
+           = F(I - F^-1 Sl^1/2 F)
+           = (F F^-1 - Sl^1/2) F
+           = (I - Sl^(1/2)) F 
+
+ function [S_h,S_h1] = spectral_density_hp(f,r0,fmax,order,varargin)
 
 \end{lstlisting}
 \subsection{highpass2d\_discrete\_pdf}
@@ -8056,6 +8380,12 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{lowpass2d\_discrete\_acf}
+${}$
+\begin{lstlisting}
+ truncated, not wrapped at the end
+
+\end{lstlisting}
 \subsection{lowpass2d\_discrete\_pdf}
 ${}$
 \begin{lstlisting}
@@ -8080,7 +8410,8 @@ ${}$
  with density S2d and autocorrelation R2d
  S2d = F_2d^-1 (R2d)
  by the slicing theorem:
- S2d(r,0) = F_1d^-1 (int R2d(x,y) dy)
+ S2d(x,0) = F_1d^-1 (int R2d(x,y) dy)
+
 
 \end{lstlisting}
 \subsection{lowpass2d\_pdf\_series}
@@ -8096,7 +8427,7 @@ ${}$
  Note: better use kernal density estimates
 
 \end{lstlisting}
-\section{statistics/distributions/phase\_drift}
+\section{statistics/distributions/phase-drift}
 \subsection{phase\_drift\_acf}
 ${}$
 \begin{lstlisting}
@@ -8107,17 +8438,17 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{phase\_drift\_acf\_across}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
 \subsection{phase\_drift\_cdf}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \subsection{phase\_drift\_inv}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{phase\_drift\_parallel\_acf}
 ${}$
 \begin{lstlisting}
 
@@ -8244,6 +8575,12 @@ ${}$
 ${}$
 \begin{lstlisting}
  random numbers of the triangular distribution
+
+\end{lstlisting}
+\section{statistics/distributions/weibull}
+\subsection{wbl\_std}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{statistics/distributions/wrapped-normal}
@@ -8833,6 +9170,11 @@ ${}$
 
 \end{lstlisting}
 \section{statistics}
+\subsection{normalize\_exponential\_random\_variable}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{normmoment}
 ${}$
 \begin{lstlisting}
@@ -9348,6 +9690,15 @@ ${}$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{lstlisting}
+\subsection{brownian\_field\_scaled}
+${}$
+\begin{lstlisting}
+ generate a square (fractal brownian) field where the variance is ellyptic,
+ i.e. increasing at different rates in both axes
+ this is facilitated by cropping and stretching
+ TODO can the kernel directly be adapted?
+
+\end{lstlisting}
 \subsection{brownian\_motion\_1d\_acf}
 ${}$
 \begin{lstlisting}
@@ -9423,6 +9774,46 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{stochastic/geometric-ar1}
+\subsection{geometric\_ar1\_2d\_generate}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{geometric\_ar1\_2d\_generate\_1}
+${}$
+\begin{lstlisting}
+ realization of the spatial geometric ornstein (geometric ar1) process
+ averaged over grid cells
+
+\end{lstlisting}
+\subsection{geometric\_ar1\_2d\_grid\_cell\_averaged\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{geometric\_ar1\_2d\_grid\_cell\_averaged\_generate}
+${}$
+\begin{lstlisting}
+ simulate a grid cell averaged stochastic process exp(z)
+ where z follows an Ornstein-Uhlenbeck (AR1) process
+ with mean lmu, standard deviatian sd and stationary autocorrelation
+ corr(z(0,0),z(x,y)) = exp(-sqrt(x^2 + y^2)/theta)
+
+\end{lstlisting}
+\subsection{geometric\_ar1\_2d\_grid\_cell\_averaged\_moment2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{geometric\_ar1\_2d\_grid\_cell\_averaged\_std}
+${}$
+\begin{lstlisting}
+ mean of the values val
+ covariance fucntion of the values
+
+\end{lstlisting}
+\section{stochastic}
 \subsection{ornstein\_uhlenbeck\_cov}
 ${}$
 \begin{lstlisting}
@@ -9946,6 +10337,12 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{test/numerical-methods/optimisation}
+\subsection{test\_extreme3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{test/signal-processing/autocorrelation}
 \subsection{test\_acf}
 ${}$
@@ -10018,6 +10415,11 @@ ${}$
 
 \end{lstlisting}
 \section{test/signal-processing/passes}
+\subsection{test\_bandpass2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_bandpass2d\_ideal}
 ${}$
 \begin{lstlisting}
@@ -10248,6 +10650,28 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\section{test/spatial-statistics}
+\subsection{test\_cov\_cell\_averages\_1d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_cov\_cell\_averages\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/anisotropic}
+\subsection{test\_anisotropic\_pattern}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_anisotropic\_pattern\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{test/statistics/distributions/gamma}
 \subsection{test\_generalized\_gamma\_mean}
 ${}$
@@ -10256,6 +10680,18 @@ ${}$
 \end{lstlisting}
 \section{test/statistics/distributions/log-uniform}
 \subsection{test\_logurnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/lognormal}
+\subsection{test\_logn\_cov}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/mises}
+\subsection{test\_mises\_std}
 ${}$
 \begin{lstlisting}
 
@@ -10276,6 +10712,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_lowpass2d\_pdf\_hankel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_lowpass2d\_pdf\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{test/statistics/distributions/skew-normal}
 \subsection{test\_skew\_generalized\_normpdf}
 ${}$
@@ -10284,6 +10730,12 @@ ${}$
 \end{lstlisting}
 \section{test/statistics/distributions}
 \subsection{test\_normpdf\_wrapped}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/statistics/distributions/weibull}
+\subsection{test\_wbl\_std}
 ${}$
 \begin{lstlisting}
 
@@ -10301,6 +10753,22 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_gamma\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_normalize\_exponential\_random\_variable}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/stochastic}
+\subsection{test\_brownian\_field}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_brownian\_field\_scaled}
 ${}$
 \begin{lstlisting}
 
@@ -10323,11 +10791,6 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_asymbp}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{test\_bandpass2d}
 ${}$
 \begin{lstlisting}
 

@@ -17,180 +17,127 @@
 %% analyze a 2D spatial pattern, estimate regularity and test for periodicity
 %
 function obj = analyze_grid(obj)
+	obj.prepare_analysis();
+
+	dx        = obj.stat.L_square ./ obj.stat.n_square;
+	df_square = 1./obj.stat.L_square;
+
 	% output
 	S    = obj.S;
 	R    = obj.R;
 	stat = obj.stat;
 
-	n = obj.n;
-	L = obj.L;
-		
-	b   = obj.b;
-	bmsk = obj.msk.b;
-	if (isempty(bmsk))
-		bmsk = true(size(b));
-	end
-
-	% convert image to double
-	b    = double(b);
-	% convert mask to logical
-	bmsk = (bmsk > 0);
-
-	% fraction of ground coverged
-	% there is a matlab bug that double images need to be scaled
-	bscaled = (b - min(b(bmsk)))/(max(b(bmsk))-min(b(bmsk)));
-
-	thresh_b      = graythresh(bscaled(bmsk));
-	stat.coverage = sum(bscaled(bmsk)<thresh_b)/sum(bmsk(:));
-
-	% resample, to make dx identical to dy
-	% (depending on the grid projection, this might not be the case)
-	dx = L./n;
-	n_ = round(L./min(dx));
-	if (n_(1)>n(1))
-		% TODO implement
-		% note : this is not necessary as the current input files have dx=dy	
-		error('not yet implemented');
-	end
-	if (n_(2)>n(2))
-		% TODO implement
-		% note : this is not necessary as the current input files have dx=dy	
-		error('not yet implemented');
-	end
-	n = n_;
-
-	% resize, to make domain square
-	nmax = max(n);
-	L    = L.*nmax./n;
- 	if (n(1) < nmax)
-		n(1) = nmax;
-		b(nmax,1) = 0;
-		bmsk(nmax,1) = false;
-	end
-	if (n(1) > n(2))
-		nmax = n(1);
-		b(1,nmax) = 0;
-		bmsk(1,nmax) = 0;
-	end
-	df   = 1./L;
-	n    = [nmax,nmax];
-	dx   = L./nmax;
-	stat.L_square = L;
-	stat.n_square = n;
-	obj.b_square = b;
-
-	% grid in real space
-	% note : x an y do not match original figure when the figure was resampled or or resized
-	obj.x   = linspace(-L(1)/2,L(1)/2,n(1))';
-	obj.y   = linspace(-L(2)/2,L(2)/2,n(2))';
-
-	% grid in frequency space
-	[obj.f.x,obj.f.y,frr,ftt] = fourier_axis_2d(L,n);
-
 	% statistics of the masked area
-	area_msk = sum(bmsk(:))*dx(1)*dx(2);
+	area_msk = sum(obj.msk.b_square(:))*dx(1)*dx(2);
 	% extend approximation by an ellipsis
-	nmsk = sum(bmsk(:));
-	centroid.x = sum(bmsk*cvec(obj.x))./nmsk;
-	centroid.y = sum(rvec(obj.y)*bmsk)./nmsk;
-	sx2 = sum(bmsk*(cvec(obj.x)-centroid.x).^2)./nmsk;
-	sy2 = sum(bmsk*(cvec(obj.y)-centroid.y).^2)./nmsk;
-	sxy = sum(bmsk*((cvec(obj.x)-centroid.x).*(cvec(obj.y)-centroid.y)))./nmsk;
+	nmsk = sum(obj.msk.b_square(:));
+	centroid.x = sum(obj.msk.b_square*cvec(obj.x))./nmsk;
+	centroid.y = sum(rvec(obj.y)*obj.msk.b_square)./nmsk;
+	sx2 = sum(obj.msk.b_square*(cvec(obj.x)-centroid.x).^2)./nmsk;
+	sy2 = sum(obj.msk.b_square*(cvec(obj.y)-centroid.y).^2)./nmsk;
+	sxy = sum(obj.msk.b_square*((cvec(obj.x)-centroid.x).*(cvec(obj.y)-centroid.y)))./nmsk;
 	centroid.C = [sx2,sxy;
         	      sxy,sy2];
 
-	% the weighted mean allows for feathering the transition
-	mu  = wmean(double(bmsk(:)),b(:));
-
-	% subtract mean
-	b  = (b - mu);
-
-	% normalize
-	b = b/wrms(bmsk(:),b(:));
-
-	% 2D periodogram, not yet normalized
-	S.hat  = abs(fft2(bmsk.*b)).^2;
-
 	% removal of spurious low frequency components
 	% we assume that spurious low frequency components are predominantly isotropic
-	[S.clip, ~, fhp, shp] = suppress_low_frequency_lobe(S.hat,bmsk,L);
-	%[S.clip, w] = suppress_low_frequency_components_1(obj,S.hat)
+	[S.hp, whp, fhp, shp] = suppress_low_frequency_lobe(S.hat,obj.msk.b_square,obj.stat.L_square);
+	%[S.hp, w] = suppress_low_frequency_components_1(obj,S.hat)
 
+	% fraction of spectral energy retained after removing spurious low-frequency components by highpass filtering
+	stat.p_S_hp = sum(whp.*S.hat,'all')./sum(S.hat,'all');
 
-	% radial density (radial periodogram)
-	[Sr, obj.f.r] = periodogram_radial(S.hat,L);
-	S.r = Sr.normalized;
+	% note that due to the high pass filtering, b_hp has positive and negative values
+	b_hp = ifft2(sqrt(whp).*fft2(obj.b_square));
+
+	% prescale image for thresholding
+	% there is a matlab bug that double images need to be scaled
+	b_scaled = (b_hp - min(b_hp(obj.msk.b_square)))/(max(b_hp(obj.msk.b_square))-min(b_hp(obj.msk.b_square)));
+	stat.thresh_b      = graythresh(b_scaled(obj.msk.b_square));
+
+	% threshold
+	b_thresh      = b_scaled>stat.thresh_b;
+	% fraction of ground coverged
+	stat.coverage = sum(b_thresh(obj.msk.b_square(:)))/sum(obj.msk.b_square(:));
+
+	% contrast between vegetated and unvegetated areas
+	% computed for the original image as a quaility indicator
+	stat.contrast = mean(obj.b_square(obj.msk.b_square & b_thresh)) - mean(obj.b_square(obj.msk.b_square & (~b_thresh)));
 
 	obj.w.x = 1-normpdf(obj.f.x,0,shp)/normpdf(0,0,shp);	
 	obj.w.y = 1-normpdf(obj.f.y,0,shp)/normpdf(0,0,shp);	
 	obj.w.r = 1-normpdf(obj.f.r,0,shp)/normpdf(0,0,shp);
 
-	% cumulative distribution
-	iSr = cumsum(S.r);
-	iSr = iSr/iSr(end);
-	% make values unique (quick hack)
-	iSr = cvec(iSr) + (0:length(iSr)-1)'*1e-12; 
-	% quantiles
-	f_05 = interp1(iSr,obj.f.r,0.05,'linear');
-	f_50 = interp1(iSr,obj.f.r,0.50,'linear');
-	f_95 = interp1(iSr,obj.f.r,0.95,'linear');
-
 	% 2D spectral density estimate by periodogram smoothing
-	dfr   = frr(1,2);
-	nf    = round(sqrt(f_50/dfr));
-	S.bar = gaussfilt2(S.clip,nf);
+	dfr   = obj.f.rr(1,2);
+	nf    = round(sqrt(obj.stat.q.fr.p50/dfr));
+	S.bar = gaussfilt2(S.hp,nf);
 
 	% smoothing window radius for frequency test
 	% TODO no magic numbers
-	nf_test  = round(0.25*f_50/dfr);
-	nf_test  = max(nf_test,2);
+	nf_test  = sqrt(2*obj.stat.q.fr.p50/dfr);
+	%nf_test  = round(0.25*obj.stat.q.fr.p50/dfr);
+	nf_test  = max(nf_test,3);
 
-	% restrict test to region containing the upper 20% of spectral energy
+	% restrict test to region containing the upper 80% of spectral energy
 	[Ssort,sdx] = sort(S.bar(:),'descend');
 	iSsort = cumsum(Ssort);
 	fdx = (iSsort <= obj.opt.pfmsk*iSsort(end));
- 	fmsk = false(n);
-	fmsk(sdx(fdx)) = true;
+ 	msk.f = false(obj.stat.n_square);
+	msk.f(sdx(fdx)) = true;
 
 	% exlude spurious low-frequency components from the test
-	fmsk = fmsk & (frr > fhp);
+	msk.f = msk.f & (obj.f.rr > fhp);
 
-	% by symmetry, excluded the symmetric half plane
-	fmsk = fmsk & cvec(obj.f.x) >= 0;
+	% by symmetry, the symmetric half plane could be excluded, though
+	% when significant frequency compenents occur at fx=0, this will not
+	% lead to the correct estimate of spectral energy contained
+	%msk.f = msk.f & cvec(obj.f.x) >= 0;
 
 	% periodicity test
 	try
-	if (any((bmsk~=bmsk(1,1)),'all'))
-		bmsk_ = bmsk;
+	if (any((obj.msk.b_square~=obj.msk.b_square(1,1)),'all'))
+		msk.b_ = obj.msk.b_square;
 	else
-		bmsk_ = [];
+		msk.b_ = [];
 	end
-	[p_periodic, stati] = periodogram_test_periodicity_2d(...
-				b, nf_test, bmsk_, fmsk, obj.opt.ns);
+	if (obj.opt.test_for_periodicity)
+		[p_periodic, stati] = periodogram_test_periodicity_2d(...
+					obj.b_square, obj.stat.L_square, nf_test, msk.b_, msk.f, obj.opt.ns);
+		fdx                   = (stati.pn_all<=obj.opt.significance_level_a1) & msk.f;
+		% as S is normalized to 1 over the half plane, this is identical to the fraction of spectral
+		% energy contained in significant frequency components 
+		stati.intS_hp_sig     = 0.5*sum(S.hp(fdx))*df_square(1)*df_square(2);
+	else
+		p_periodic = NaN;
+		stati = struct();
+	end
 	%fr_periodic = stati.fr_max;
 	catch e
 		disp(e);
 		p_periodic= NaN;
+		stati = struct();
 		%fr_periodic = NaN;
 	end
+	stat.stati = stati;
 
 	% determine if pattern is isotropic (spotted, gapped, labyrinthic)
 	% or anisotropic (banded)
 	% note: presmoothed with Sbar works better than with Shat
 	%nt   = pi*n(1);
 	%nc   = 2*pi*f_50/dfr;
-	nc   = sqrt(f_50/dfr);
-	nf_s = ceil(n(1)/nc);
+	nc   = sqrt(obj.stat.q.fr.p50/dfr);
+	nf_s = ceil(obj.stat.n_square(1)/nc);
 	% more sharper later
-	nf_s_ = ceil(1/4*n(1)/nc);
-	mode = 'angular'; 
-	nf_    = round(2*sqrt((f_50/dfr)));
-	Sbar_ = gaussfilt2(S.clip,nf_);
-	[isisotropic,stati] = separate_isotropic_from_anisotropic_density(Sbar_,fmsk,L,mode,nf_s);
+	nf_s_  = ceil(1/4*obj.stat.n_square(1)/nc);
+	mode   = 'angular'; 
+	nf_    = round(2*sqrt((obj.stat.q.fr.p50/dfr)));
+	Sbar_  = gaussfilt2(S.hp,nf_);
+	[isisotropic,stati] = separate_isotropic_from_anisotropic_density(Sbar_,msk.f,obj.stat.L_square,mode,nf_s);
 	angle_deg = stati.angle_deg;
 	p_isotropic = stati.p_iso;
 
-	L_eff = effective_mask_size(bmsk,L,-angle_deg);
+	L_eff = effective_mask_size(obj.msk.b_square,obj.stat.L_square,-angle_deg);
 
 	% for patterns with known direction, such as computer generated patterns, the direction angle_deg can be specified
 	if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
@@ -199,9 +146,13 @@ function obj = analyze_grid(obj)
 		%angle = rad2deg(atan2(fc.yy.bar,fc.xx.bar));
 	end
 
-	for field = {'clip','hat','bar'}
+	L = obj.stat.L_square;
+	df = 1./obj.stat.L_square;
+	n  = obj.stat.n_square;
+	for field = {'hp','hat','bar'}
 		% normalize volume of density to 1
-		S.(field{1})   = 2*S.(field{1})/(sum(sum(S.(field{1})))*df(1)*df(2));
+		S.(field{1})   = periodogram_normalize_2d(S.(field{1}),df_square);
+		%S.(field{1})   = 2*S.(field{1})/(sum(sum(S.(field{1})))*df(1)*df(2));
 		% autocorrelaton
 		R.(field{1})   = 0.5*(n(1)*n(2))./(L(1)*L(2))*real(ifft2(S.(field{1})));
 
@@ -211,8 +162,8 @@ function obj = analyze_grid(obj)
 		%[stat.(field{1}).imax,stat.(field{1}).jmax] = ind2sub(n,cdx);
 		[imax,jmax]    = ind2sub(n,cdx);
 		% maximum frequency
-		fc.rr.(field{1}) = frr(cdx);
-		fc.tt.(field{1}) = ftt(cdx);
+		fc.rr.(field{1}) = obj.f.rr(cdx);
+		fc.tt.(field{1}) = obj.f.tt(cdx);
 		fc.xx.(field{1}) = obj.f.x(imax);
 		fc.yy.(field{1}) = obj.f.y(jmax);
 
@@ -234,9 +185,9 @@ function obj = analyze_grid(obj)
 		S.rot.y.(field{1}) = mean(S.rot.(field{1}),1)';
 
 		% normalize the area of density to 1 over the positive half-axis
-		S.rot.x.(field{1}) = 2*S.rot.x.(field{1}) / (sum(S.rot.x.(field{1}))*df(1));
+		S.rot.x.(field{1}) = periodogram_normalize(S.rot.x.(field{1}),df_square(1));
 		% normalize area under density to 1 over the entire axis
-		S.rot.y.(field{1}) = 2*S.rot.y.(field{1}) / (sum(S.rot.y.(field{1}))*df(2));
+		S.rot.y.(field{1}) = periodogram_normalize(S.rot.y.(field{1}),df_square(2));
 
 		% autocorrelation in direction perpendictular to bands
 		R.rot.x.(field{1}) = mean(R.rot.(field{1}),2);
@@ -264,25 +215,23 @@ function obj = analyze_grid(obj)
 
 	end % for field
 
-	fmsk_rot = fft_rotate(fmsk,-angle_deg);
+	msk.rot.f = fft_rotate(msk.f,-angle_deg);
 
 	if (isisotropic)
-		regularity = Sc.radial.clip .* fc.radial.clip;
-		%[Sc.ref,ldx] = S.radial.clip);
+		regularity = Sc.radial.hp .* fc.radial.hp;
+		%[Sc.ref,ldx] = S.radial.hp);
 		%lc       = 1./obj.f.r(ldx);
 	else
-		regularity = Sc.x.clip .* fc.x.clip;
+		regularity = Sc.x.hp .* fc.x.hp;
 		%[Sc,ldx] = max(Sx);
 		%lc       = 1./abs(obj.f.x(ldx));
 	end
-	
 
 	% store reasults
 	stat.L_eff         = L_eff;
 	stat.Sc	           = Sc;
 	stat.angle_deg     = angle_deg;
 	stat.area_msk      = area_msk;
-	stat.f_50          = f_50;
 	stat.fc            = fc;
 	%stat.fr_periodic   = fr_periodic;
 	stat.isisotropic   = isisotropic;
@@ -291,19 +240,16 @@ function obj = analyze_grid(obj)
 	stat.nf_test       = nf_test;
 	stat.p_isotropic   = p_isotropic;
 	stat.p_periodic    = p_periodic;
-	stat.qfr_05        = f_05;
-	stat.qfr_50        = f_50;
-	stat.qfr_95        = f_95;
 	stat.regularity    = regularity;
 	stat.siz           = n;
 	stat.centroid      = centroid;
 
 	obj.stat = stat;
-	obj.msk.f           = fmsk;
-	obj.msk.b_square    = bmsk;
-	obj.msk.rot.f       = fmsk_rot;
+	obj.msk.f           = msk.f;
+%	obj.msk.b_square    = msk.b;
+	obj.msk.rot.f       = msk.rot.f;
 	obj.R = R;
 	obj.S = S;
-	obj.f.rr = frr;
+%	obj.f.rr = frr;
 end % analyze_grid
 

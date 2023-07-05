@@ -106,6 +106,8 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	%sum(mid(wS).*diff(f));
 
 	iwS_ = cumint_trapezoidal(f_,wS_);
+	
+	wSp0 = wSfun(par0);
 
 	switch (method)
 	case {'cdf_l1'}
@@ -121,7 +123,7 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 		opt = optimset();
 		opt.Display = 'off';
 		%opt.Algorithm = 'levenberg-marquardt';
-		lb = sqrt(eps)*zeros(size(par0));
+		%lb = sqrt(eps)*zeros(size(par0));
 		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_least_squares(wSfun(par)),par0,lb,[],opt); 
 	case {'log-likelihood','ll'}
 		par  = fminsearch(@(par) log_likelihood(par),par0); 
@@ -135,11 +137,21 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	int_Sp = spectral_density_area(f,Sp);
 	Sp     = Sp/int_Sp;
 	wSp_    = wSfun(par);
+%clf
+%par0
+%par
+%subplot(2,2,1)
+%plot([wS_,wSp0,wSp_])
+%subplot(2,2,2)
+%plot([Sp,S])
+%pause()
+
 
 	% goodness of fit measures
 	% root mean square error
 	res_sqrt_df          = res_least_squares(wSp_);
-	stat.goodness.rmse   = sum(res_sqrt_df.*res_sqrt_df);
+	% rmse = sqrt(1/(f_max-0) int_0^{f_max} res.^2 df)
+	stat.goodness.rmse   = sqrt(1./max(f)*sum(res_sqrt_df.*res_sqrt_df));
 	stat.goodness.r2     = 1.0 - stat.goodness.rmse.^2./wvar(w_.*inner2outer(df_),S_);
 
 	% l2 in difference of cdf von Mise - Cramer distance
@@ -192,7 +204,7 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 		res = wSp_ - wS_;
 		% smooth
 		if (nf>1)
-		res = trifilt1(res,nf);
+			res = trifilt1(res,nf);
 		end
 		res = mid(res).*sqrt_df;
 	end

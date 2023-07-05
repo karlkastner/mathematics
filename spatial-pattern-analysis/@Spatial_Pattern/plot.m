@@ -40,7 +40,7 @@ function plot(obj,field_str,varargin)
 		axis tight
 		xlabel('$x/\lambda_c$','interpreter','latex');
 		ylabel('$y/\lambda_c$','interpreter','latex');
-	case {'hat','clip','bar'}
+	case {'hat','hp','bar'}
 	switch (field_C{1})
 	case {'S'}
 		imagesc(fftshift(obj.f.x*lambda_c),fftshift(obj.f.y*lambda_c),fftshift(var'/lambda_c.^2));

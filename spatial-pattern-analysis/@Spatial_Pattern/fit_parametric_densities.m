@@ -47,8 +47,9 @@ function fit_parametric_densities(obj)
 
 	% log-normal
 	[par0(1),par0(2)] = logn_mode2par(fc.x.bar,Sc.x.bar);
+	[par0(1),par0(2)] = logn_mode2par(fc.x.hat,Sc.x.hat);
 	Sfun = @lognpdf;
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.rot.x.logn  = Sfit;
 	stat.fit.x.logn.par  = par;
 	stat.fit.x.logn.stat = fitstat;
@@ -97,12 +98,19 @@ function fit_parametric_densities(obj)
 	stat.fit.radial.bandpass.stat = fitstat;
 
 	% log-normal
-	[par0(1),par0(2)] = logn_mode2par(fc.radial.bar,Sc.radial.bar);
+	[par0(1),par0(2)] = logn_mode2par(fc.radial.hat,Sc.radial.hat);
 	Sfun = @lognpdf;
-	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf);
+%'molch'
+%obj.opt.objective
+%nf
+	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.radial.logn  = Sfit;
 	stat.fit.radial.logn.par  = par;
 	stat.fit.radial.logn.stat = fitstat;
+%clf
+%plot(obj.f.r,obj.w.r.*[S.radial.hat,Sfit,lognpdf(obj.f.r,par0(1),par0(2))])
+%pause
+
 
 	% gamma
 	[par0(1),par0(2)] = gamma_mode2par(fc.radial.bar,Sc.radial.bar);
@@ -111,6 +119,19 @@ function fit_parametric_densities(obj)
 	S.radial.gamma  = Sfit;
 	stat.fit.radial.gamma.par  = par;
 	stat.fit.radial.gamma.stat = fitstat;
+
+	% flat density of white noise
+	% TODO weight
+	S.fit.radial.white = mean(S.radial.hat)*ones(size(S.radial.hat));
+	stat.fit.radial.white.stat.goodness.r2 = 1 - rms(S.radial.hat - S.fit.radial.white).^2./var(S.radial.hat)
+	S.fit.x.white = mean(S.rot.x.hat)*ones(size(S.rot.x.hat));
+	stat.fit.x.white.stat.goodness.r2 = 1 - rms(S.rot.x.hat - S.fit.x.white).^2./var(S.rot.x.hat);
+	% periodic
+	S.fit.radial.periodic = zeros(size(S.radial.hat));
+	flag = obj.f.r>=0;
+	[mv,mdx] = max(S.radial.hat.*flag); 
+	S.fit.radial.periodic(mdx) = sum(S.radial.hat.*flag);
+	stat.fit.radial.periodic.stat.goodness.r2 = 1 - rms(S.radial.hat(fdx) - S.fit.radial.periodic(fdx)).^2./var(S.radial.hat(fdx));
 
 	obj.stat = stat;
 	obj.S    = S;

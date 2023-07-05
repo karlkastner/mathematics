@@ -16,7 +16,7 @@
 %
 %% test a periodogram for hidden periodic frequency components
 %% 
-%% [p,stat,ratio] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns)
+%% [p,stat,ratio] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 %%
 %% input:
 %%	b    (nx * ny): image to test for presence of hidden periodicities,
@@ -43,21 +43,28 @@
 %%	      - values in the periodogram are not any more linearly independent
 %%	        so that the dof of the filter window is not nf^2
 %%
-function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
-	if (nargin()<3)
-		bmsk = [];
+function [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, test_all)
+	n = numel(b);
+	p_thresh = 0.05;
+	if (nargin()< 3 || isempty(L))
+		L = n;
 	end
 	if (nargin()<4)
+		bmsk = [];
+	end
+	if (nargin()<5)
 		fmsk = [];
 	else
 		if (~islogical(fmsk))
 			error('fmsk must be logical');
 		end
 	end	
-	if (nargin()<5)
-		ns = 101;
+	if (nargin()<6)
+		ns = 100;
 	end
-	n = numel(b);
+	if (nargin<7)
+		test_all = true;
+	end
 
 	% exclude mean and masked area
 	if (~isempty(bmsk))
@@ -67,8 +74,12 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 		b = b-mean(b(:));
 	end
 	% compute the 2D periodogram
-	% it is not necessary to scale here, as we are testing ratios
 	Shat  = abs(1/n*fft2(b)).^2;
+	% it is not necessary to scale here, as we are testing ratios
+	% though the fraction of spectral energy is returned, that is why Shat
+	% is normalized to unity over the half-plane
+	df    = 1./L;
+	Shat  = 2*Shat/(sum(Shat,'all')*df(1)*df(2));
 
 	% estimate the spectral density by smoothing
 	% the weights of the smoothing window have to be 1 or zero for the
@@ -76,12 +87,12 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 	% so gaussian smoothing can only be used in combination with the monte-
 	% carlo estimating of the statistic, for getting identical results
 	% for masking or not masking, we always use a window with weights 0,1 here
-%	if (isempty(bmsk))
+	%if (isempty(bmsk))
 		[Sbar,nf2] = circfilt2(Shat,nf);
-%	else
-%		note: if this is chosen, the quantiles have to be differently estimated
-%		[Sbar,nf2] = gaussfilt2(Shat,nf);
-%	end
+	%else
+	%	%note: if this is chosen, the quantiles have to be differently estimated
+	%	[Sbar,nf2] = gaussfilt2(Shat,nf);
+	%end
 
 	% ratio of periodogram and density
 	ratio = Shat./Sbar;
@@ -95,7 +106,7 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 
 	% maximum ratio
 	if (~isempty(fmsk))
-		[ratio_max,mdx] = max(flat(ratio(fmsk)));
+		[ratio_max,mdx] = max(flat(ratio.*fmsk));
 	else
 		[ratio_max,mdx] = max(flat(ratio));
 	end
@@ -105,18 +116,22 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 		% Shat/Sbar ~ nf^2*betarnd(a,b)
 
 		% distribution parameters of test statistics
-		a = 1;
-		b = (nf2-1);
+		ap = 1;
+		bp = (nf2-1);
 		% p-value, if only 1 bin were tested
-		p1 = 1-betacdf(ratio_max/nf2,a,b);
+		p1 = 1-betacdf(ratio_max/nf2,ap,bp);
 
 		% correct for repeated testing the nt-bins selected by the mask
 		pn  = 1-(1-p1)^nt;
+		if (test_all)
+			p1_all  = 1-betacdf(ratio/nf2,ap,bp);
+			pn_all  = 1-(1-p1_all).^nt;
+		end
 
-		if (nargout()>2)
+		if (0) %nargout()>2)
 			np = 100;
 			out.pr1 = (1:np)'/(np+1);
-			out.qr1 = nf2*betainv(out.pr1,a,b);
+			out.qr1 = nf2*betainv(out.pr1,pa,pb);
 			out.prn = 1-(1-out.pr1).^nt;
 			out.qrn = out.qr1;
 		end
@@ -135,20 +150,41 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
 		else
 			pn = 1-interp1(qrn,pr,ratio_max,'linear');
 		end
+		if (test_all)
+			p1_all = [];
+			% note that while it is defined here for all bins,
+			% it is only valid in the range defined by the mask
+			pn_all = 1-interp1(qrn,pr,ratio,'linear');
+			pn_all(ratio>qrn(end)) = 0.5/ns;
+		end
 		out.pr1 = pr;
 		out.prn = pr;
 		out.qr1 = qr1;
 		out.qrn = qrn;
 	end
+	if (test_all)
+		fdx = (pn_all<=p_thresh);
+		stat.intShat_sig = 0.5*sum(Shat(fdx))*df(1)*df(2);
+	end
+	[fx,fy]            = fourier_axis_2d(L,size(b));
+	[id,jd]            = ind2sub(size(b),mdx);
+	stat.max.ratio     = ratio_max;
+	stat.max.Shat      = Shat(mdx);
+	stat.max.Shat_rel  = Shat(mdx)*df(1)*df(2);
+	stat.max.fx        = fx(id);
+	stat.max.fy        = fy(jd);
+	stat.p1            = p1;
+	stat.pn            = pn;
 
-	stat.ratio_max = ratio_max;
-	stat.id_max    = mdx;
-	stat.p1        = p1;
+	if (test_all)
+		stat.p1_all = p1_all;
+		stat.pn_all = pn_all;
+	end
 
 	if (nargout()>2)
 		out.p = (1:nt)'/(nt+1);
 		out.q(:,1) = sort(flat(ratio(fmsk)));
-		
+
 		out.Shat = Shat;
 		out.Sbar = Sbar;
 		out.ratio = ratio;

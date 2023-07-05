@@ -16,6 +16,7 @@
 %
 % unnormalized (radial) density of the pth-order lowpass in two dimensions
 % continuous space
+% function S = lowpass2d_pdf(fr,a,order)
 function S = lowpass2d_pdf(fr,a,order)
 	S = zeros(size(fr));
 	for idx=1:numel(fr)
