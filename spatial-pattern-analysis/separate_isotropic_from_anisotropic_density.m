@@ -48,10 +48,10 @@ function [isisotropic,stat,S,f] = separate_isotropic_from_anisotropic_density(Sh
 	for kdx=1:kmax
 
 	% estimate radial density
-	[S.r,f.r,~,A] = periodogram_radial(S.hat_iso,L);
+	[S.r,f.r,~,~,A] = periodogram_radial(S.hat_iso,L);
 
 	% reconstruct 2D density from isotropic radial density
-	S.iso = reshape(A*S.r.normalized,n);
+	S.iso = reshape(A*double(S.r.normalized),n);
 
 	% anisotropic densities
 	S.x = mean(S.hat_aniso,2);

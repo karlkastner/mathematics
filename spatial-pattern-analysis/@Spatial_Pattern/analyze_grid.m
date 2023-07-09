@@ -18,6 +18,8 @@
 %
 function obj = analyze_grid(obj)
 	obj.prepare_analysis();
+	
+	timer = tic();
 
 	dx        = obj.stat.L_square ./ obj.stat.n_square;
 	df_square = 1./obj.stat.L_square;
@@ -74,25 +76,22 @@ function obj = analyze_grid(obj)
 	S.bar = gaussfilt2(S.hp,nf);
 
 	% smoothing window radius for frequency test
-	% TODO no magic numbers
-	nf_test  = sqrt(2*obj.stat.q.fr.p50/dfr);
+	nf_test  = sqrt(obj.opt.nf_test_scale*obj.stat.q.fr.p50/dfr);
 	%nf_test  = round(0.25*obj.stat.q.fr.p50/dfr);
-	nf_test  = max(nf_test,3);
+	nf_test  = max(nf_test,obj.opt.nf_test_min);
 
 	% restrict test to region containing the upper 80% of spectral energy
 	[Ssort,sdx] = sort(S.bar(:),'descend');
 	iSsort = cumsum(Ssort);
-	fdx = (iSsort <= obj.opt.pfmsk*iSsort(end));
- 	msk.f = false(obj.stat.n_square);
-	msk.f(sdx(fdx)) = true;
+	fdx = (iSsort <= obj.opt.p_fmsk*iSsort(end));
+ 	obj.msk.f = false(obj.stat.n_square);
+	obj.msk.f(sdx(fdx)) = true;
 
 	% exlude spurious low-frequency components from the test
-	msk.f = msk.f & (obj.f.rr > fhp);
+	obj.msk.f = obj.msk.f & (obj.f.rr > fhp);
 
-	% by symmetry, the symmetric half plane could be excluded, though
-	% when significant frequency compenents occur at fx=0, this will not
-	% lead to the correct estimate of spectral energy contained
-	%msk.f = msk.f & cvec(obj.f.x) >= 0;
+	% by symmetry, the negative-half plane can be excluded
+	obj.msk.f_pos = obj.msk.f & cvec(obj.f.x) >= 0;
 
 	% periodicity test
 	try
@@ -102,9 +101,11 @@ function obj = analyze_grid(obj)
 		msk.b_ = [];
 	end
 	if (obj.opt.test_for_periodicity)
-		[p_periodic, stati] = periodogram_test_periodicity_2d(...
-					obj.b_square, obj.stat.L_square, nf_test, msk.b_, msk.f, obj.opt.ns);
-		fdx                   = (stati.pn_all<=obj.opt.significance_level_a1) & msk.f;
+		[isperiodic, stati] = periodogram_test_periodicity_2d(...
+					obj.b_square, obj.stat.L_square, nf_test, msk.b_, obj.msk.f_pos, obj.opt.n_mc);
+		% note, for summing up the energy, the negative half-plane must not be excluded
+		fdx                   = (stati.pn_all<=obj.opt.significance_level_a1) & obj.msk.f;
+		p_periodic            = stati.pn;
 		% as S is normalized to 1 over the half plane, this is identical to the fraction of spectral
 		% energy contained in significant frequency components 
 		stati.intS_hp_sig     = 0.5*sum(S.hp(fdx))*df_square(1)*df_square(2);
@@ -133,7 +134,7 @@ function obj = analyze_grid(obj)
 	mode   = 'angular'; 
 	nf_    = round(2*sqrt((obj.stat.q.fr.p50/dfr)));
 	Sbar_  = gaussfilt2(S.hp,nf_);
-	[isisotropic,stati] = separate_isotropic_from_anisotropic_density(Sbar_,msk.f,obj.stat.L_square,mode,nf_s);
+	[isisotropic,stati] = separate_isotropic_from_anisotropic_density(Sbar_,obj.msk.f,obj.stat.L_square,mode,nf_s);
 	angle_deg = stati.angle_deg;
 	p_isotropic = stati.p_iso;
 
@@ -215,7 +216,7 @@ function obj = analyze_grid(obj)
 
 	end % for field
 
-	msk.rot.f = fft_rotate(msk.f,-angle_deg);
+	obj.msk.rot.f = fft_rotate(obj.msk.f,-angle_deg);
 
 	if (isisotropic)
 		regularity = Sc.radial.hp .* fc.radial.hp;
@@ -245,11 +246,10 @@ function obj = analyze_grid(obj)
 	stat.centroid      = centroid;
 
 	obj.stat = stat;
-	obj.msk.f           = msk.f;
-%	obj.msk.b_square    = msk.b;
-	obj.msk.rot.f       = msk.rot.f;
 	obj.R = R;
 	obj.S = S;
-%	obj.f.rr = frr;
+
+	obj.stat.analyzed = true;
+	obj.stat = setfield_deep(obj.stat,'runtime.analysis',toc(timer));
 end % analyze_grid
 

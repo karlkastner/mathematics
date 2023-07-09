@@ -37,12 +37,16 @@ function analyze(obj)
 			% check if image has already been analyzed
 			if (obj.opt.reload && exist(spname,'file'))
 				% reload
-				clear sp
-				load(spname,'sp');
-				if (~isfield(sp.stat,'stati'))
+				clear sp % runtime
+				load(spname,'sp'); %,'runtime');
+				if (~isfield(sp.stat,'p_periodic'))
+					info=imfinfo([folder,filesep,filename]);
+					A = max(info.Width,info.Height)^2;
+					if (A > obj.opt.area_max)
+						error('Image exceeds size limit');
+					end
 					sp.imread([folder,filesep,filename]);
 					sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
-					sp.prepare_analysis();
 					sp.analyze_grid();
 
 					% clear 2d varibales to save space
@@ -50,16 +54,22 @@ function analyze(obj)
 		
 					%sp = sp_a(idx);
 					mkdir(dirname(spname));
-					runtime = toc(timer)-t;
-					obj.runtime(idx,2) = runtime;
+					%runtime = toc(timer)-t;
 					% save analysis of individual pattern
-					save(spname,'sp','runtime');
+					save(spname,'sp'); %,'runtime');
 				end
 			else
 				% analyze pattern
 				disp([num2str(idx), ' ', num2str(dx), ' ', filename])
 
+				info=imfinfo([folder,filesep,filename]);
+				A = max(info.Width,info.Height)^2;
+				if (A > obj.opt.area_max)
+					error('Image exceeds size limit');
+				end
+
 				sp = Spatial_Pattern();
+				sp.init();
 	
 				sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
 		
@@ -72,22 +82,29 @@ function analyze(obj)
 		
 				%sp = sp_a(idx);
 				mkdir(dirname(spname));
-				runtime = toc(timer)-t;
-				obj.runtime(idx,2) = runtime;
+				%runtime = toc(timer)-t;
+				%obj.runtime(idx,2) = runtime;
 				% save analysis of individual pattern
-				save(spname,'sp','runtime');
+				save(spname,'sp'); %,'runtime');
 
 			end % else of (reload && exist spname)
-			obj.sp_a(idx) = sp;
 		catch e
 			%disp(base);
+			sp = Spatial_Pattern();
+			sp.init();
+			%runtime = NaN;
 			disp(e)
 			s = e.stack;
-			for idx=1:length(s)
-				disp(s(idx));
+			for jdx=1:length(s)
+				disp(s(jdx));
 			end	
-			obj.error_C{idx,2} = e;
-		end % of try-catch 
+			obj.error_C{jdx,2} = e;
+		end % of try-catch
+		%if (~exist('runtime','var'))
+		%	runtime = NaN;
+		%end 
+		obj.sp_a(idx,1) = sp;
+		%obj.runtime(idx,2) = runtime;
 	end % for idx (each pattern)
 end % analyze
 

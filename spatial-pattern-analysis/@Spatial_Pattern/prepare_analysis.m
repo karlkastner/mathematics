@@ -15,6 +15,8 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 function prepare_analysis(obj)
+	timer = tic();
+
 	n = obj.n;
 	L = obj.L;
 		
@@ -28,8 +30,14 @@ function prepare_analysis(obj)
 		end
 	end
 
-	% convert image to double
-	b    = double(b);
+	switch (obj.opt.datatype)
+	case {'single'}
+		b = single(b);
+	case {'double'}
+		b = double(b);
+	otherwise
+		error('Dataype must be single or double');
+	end
 
 	% convert mask to logical
 	obj.msk.b = (obj.msk.b > 0);
@@ -99,24 +107,26 @@ function prepare_analysis(obj)
 	obj.S.hat = obj.S.hat/(0.5*sum(obj.S.hat,'all')*df(1)*df(2));
 
 	% radial density (radial periodogram)
-	[Sr, obj.f.r] = periodogram_radial(obj.S.hat,L);
+	[Sr, obj.f.r,Cr] = periodogram_radial(obj.S.hat,L);
 	obj.S.radial.hat = Sr.normalized;
 
 	% cumulative distribution
-	Cr = cumsum(cvec(obj.f.r).*cvec(obj.S.radial.hat));
-	Cr = Cr/Cr(end);
+	%Cr = periodogram_cumulative(Sr.normalized,obj.f.r,'radial');
+	%Cr = cumsum(cvec(obj.f.r).*cvec(obj.S.radial.hat));
+	%Cr = Cr/Cr(end);
 
-	% make values unique (quick hack)
-	Cr = cvec(Cr) + (0:length(Cr)-1)'*1e-12; 
+	% unique values, required for interpolation
+	fdx = [true; cvec(Cr(2:end)~=Cr(1:end-1))];
 
 	% quantiles
-	obj.stat.q.fr.p05 = interp1(Cr,obj.f.r,0.05,'linear');
-	obj.stat.q.fr.p50 = interp1(Cr,obj.f.r,0.50,'linear');
-	obj.stat.q.fr.p84 = interp1(Cr,obj.f.r,0.84,'linear');
-	obj.stat.q.fr.p95 = interp1(Cr,obj.f.r,0.95,'linear');
+	obj.stat.q.fr.p05 = interp1(Cr(fdx),obj.f.r,0.05,'linear');
+	obj.stat.q.fr.p50 = interp1(Cr(fdx),obj.f.r,0.50,'linear');
+	obj.stat.q.fr.p84 = interp1(Cr(fdx),obj.f.r,0.84,'linear');
+	obj.stat.q.fr.p95 = interp1(Cr(fdx),obj.f.r,0.95,'linear');
 	obj.stat.q.fr.max = obj.f.r(end);
 
 	obj.C.r = Cr;
 	obj.b_square = b_square;
+	obj.stat = setfield_deep(obj.stat,'runtime.prepare_analysis',toc(timer));
 end
 

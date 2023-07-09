@@ -14,21 +14,21 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function obj = clear_2d_properties(obj)
-		% remove 2d grid fields to save memory and disk space
-		obj.b = [];
-		obj.b_square = [];
-		obj.msk      = [];
-		obj.stat.qq = [];
-		for field = {'hat','hp','bar'}
-			obj.S.(field{1}) = [];
-			obj.R.(field{1}) = [];
-			obj.S.rot.(field{1}) = [];
-			obj.R.rot.(field{1}) = [];
-		end % for field
-		obj.f.rr = [];
-		obj.f.tt = [];
-		obj.w    = [];
-		obj.stat.stati.p1_all = [];
-		obj.stat.stati.pn_all = [];
+	% remove 2d grid fields to save memory and disk space
+	obj.b = [];
+	obj.b_square = [];
+	obj.msk      = [];
+	obj.stat.qq = [];
+	for field = {'hat','hp','bar'}
+		obj.S.(field{1}) = [];
+		obj.R.(field{1}) = [];
+		obj.S.rot.(field{1}) = [];
+		obj.R.rot.(field{1}) = [];
+	end % for field
+	obj.f.rr = [];
+	obj.f.tt = [];
+	obj.w    = [];
+	obj.stat.stati.p1_all = [];
+	obj.stat.stati.pn_all = [];
 end
 

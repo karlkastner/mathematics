@@ -37,6 +37,9 @@
 %%	- fits of the fisher or beta distribution are highly unstable
 %%
 function [pr, qr1, qrn, ratio, w] = approximate_ratio_distribution(bmsk,nf,ns,fmsk,mdx)
+	if (isempty(fmsk))
+		fmsk = 1;
+	end
 	sb     = size(bmsk);
 
 	% allocate memory
@@ -67,6 +70,7 @@ function approximate_ratio_distribution_(k1,k2)
 	x     = randn(sb(1),sb(2),k2-k1+1);
 
 	% periodogram, normalization not necessary, as ratios are tested
+	% note that we do not have to subtract the mean here, as the expected mean of x is zero
 	Shat  = abs(fft2(bmsk.*x)).^2;
 
 	% approximate the spectral density by smoothing

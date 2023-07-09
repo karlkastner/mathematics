@@ -12,7 +12,7 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function export_shp(obj,shpname)
+function shp = export_shp(obj,shpname)
 
 	mydeal              = @(x) deal(x{:});
 	obj.runtime(end:obj.n,:) = NaN;
@@ -32,17 +32,19 @@ function export_shp(obj,shpname)
 	[shp.isisotropic] = mydeal(num2cell(obj.isisotropic));
 	[shp.p_periodic]  = mydeal(num2cell(obj.p_periodic));
 	[shp.p_S_hp]      = mydeal(num2cell(obj.p_S_hp));
-	[shp.region_id]   = deal(num2cell(obj.region_id));
-%	[shp.region_str]  = deal(obj.region_C(obj.region_id));
+	[shp.region_id]   = mydeal(num2cell(obj.region_id));
+	[shp.region_str]  = mydeal(obj.region_C(obj.region_id));
 	[shp.regulari_r]  = mydeal(num2cell(obj.regularity_r));
 	[shp.regulari_x]  = mydeal(num2cell(obj.regularity_x));
 	[shp.regulari_y]  = mydeal(num2cell(obj.regularity_x));
-	[shp.runtime1]   = mydeal(num2cell(obj.runtime(:,1)));
-	[shp.runtime2]   = mydeal(num2cell(obj.runtime(:,2)));
-	%[shp.slope]      = mydeal(num2cell(slope));
+	[shp.runtime1]    = mydeal(num2cell(obj.runtime(:,1)));
+	if (size(obj.runtime,2)>1)
+		[shp.runtime2]   = mydeal(num2cell(obj.runtime(:,2)));
+	end
 	[shp.waveleng_r]  = mydeal(num2cell(obj.wavelength_r));
 	[shp.waveleng_x]  = mydeal(num2cell(obj.wavelength_x));
-	[shp.quality_check_passed]  = mydeal(num2cell(obj.quality_check()));
+	% note bug in shapewrite, logical variables are not exported
+	[shp.qc_passed]  = mydeal(num2cell(double(obj.quality_check())));
 	
 	shp = Shp.set_geometry(shp,'Point');
 	shp = Shp.nan2zero(shp);

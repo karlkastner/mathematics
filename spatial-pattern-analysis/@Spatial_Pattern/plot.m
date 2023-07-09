@@ -25,9 +25,8 @@ function plot(obj,field_str,varargin)
 	else
 		lambda_c = lambda_c;
 	end
-
 	if (~isvector(var))
-	switch (field_C{end})
+	switch (field_C{1})
 	case {'b'}
 		if (isempty(obj.msk.b))
 			imagesc((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_square);
@@ -40,15 +39,29 @@ function plot(obj,field_str,varargin)
 		axis tight
 		xlabel('$x/\lambda_c$','interpreter','latex');
 		ylabel('$y/\lambda_c$','interpreter','latex');
-	case {'hat','hp','bar'}
-	switch (field_C{1})
+	case {'msk'}
+	switch (field_C{2})
+	case {'f'}
+		imagesc(fftshift(obj.f.x*lambda_c),fftshift(obj.f.y*lambda_c),fftshift(obj.msk.f));
+		axis xy;
+		axis equal;
+		axis tight
+		s = 10;
+		xlim(s*[-1,1]);
+		ylim(s*[-1,1]);
+		colormap(flipud(gray));
+		xlabel('Wavenumber $k_x/k_c$','interpreter','latex');
+		ylabel('Wavenumber $k_y/k_c$','interpreter','latex');
+	end
 	case {'S'}
+	%switch ('hat','hp','bar'}
+	%case {'S'}
 		imagesc(fftshift(obj.f.x*lambda_c),fftshift(obj.f.y*lambda_c),fftshift(var'/lambda_c.^2));
 		%axis(4*[-1,1,-1,1]);
 		axis xy;
-		s = 4;
 		axis equal;
 		axis tight
+		s = 4;
 		xlim(s*[-1,1]);
 		ylim(s*[-1,1]);
 		colormap(flipud(gray));
@@ -68,9 +81,9 @@ function plot(obj,field_str,varargin)
 		axis equal
 		axis tight
 		axis([obj.opt.xlim,obj.opt.xlim]); % rp
-	otherwise
-		error(['Unknown field ', field_str]);
-	end
+%	otherwise
+%		error(['Unknown field ', field_str]);
+%	end
 
 	otherwise
 		error(['Unknown field ', field_str]);

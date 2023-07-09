@@ -53,7 +53,7 @@
 %% S_iso     = (A*S_radial)
 %% S_radial  = A^-1 S_hat
 %%
-function [Sr, fri, count, A] = periodogram_radial(S2d,L)
+function [Sr, fri, Cr, count, A] = periodogram_radial(S2d,L)
 	n = size(S2d);
 	if (nargin()<2)
 		L = n;
@@ -69,7 +69,6 @@ function [Sr, fri, count, A] = periodogram_radial(S2d,L)
 
 	% output axis
 	dfi     = sqrt(df(1).*df(2));
-%ceil(frmax+dfi))';
 	fri_max = min(max(fx),max(fy));
 	fri     = (0:dfi:fri_max);
 
@@ -112,6 +111,13 @@ end
 	
 	% normalize
 	Sr.normalized = Sr.mu./(sum(mid(Sr.mu)).*dfi);
+
+	% cumulative distribution
+	if (nargout()>2)                                           
+	        %Cr = periodogram_cumulative(Sr.normalized,f.ri,'radial');            
+       	        Cr = cumsum(cvec(fri).*cvec(Sr.normalized));                     
+        	Cr = Cr/Cr(end);
+	end
 
 	% matrix
 	if (nargout()>3)

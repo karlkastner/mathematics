@@ -17,10 +17,6 @@
 %% server and later processing
 %%
 function obj = fetch(obj,inshpname,outshpname)
-		% TODO no magic numbers
-		d1 = 2;
-		d2 = 1;
-
 		shp   = Shp.read(inshpname);
 		% important, otherwise masks are not burned
 		shp   = Shp.reassign_id(shp);
@@ -77,7 +73,8 @@ function obj = fetch(obj,inshpname,outshpname)
 				obj.runtime(idx,1) = runtime;
 				save(spname,'sp');
 			end % ~isfield
-			obj.fr_max_target(idx,1) = d2*(sp.stat.q.fr.p50 + d1*(sp.stat.q.fr.p84-sp.stat.q.fr.p50));
+			% TODO : use simpler requirement, like q90 < frmax/2, tail is anyway not normal
+			obj.fr_max_target(idx,1) = (sp.stat.q.fr.p50 + obj.opt.tail_trim_scale*(sp.stat.q.fr.p84-sp.stat.q.fr.p50));
 			%disp([idx,dx,s.(dx_field).q.fr.p50, s.(dx_field).q.fr.p84, s.(dx_field).q.fr.p95, s.(dx_field).q.fr.max, s.fr_max_target < s.(dx_field).q.fr.max]);
 			if (obj.fr_max_target(idx) > sp.stat.q.fr.max);
 				% undersampled

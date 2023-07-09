@@ -36,16 +36,18 @@ classdef Spatial_Pattern_Array < handle
 		type       = '';
 		%e(end:n)           = {[]};
 		%filename_C(end:n)   = {''};
-		opt = struct('test_for_periodicity',true ...
-			     ,'dx_max', 4 ...
-			     ,'dx0', 2 ...
-			     ,'dx_min', 0.5 ...
-			     ,'reload', true ...
+		opt = struct( ... 
+			      'test_for_periodicity',true ...
+			     ,'area_max', 4e6 ...
 			     ,'cmd_str', 'LD_LIBRARY_PATH= python3 vegetation_patterns_fetch_polygons_google_satellite.py %s %g' ...
-			     ,'regularity_min', 0.5 ... % minimum regularity of patterns included in the analysis
-			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
+			     ,'dx0', 2 ...
+			     ,'dx_max', 4 ...
+			     ,'dx_min', 0.5 ...
+			     ,'regularity_min', 0.4 ... % minimum regularity of patterns included in the analysis
+			     ,'reload', true ...
+			     ,'tail_trim_scale', 3 ...
 			     ,'wavelength_max', 500 ...% maximum wavelength for a pattern to be included
-			     ,'area_max', 1e6 ...
+			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
 			    );
 		imgbase  = 'google-satellite_';
 	end
@@ -71,64 +73,64 @@ classdef Spatial_Pattern_Array < handle
 	end
 	function y = area_msk(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.area_msk',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.area_msk',NaN)),obj.sp_a(idx));
 	end
 	function y = contrast(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.contrast',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.contrast',NaN)),obj.sp_a(idx));
 	end
 	function y = coverage(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.coverage',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.coverage',NaN)),obj.sp_a(idx));
 	end
 	function y = isisotropic(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,'stat.isisotropic',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) double(double(getfield_try(x,'stat.isisotropic',NaN))),obj.sp_a(idx));
 	end
 	function y = intS_hp_sig(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.stati.intS_hp_sig',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.stati.intS_hp_sig',NaN)),obj.sp_a(idx));
 	end
 	function y = L_eff_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.L_eff.r',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.L_eff.r',NaN)),obj.sp_a(idx));
 	end
 	function y = L_eff_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.L_eff.x',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.L_eff.x',NaN)),obj.sp_a(idx));
 	end
 	function y = L_eff_y(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.L_eff.y',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.L_eff.y',NaN)),obj.sp_a(idx));
 	end
 
 	function y = p_periodic(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.p_periodic',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.p_periodic',NaN)),obj.sp_a(idx));
 	end
 	function y = p_S_hp(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.p_S_hp',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.p_S_hp',NaN)),obj.sp_a(idx));
 	end
 	function y = wavelength_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) 1./getfield_try(x,'stat.fc.radial.bar',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) 1./double(getfield_try(x,'stat.fc.radial.hp',NaN)),obj.sp_a(idx));
 	end
 	function y = wavelength_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) 1./getfield_try(x,'stat.fc.x.bar',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) 1./double(getfield_try(x,'stat.fc.x.hp',NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.Sc.radial.bar',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.radial.hp',NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.Sc.x.bar',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.x.hp',NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_y(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) getfield_try(x,'stat.Sc.y.bar',NaN),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.y.hp',NaN)),obj.sp_a(idx));
 	end
 	function y = regularity_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
