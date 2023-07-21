@@ -38,6 +38,7 @@ function shp = export_shp(obj,shpname)
 	[shp.regulari_x]  = mydeal(num2cell(obj.regularity_x));
 	[shp.regulari_y]  = mydeal(num2cell(obj.regularity_x));
 	[shp.runtime1]    = mydeal(num2cell(obj.runtime(:,1)));
+	[shp.date]        = mydeal(obj.date);
 	if (size(obj.runtime,2)>1)
 		[shp.runtime2]   = mydeal(num2cell(obj.runtime(:,2)));
 	end

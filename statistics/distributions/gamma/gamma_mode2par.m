@@ -15,7 +15,8 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
-	
+	xm = double(xm);	
+	ym = double(ym);	
 	if (nargin()<3||isempty(p0))
 		% normal approximation
 		[mu,sd] = normpdf_mode2par(xm,ym);

@@ -14,5 +14,5 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 function w = heat_equation_width(t,d)
-	w = sqrt(-2*t*d*log(0.5));
+	w = sqrt(2*t*d*log(2));
 end

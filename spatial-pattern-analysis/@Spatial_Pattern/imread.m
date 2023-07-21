@@ -49,6 +49,7 @@ function [img, alpha, obj] = imread(obj,filename)
 		obj.stat.xy0 = g.xy0;
 		obj.stat.dxy = g.dxy;
 		obj.stat.bangle_rad = g.angle;
+		obj.stat.date = g.info.FileModDate;
 	%catch
 	%	dxy = 1;
 	%	obj.stat.pgw = [];

@@ -22,11 +22,16 @@
 %%
 %% function [D1, d1] = derivative_matrix_1d(n,L,order)
 % TODO allow optionally for circular boundary condition
-function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,bc)
-	if (nargin()< 2 || isempty(L))
-		% choose domain [0 1]
-		L = 1;
+function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
+	if (nargin()<6)
+		isdx = false;
 	end
+	if (nargin()< 2 || isempty(arg2))
+		% choose domain [0 1]
+		arg2 = 1;
+	end
+
+
 	if (nargin() < 3 || isempty(order))
 		order = 2;
 	end
@@ -46,8 +51,13 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,L,order,bc)
 	n = arg1;
 
 	% changed Sat Nov 27 02:01:15 MSK 2010
-	%h = L/(n+1); % n? 1/(n-1);
-	h = L/(n-1);
+	if (~isdx)
+		L = arg2;
+		h = L / (n-1);
+	else
+		h = arg2;
+	end
+
 
 	switch order
 	 case {-1,'-1'}

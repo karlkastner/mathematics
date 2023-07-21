@@ -1,6 +1,19 @@
 % Sat Oct  2 21:21:48 MSD 2010
 % Karl Kästner
 %
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 %% finite derivative matrix of second derivative in one dimension
 % 
 %
@@ -17,10 +30,18 @@
 % 
 %
 % function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
-function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
-	if (nargin()<2||isempty(L))
+function D2 = derivative_matrix_2_1d(nx,arg2,order,bcl,bcr,isdx)
+	if (nargin()<6)
+		isdx = false;
+	end
+	if (nargin()<2||isempty(arg2))
 		% choose domain [0 1]
-		L = 1;
+		arg2 = 1;
+	end
+	if (~isdx)
+		h = arg2/(nx-1);
+	else
+		h = arg2;
 	end
 	if (nargin() < 3 || isempty(order))
 		order = 2;
@@ -51,7 +72,6 @@ function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 		% for dirichlet only interior points
 		% for neumann also exterior points
 		%h = L/(n+1); % n? 1/(n-1); changed Sat Nov 27 02:01:15 MSK 2010
-		h = L/(n-1);
 		switch (order)
 		case {2}
 			% second order: ddu_m := (1/h^2)*(u_l -2u_m + u_n);

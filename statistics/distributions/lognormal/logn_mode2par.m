@@ -17,6 +17,7 @@
 % demonstration, that averaging densities with the same distribution
 % but different regularity results in a density that is more pointed
 % and has heavier tales than the underlying distribution
+% function [lmu,lsd] = logn_mode2param(xm,ym)
 
 function [lmu,lsd] = logn_mode2param(xm,ym)
 	% sqrt(2*pi)*lc*Sc = exp(-1/2*s^2)/s

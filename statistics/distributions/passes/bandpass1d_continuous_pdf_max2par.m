@@ -26,6 +26,8 @@ function [p] = bandpass1d_continuous_pdf_max2par(fc,Sc,p0,pp)
 		pp = [];
 	end
 	% n.b: lsqnonlin works much more reliable than fzero
+	p0 = double(p0);
+	Sc = double(Sc);
 	p  = lsqnonlin(@(p) bandpass1d_continuous_pdf_scale(fc,abs(p),pp) - Sc, p0,0);
 end
 

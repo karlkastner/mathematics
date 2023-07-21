@@ -5,6 +5,6 @@
 %
 function [mu, sd] = logn_param2mode(lmu,lsd)
 	mu = exp(lmu + 0.5*lsd.^2);
-	sd = sqrt(exp(lsd.^2)-1).*exp(lmu+0.5*lsd.^2);
+	sd = sqrt(exp(lsd.^2)-1).*mu; % exp(lmu+0.5*lsd.^2);
 end
 

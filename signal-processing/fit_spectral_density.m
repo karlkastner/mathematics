@@ -63,6 +63,9 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	if (nargin()<8)
 		lb = [];
 	end
+	% for lsqnonlin
+	S = double(S);
+
 	% exclude negative part, as it is redundant
 	% note that ther is otherwise a jump without shifting the fft
 	fdx = f>=0;
@@ -83,6 +86,8 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 			w_ = w(fdx);
 		end
 	end
+	w = double(w);
+	w_ = double(w_);
 
 	% restrict fit to positive half of the plane
 	%fdx  = f>0;
@@ -106,8 +111,12 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	%sum(mid(wS).*diff(f));
 
 	iwS_ = cumint_trapezoidal(f_,wS_);
-	
+
+	par0 = double(par0);	
 	wSp0 = wSfun(par0);
+	wSp0 = double(wSp0);
+
+%	wSfun_ = @(x) double(wSfun(x));
 
 	switch (method)
 	case {'cdf_l1'}
