@@ -25,7 +25,7 @@
 %%
 %% f_ij = int_(x_i - dx/2)^(x_i+dx/2) int_(y_i-dy/2)^(y_j+dy/2) f(x,y) dx dy
 %%
-%% integrals approximated by equal spaced mid-point intervales,
+%% integrals approximated by equal spaced mid-point intervals,
 %% this allows to reduce the double-integral along each dimension into a
 %% single integral and hence to reduce the computational effort from m^4 to m^2
 %%
@@ -39,58 +39,57 @@ function cov_ = cov_cell_averages_2d(cfun,x,y,dx,dy,m,efficient)
 	siz = size(x);
 
 	if (efficient)
-	% efficient integration, double-integrals along each dimension reduced
-	% to single integrals by exploiting stationarity
-	cov_ = m^2*cfun(x,y);
-	dx_ = dx*(1:m)/m;
-	dy_ = dy*(1:m)/m;
-	for idx=1:m-1
-		cov_ = cov_ + (m-idx)*m*cfun((x)-(dx_(idx)),(y));
-		cov_ = cov_ + (m-idx)*m*cfun((x)+(dx_(idx)),(y));
-		cov_ = cov_ + (m-idx)*m*cfun((x),(y)-(dy_(idx)));
-		cov_ = cov_ + (m-idx)*m*cfun((x),(y)+(dy_(idx)));
-		for jdx=1:m-1
-			cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)-(dx_(idx)),(y)-(dy_(jdx)));
-			cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)-(dx_(idx)),(y)+(dy_(jdx)));
-			cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)+(dx_(idx)),(y)-(dy_(jdx)));
-			cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)+(dx_(idx)),(y)+(dy_(jdx)));
-		end % for jdx
-	end
-	cov_ = cov_/m^4;
-	
+		% efficient integration, double-integrals along each dimension reduced
+		% to single integrals by exploiting stationarity
+		cov_ = m^2*cfun(x,y);
+		dx_ = dx*(1:m)/m;
+		dy_ = dy*(1:m)/m;
+		for idx=1:m-1
+			cov_ = cov_ + (m-idx)*m*cfun((x)-(dx_(idx)),(y));
+			cov_ = cov_ + (m-idx)*m*cfun((x)+(dx_(idx)),(y));
+			cov_ = cov_ + (m-idx)*m*cfun((x),(y)-(dy_(idx)));
+			cov_ = cov_ + (m-idx)*m*cfun((x),(y)+(dy_(idx)));
+			for jdx=1:m-1
+				cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)-(dx_(idx)),(y)-(dy_(jdx)));
+				cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)-(dx_(idx)),(y)+(dy_(jdx)));
+				cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)+(dx_(idx)),(y)-(dy_(jdx)));
+				cov_ = cov_ + (m-idx)*(m-jdx)*cfun((x)+(dx_(idx)),(y)+(dy_(jdx)));
+			end % for jdx
+		end
+		cov_ = cov_/m^4;
 	else
-	% explicitly solve the double integral (for testing)
-
-	x = flat(x);
-	y = flat(y);
-	% weights and evaluation points of gauss integral
-	%[w,p] = int_1d_gauss(order);
-	[w,p] = int_1d_equal(m);
-
-	% integrate along x for first cell
-	x1 = 0   + p*(0.5*dx*[-1;1]);
-	% integrate along x for second cell
-	x2 = x + (p*(0.5*dx*[-1;1]))';
-	% integrate along y for first cell
-	y1 = 0   + p*(0.5*dy*[-1;1]);
-	% integrate along y for second cell
-	y2 = y + (p*(0.5*dy*[-1;1]))';
-	cov_ = zeros(prod(siz),1);
-
-	% 2D gauss integration
-	for x1id=1:length(w)
-	 for x2id=1:length(w)
-          for y1id=1:length(w)
-           for y2id=1:length(w)
-		% note it is not necessary to multiply or divide by dx and dy,
-		% as they the multiplication for integration cancels with the division for averaging
-		cov_ = cov_ + w(x1id)*w(x2id)*w(y1id)*w(y2id)*cfun(x1(x1id)-x2(:,x2id),y1(y1id)-y2(:,y2id));
-		%cov_ = cov_ + w(x1id)*w(x2id)*w(y1id)*w(y2id)*rfun(x1(x1id),x2(:,x2id),y1(y1id),y2(:,y2id));
-	   end % for y2id
-	  end % for yi1d
-	 end % for x2id
-	end % for x1id
-	cov_ = reshape(cov_,siz(1),siz(2));
+		% explicitly solve the double integral (for testing)
+	
+		x = flat(x);
+		y = flat(y);
+		% weights and evaluation points of gauss integral
+		%[w,p] = int_1d_gauss(order);
+		[w,p] = int_1d_equal(m);
+	
+		% integrate along x for first cell
+		x1 = 0   + p*(0.5*dx*[-1;1]);
+		% integrate along x for second cell
+		x2 = x + (p*(0.5*dx*[-1;1]))';
+		% integrate along y for first cell
+		y1 = 0   + p*(0.5*dy*[-1;1]);
+		% integrate along y for second cell
+		y2 = y + (p*(0.5*dy*[-1;1]))';
+		cov_ = zeros(prod(siz),1);
+	
+		% 2D gauss integration
+		for x1id=1:length(w)
+		 for x2id=1:length(w)
+	          for y1id=1:length(w)
+	           for y2id=1:length(w)
+			% note it is not necessary to multiply or divide by dx and dy,
+			% as they the multiplication for integration cancels with the division for averaging
+			cov_ = cov_ + w(x1id)*w(x2id)*w(y1id)*w(y2id)*cfun(x1(x1id)-x2(:,x2id),y1(y1id)-y2(:,y2id));
+			%cov_ = cov_ + w(x1id)*w(x2id)*w(y1id)*w(y2id)*rfun(x1(x1id),x2(:,x2id),y1(y1id),y2(:,y2id));
+		   end % for y2id
+		  end % for yi1d
+		 end % for x2id
+		end % for x1id
+		cov_ = reshape(cov_,siz(1),siz(2));
 	end
-end % cov_
+end % cov_cell_averages_2d
 

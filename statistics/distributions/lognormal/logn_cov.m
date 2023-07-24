@@ -47,8 +47,8 @@ function cov_eaeb = logn_cov(r, mu_za, mu_zb, s_za, s_zb)
 		%	     = exp(1 + r
 
 	% this neglects the contribution by mu_za, scaled in later
-	Eea      = exp(mu_za + 0.5*s_za.*s_za);
-	Eeb      = exp(mu_zb + 0.5*s_zb.*s_zb);
+	Eea      = logn_mean(mu_za,s_za);
+	Eeb      = logn_mean(mu_zb,s_zb);
 	Eeaeb    = exp(0.5*(s_za.*s_za + 2*r*s_za.*s_zb + s_zb.*s_zb));
 	cov_eaeb = exp(mu_za + mu_zb).*Eeaeb - Eea*Eeb;
 end

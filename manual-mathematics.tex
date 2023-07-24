@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 29M
+mathematics\protect\\Revision 32M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -1945,6 +1945,11 @@ ${}$
 
 \end{lstlisting}
 \section{linear-algebra}
+\subsection{deflation\_matrix}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{det2x2}
 ${}$
 \begin{lstlisting}
@@ -3415,6 +3420,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{advection\_kernel}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{numerical-methods/differentiation}
 \subsection{derivative1}
 ${}$
@@ -3427,12 +3437,6 @@ ${}$
 ${}$
 \begin{lstlisting}
  second derivative on a variable mesh
-
-\end{lstlisting}
-\section{numerical-methods}
-\subsection{diffuse\_analytic}
-${}$
-\begin{lstlisting}
 
 \end{lstlisting}
 \section{numerical-methods/finite-difference}
@@ -5528,6 +5532,80 @@ ${}$
 
 \end{lstlisting}
 \section{numerical-methods}
+\subsection{step\_advect\_euler\_explicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_diffuse\_analytic}
+${}$
+\begin{lstlisting}
+ analytic solution to the heat equation
+ the spectral solution is not positivity preserving as it results in 
+ spurious oscillations, this is avoided here, by integrating over segments
+ rather than sampling at gridpoints
+
+\end{lstlisting}
+\subsection{step\_diffuse\_euler\_explicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_diffuse\_euler\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_diffuse\_spectral}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_diffuse\_trapezoidal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_euler\_explicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_euler\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_midpoint}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_ralston}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_ralston\_exp}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_ralston\_exp\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_semi\_analytic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{step\_react\_trapezoidal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_adams\_bashforth}
 ${}$
 \begin{lstlisting}
@@ -5545,6 +5623,16 @@ ${}$
 \end{lstlisting}
 \section{pdes}
 \subsection{heat\_equation\_fundamental\_solution}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{heat\_equation\_fundamental\_std\_to\_time}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{heat\_equation\_std}
 ${}$
 \begin{lstlisting}
 
@@ -6916,26 +7004,42 @@ ${}$
 \begin{lstlisting}
  test a periodogram for hidden periodic frequency components
  
- [p,stat,ratio] = periodogram_test_periodicity_2d(b, nf, bmsk, fmsk, ns)
+ [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, significance_level)
 
  input:
 	b    (nx * ny): image to test for presence of hidden periodicities,
              i.e. periodicities where the frequency is not known a priori
-      nf   = nfr or [nfx, nfy]
+	L    : domain size in arbitrary units, default is n
+	       only effects scaling of complementary outout Shat and Sbar
+	       does not effect test as it cancels out in the tested ratio Shat/Sbar
+      nf   : nfr or [nfx, nfy]
 	       radius of circular disk (in number of bins) used for smoothing
              the periodogram to estimate the spectral density,
 	       or axes of ellipses for smoothing
 	       when b is not square a good choice is nfx/nfy ~ Lx/Ly
       bmsk : mask in real space selecting parts of the image to include in
-	       the analysis default is entire image
+	       the analysis. default is the entire image
 	       the mask can have non-integer values to feather the borders of the mask
 	fmsk : mask in frequency selecting frequencies to test for periodicity
 	       default is all frequencies
 	       note: when b is real, one half plane can always be excluded
 	       because of symmetry. This slightly increases the significance
-	ns   : number of samples for the monte-carlo determination of
+	n_mc : number of samples for the monte-carlo determination of
 	       the test statistics, mc is only used when parts of the image are masked
 	       otherwise the analytic test statistic is used 
+	siginificance_level : 
+
+ output : 
+	pn   : p-value of largest frequency component with largest ratio Shat/Sbar
+             when testing all frequency components selected by fmsk
+	stat.max.ratio     : max ratio value of Shat/Sbar
+	stat.max.Shat      : periodigoram value of frequency component with max ratio
+	stat.max.Shat_rel  : spectral energy contained frequency component with max ratio
+	stat.max.fx        : x-component of frequency at max ratio
+	stat.max.fy        : y-component of frequency of max ratio
+	stat.intShat_sig   : spectral energy contained in all significant frequency bins
+	stat.p1            : p-value of all frequency components
+	stat.pn            : p-value of all frequency components, corrected for multiple comparisons
 
  influence of masking the input file:
  	      - the root-mean-square energy of the ordinates is proportional
@@ -7442,6 +7546,11 @@ ${}$
  read an image file containing a pattern, mask and geospatial data
 
 \end{lstlisting}
+\subsection{init}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{plot}
 ${}$
 \begin{lstlisting}
@@ -7625,7 +7734,7 @@ ${}$
 
  f_ij = int_(x_i - dx/2)^(x_i+dx/2) int_(y_i-dy/2)^(y_j+dy/2) f(x,y) dx dy
 
- integrals approximated by equal spaced mid-point intervales,
+ integrals approximated by equal spaced mid-point intervals,
  this allows to reduce the double-integral along each dimension into a
  single integral and hence to reduce the computational effort from m^4 to m^2
 
@@ -8091,6 +8200,8 @@ ${}$
 \subsection{logn\_corr}
 ${}$
 \begin{lstlisting}
+ function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
+
  correlation of two log-normal random variables, where the log of the variables
  is correlated with r
 
@@ -9796,9 +9907,15 @@ ${}$
 ${}$
 \begin{lstlisting}
  simulate a grid cell averaged stochastic process exp(z)
- where z follows an Ornstein-Uhlenbeck (AR1) process
+ where z follows a geometric Ornstein-Uhlenbeck (AR1) process
  with mean lmu, standard deviatian sd and stationary autocorrelation
+
+ val = exp(z)
+ mean(z) = lmu
+ std(z)  ) ls
  corr(z(0,0),z(x,y)) = exp(-sqrt(x^2 + y^2)/theta)
+
+
 
 \end{lstlisting}
 \subsection{geometric\_ar1\_2d\_grid\_cell\_averaged\_moment2par}
@@ -10339,6 +10456,12 @@ ${}$
 \end{lstlisting}
 \section{test/numerical-methods/optimisation}
 \subsection{test\_extreme3}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{test/numerical-methods}
+\subsection{test\_advection\_kernel}
 ${}$
 \begin{lstlisting}
 

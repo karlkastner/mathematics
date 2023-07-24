@@ -13,20 +13,30 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%
+% test 1 : for dx -> 0, correlation approaches the uncorrelated cases
+% test 2 : for dx finite, correlation is larger
+%
+
 % uni-directional
 order = 9;
 Lr = 1;
 cfun = @(x,y) exp(-abs(x)/Lr)
+cfun = @(x,y) exp(-hypot(x,y)/Lr)
 %cfun = @(x,y) 0.5*(abs(x)<0.5);
 L_ = 4;
 %cfun = @(x,y) (1-abs(x/L_)).*(abs(x/L_)<1)
 %cfun = @(x,y) 0;
 dx = 1;
+dx = 0.001;
 dy = dx;
 
 
-x = [0,1,2,3,4,5]*dx;
-y = [0,0,0,4,5];
+% distance along x
+x = [0,1,2,3,4,5];
+% distane along y
+%y = [0,0,0,0,0,0];
 c = cov_cell_averages_2d(cfun,x,y,dx,dy,order)
 r=c/c(1)
 

@@ -13,8 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function [lmu,lsd,lr] = logn_moment2param_correlated(mu,sd,r)
-	[lmu,lsd]     = logn_moment2param(mu,sd);
-	lr            = (log(exp(ls^2) + r*exp(-2*lm)) - ls^2)/ls^2;
+function [lmu,lsd,lr] = logn_moment2par_correlated(mu,sd,r)
+	[lmu,lsd]     = logn_moment2par(mu,sd);
+	lr = log(1 + r.*(exp(lsd.^2) - 1))./lsd.^2;
 end
 

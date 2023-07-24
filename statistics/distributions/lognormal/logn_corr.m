@@ -14,27 +14,29 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+%% function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
+%%
 %% correlation of two log-normal random variables, where the log of the variables
 %% is correlated with r
-function corr_eaeb = corr_logn(r,mu_za,mu_zb,s_za,s_zb)
+function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
 	if (nargin()<2)
-		mu_za = 0;
+		lmu_a = 0;
 	end
 	if (nargin()<3)
-		mu_zb = 0;
+		lmu_b = 0;
 	end
 	if (nargin()<4)
-		s_za = 1;
+		lsd_a = 1;
 	end
 	if (nargin()<5)
-		s_zb = 1;
+		lsd_b = 1;
 	end
 	% standard deviation
-	s_ea = sqrt(exp(s_za.*s_za) - 1).*exp(mu_za + 0.5*s_za.*s_za);
-	s_eb = sqrt(exp(s_zb.*s_zb) - 1).*exp(mu_zb + 0.5*s_zb.*s_zb);
+	sd_ea = logn_std(lmu_a,lsd_a);
+	sd_eb = logn_std(lmu_b,lsd_b);
 	% covariance
-	cov_eaeb = logn_cov(r,mu_za,mu_zb,s_za,s_zb);
+	cov_eaeb = logn_cov(lr,lmu_a,lmu_b,lsd_a,lsd_b);
 	% correlation
-	corr_eaeb = cov_eaeb ./(s_ea.*s_eb);
+	corr_eaeb = cov_eaeb ./(sd_ea.*sd_eb);
 end
 
