@@ -18,6 +18,8 @@
 %%
 function obj = fetch(obj,inshpname,outshpname)
 		shp   = Shp.read(inshpname);
+		% optionally skip patterns for quick testing
+		shp = shp(1:obj.opt.skip:end);
 		% important, otherwise masks are not burned
 		shp   = Shp.reassign_id(shp);
 		n     = length(shp);

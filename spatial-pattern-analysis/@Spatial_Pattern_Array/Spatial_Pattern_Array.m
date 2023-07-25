@@ -48,6 +48,7 @@ classdef Spatial_Pattern_Array < handle
 			     ,'tail_trim_scale', 3 ...
 			     ,'wavelength_max', 500 ...% maximum wavelength for a pattern to be included
 			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
+			     , 'skip', 1 ...
 			    );
 		imgbase  = 'google-satellite_';
 	end
