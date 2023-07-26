@@ -50,7 +50,8 @@ function obj = fetch(obj,inshpname,outshpname)
 
 			[folder,filename,folder_a] = obj.generate_filename(idx,dx);
 			obj.filename_C{idx}    = filename;
-			mkdir([folder,filesep,'analysis']);
+			%mkdir([dirname(folder),filesep,'analysis',filesep,basename(folder)]);
+
 			spname = [folder_a,filesep,filename(1:end-4),'.mat'];
 			disp([obj.type, ' ', num2str(dx), ' ', num2str(idx), ' quantile estimation ', filename]);
 			
@@ -73,6 +74,7 @@ function obj = fetch(obj,inshpname,outshpname)
 				runtime = toc(timer)-t0;
 				% note, that only stores runtime of pattern preparation in highest resolution
 				obj.runtime(idx,1) = runtime;
+				mkdir(folder_a);
 				save(spname,'sp');
 			end % ~isfield
 			% TODO : use simpler requirement, like q90 < frmax/2, tail is anyway not normal

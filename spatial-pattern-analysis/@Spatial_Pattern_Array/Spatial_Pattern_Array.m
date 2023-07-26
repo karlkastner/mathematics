@@ -86,7 +86,7 @@ classdef Spatial_Pattern_Array < handle
 	end
 	function y = date(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,'stat.date',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) getfield_try(x,'stat.date',''),obj.sp_a(idx),'uniformoutput',false);
 	end
 	function y = isisotropic(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
