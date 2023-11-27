@@ -63,8 +63,7 @@ function fit_parametric_densities(obj)
 	stat.fit.x.gamma.par  = par;
 	stat.fit.x.gamma.stat = fitstat;
 
-	% wrapped-normal
-	% TODO
+	% TODO wrapped-normal
 
 	% fit parametric density models in the direction perpendicular to the bands
 	fy = obj.f.y;
@@ -76,7 +75,19 @@ function fit_parametric_densities(obj)
 	stat.fit.y.phase_drift_parallel.par  = pary;
 	stat.fit.y.phase_drift_parallel.stat = fitstat;
 
-	% TODO gamma, exponential
+
+	% flat density of white noise
+	% TODO weight
+	S.fit.x.white = mean(S.rot.x.hat)*ones(size(S.rot.x.hat));
+	stat.fit.x.white.stat.goodness.r2 = 1 - rms(S.rot.x.hat - S.fit.x.white).^2./var(S.rot.x.hat);
+
+	% periodic
+	flag = obj.f.x>=0;
+	[mv,mdx] = max(S.rot.x.hat.*flag); 
+	S.fit.x.periodic = zeros(size(S.rot.x.hat));
+	S.fit.x.periodic(mdx) = sum(S.rot.x.hat.*flag);
+	stat.fit.x.periodic.stat.goodness.r2 = 1 - rms(S.rot.x.hat(flag) - S.fit.x.periodic(flag)).^2./var(S.rot.x.hat(flag));
+
 
 	% fit parametric density models to the radial density
 
@@ -100,17 +111,11 @@ function fit_parametric_densities(obj)
 	% log-normal
 	[par0(1),par0(2)] = logn_mode2par(fc.radial.hat,Sc.radial.hat);
 	Sfun = @lognpdf;
-%'molch'
-%obj.opt.objective
-%nf
+
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.radial.logn  = Sfit;
 	stat.fit.radial.logn.par  = par;
 	stat.fit.radial.logn.stat = fitstat;
-%clf
-%plot(obj.f.r,obj.w.r.*[S.radial.hat,Sfit,lognpdf(obj.f.r,par0(1),par0(2))])
-%pause
-
 
 	% gamma
 	[par0(1),par0(2)] = gamma_mode2par(fc.radial.bar,Sc.radial.bar);
@@ -124,14 +129,13 @@ function fit_parametric_densities(obj)
 	% TODO weight
 	S.fit.radial.white = mean(S.radial.hat)*ones(size(S.radial.hat));
 	stat.fit.radial.white.stat.goodness.r2 = 1 - rms(S.radial.hat - S.fit.radial.white).^2./var(S.radial.hat)
-	S.fit.x.white = mean(S.rot.x.hat)*ones(size(S.rot.x.hat));
-	stat.fit.x.white.stat.goodness.r2 = 1 - rms(S.rot.x.hat - S.fit.x.white).^2./var(S.rot.x.hat);
+
 	% periodic
-	S.fit.radial.periodic = zeros(size(S.radial.hat));
 	flag = obj.f.r>=0;
 	[mv,mdx] = max(S.radial.hat.*flag); 
+	S.fit.radial.periodic = zeros(size(S.radial.hat));
 	S.fit.radial.periodic(mdx) = sum(S.radial.hat.*flag);
-	stat.fit.radial.periodic.stat.goodness.r2 = 1 - rms(S.radial.hat(fdx) - S.fit.radial.periodic(fdx)).^2./var(S.radial.hat(fdx));
+	stat.fit.radial.periodic.stat.goodness.r2 = 1 - rms(S.radial.hat(flag) - S.fit.radial.periodic(flag)).^2./var(S.radial.hat(flag));
 
 	obj.stat = stat;
 	obj.S    = S;

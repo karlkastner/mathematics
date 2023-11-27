@@ -1,4 +1,4 @@
-% Fri 22 Apr 14:05:05 CEST 2022
+% Fri 22 Apr 13:28:53 CEST 2022
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,18 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-% unnormalized (radial) density of the pth-order lowpass in two dimensions
-% continuous space
-% function S = lowpass2d_pdf(fr,a,order)
-function S = lowpass2d_pdf(fr,a,order)
-	S = zeros(size(fr));
-	for idx=1:numel(fr)
-		S(idx) = integral(@(r) besselj(0,(2*pi)*r*fr(idx)).*r.*exp(-a*r),0,inf);
-	end
-	% S0 = int r S J0(r k) dk = 1/a^2
-	S0 = a^2;
-	% scale S(0) to 1
-	S = S/S0;
-	S=S/S(1);
+%% function Sb = bandpass2d_continuous_pdf(fr,a,order)
+%% not normalized, max (S) = 1;
+function Sb = bandpass2d_continuous_pdf(fr,a,order)
+	% lowpass density
+	Sl = lowpass2d_continuous_pdf(fr,a,[]);
+	% bandpass density
+	Sb = 4*Sl.*(1.0-Sl);
+	% round of error
+	Sb = max(0,Sb);
+	% higher order
 	if (nargin()>2 && ~isempty(order))
-		S = S.^order;
+		Sb = Sb.^order;
 	end
-	% TODO normalize
 end
 

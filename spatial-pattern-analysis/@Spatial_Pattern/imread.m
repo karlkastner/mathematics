@@ -15,28 +15,31 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 %% read an image file containing a pattern, mask and geospatial data
-function [img, alpha, obj] = imread(obj,filename)
+function [g, alpha, obj] = imread(obj,filename)
 	g = GeoImg();
 	g.read(filename);
+
+	b = g.img;
+
 	%[img, map, alpha] = imread(filename);
 	if (~isempty(g.map))
 		error('Convert indexed images to grayscale or RGB first');
 	end
 	switch (obj.opt.datatype)
 	case {'single'}
-		img = single(g.img);
+		b = single(b);
 	case {'double'}
-		img = double(g.img);
+		b = double(b);
 	otherwise
 		error('Dataype must be single or double');
 	end
-	if (3 == ndims(img))
+	if (3 == ndims(b))
 		% sloppy conversion to grayscale
-		img = mean(img,3);
+		b = mean(b,3);
 	end
 
 	% invert to get biomass proxy
-	b = max(img,[],'all')-img;
+	b = max(b,[],'all')-b;
 	% stretch contrast to 1
 	b = b./max(b,[],'all');
 

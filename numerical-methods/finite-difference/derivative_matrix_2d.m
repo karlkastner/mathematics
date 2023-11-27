@@ -1,9 +1,25 @@
 % Tue 13 Mar 12:20:15 CET 2018
 % Karl Kastner, Berlin
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 %
 %% finite difference derivative matrix in two dimensions
-% function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,circular)
+% function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,bc)
 function [Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,L,order,bc)
+	if (1 == length(order))
+		order(2) = order(1);
+	end
 	% first oder derivative matrices
 	Dx1  = derivative_matrix_1_1d(n(1),L(1),order,bc{1});
 	Dy1  = derivative_matrix_1_1d(n(2),L(2),order,bc{2});

@@ -14,35 +14,35 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 function z = step_react_advection_diffusion(t,y,afun,bfun)
-		% y' = a*y + b
-		% y(t) = (exp(a*t)*(b/a + y0) - b/a);
-		% fixed point iteration
-		% this is better solved with NR, but this requires solution of a linear system
-		kmax = 100;
-		kdx = 0;
-		o = ones(prod(obj.n),1);
-		% pade iteration
-		% TODO use function (bcfgf)
-		z0 = z;
-		a0 = afun(t,z0);
-		b0 = bfun(t,z0);
-		while (1)
-			kdx = kdx+1;
-			a = afun(t,z);
-			b = bfun(t,z);
-			%y = exp(0.5*dt*(a0+a)).*y0 + 0.5*dt*(b + b0);
-			z_ = ((1 + 0.5*dt*a0).*y0 + 0.5*dt*(b + b0))./(1 - 0.5*a*dt);
-			dz = rms(z - z_);
-			z = z_;
-			if (dz<tol)
-				break;
-			end
-			if (~isfinite(dz))
-				error(['isnan', num2str(kdx), ' ', num2str(dz)]);
-			end
-			if (kdx>kmax)
-				error(['no convergence ', num2str(kdx), ' ', num2str(dz)]);
-			end
+	% y' = a*y + b
+	% y(t) = (exp(a*t)*(b/a + y0) - b/a);
+	% fixed point iteration
+	% this is better solved with NR, but this requires solution of a linear system
+	kmax = 100;
+	kdx = 0;
+	o = ones(prod(obj.n),1);
+	% pade iteration
+	% TODO use function (bcfgf)
+	z0 = z;
+	a0 = afun(t,z0);
+	b0 = bfun(t,z0);
+	while (1)
+		kdx = kdx+1;
+		a = afun(t,z);
+		b = bfun(t,z);
+		%y = exp(0.5*dt*(a0+a)).*y0 + 0.5*dt*(b + b0);
+		z_ = ((1 + 0.5*dt*a0).*y0 + 0.5*dt*(b + b0))./(1 - 0.5*a*dt);
+		dz = rms(z - z_);
+		z = z_;
+		if (dz<tol)
+			break;
 		end
+		if (~isfinite(dz))
+			error(['isnan', num2str(kdx), ' ', num2str(dz)]);
+		end
+		if (kdx>kmax)
+			error(['no convergence ', num2str(kdx), ' ', num2str(dz)]);
+		end
+	end
 end
 

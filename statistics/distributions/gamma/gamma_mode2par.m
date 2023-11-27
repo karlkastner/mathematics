@@ -23,8 +23,8 @@ function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 		% now we know that
 		[p0(1), p0(2)] = gamma_moment2par(mu,sd);
 	end
-	opt = optimset('MaxFunEvals',1e4,'MaxIter',1e3,'Display','notify');
-	l = lsqnonlin(@resfun,p0,[],[],opt);
+	opt = optimset('MaxFunEvals',1e4,'MaxIter',1e3,'Display','off');
+	[l,resn,res,flag] = lsqnonlin(@resfun,p0,[],[],opt);
 %	if (flag ~= 1)
 %		warning(sprintf('lsqnonlin did terminate without converging %d\n',flag));
 %	end

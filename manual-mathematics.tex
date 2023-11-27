@@ -16,7 +16,7 @@ breaklines=true
 \setlength{\cftsubsecnumwidth}{3.5em}
 
 \title{Manual for Package:
-mathematics\protect\\Revision 34M
+mathematics\protect\\Revision 35M
 }
 \author{Karl K\"astner}
 %\date{}
@@ -178,6 +178,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{derive\_error\_step\_euler\_implicit}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_error\_step\_trapezoidal}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{derive\_fourier\_power}
 ${}$
 \begin{lstlisting}
@@ -204,6 +214,16 @@ ${}$
 
 \end{lstlisting}
 \subsection{derive\_phase\_drift\_inv}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_pni\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{derive\_pni\_tf}
 ${}$
 \begin{lstlisting}
 
@@ -581,6 +601,21 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{coherence}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{coherence\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{coherence\_radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{dftmtx\_man}
 ${}$
 \begin{lstlisting}
@@ -601,6 +636,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{fft2\_cartesian2radial}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fft2\_periodically\_extended}
 ${}$
 \begin{lstlisting}
 
@@ -964,6 +1004,16 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{fourier\_upsample}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{fourier\_upsample2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{hyperbolic\_fourier\_box}
 ${}$
 \begin{lstlisting}
@@ -975,6 +1025,11 @@ ${}$
  inverse matrix for the discrete fourier transform in matlab style
  with a limited number of columns, thus ignoring higher frequencies
  keep 2nc+1 columns (mean and conj-complex pairs of nc frequencies)
+
+\end{lstlisting}
+\subsection{ifft2\_periodically\_extended}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{laplace\_2d\_pwlinear}
@@ -1975,6 +2030,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{down}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{downsampling\_matrix}
 ${}$
 \begin{lstlisting}
 
@@ -3113,12 +3173,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{upsampling\_matrix}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{vander\_nd}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
 \subsection{vanderd\_2d}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{zeros\_man}
 ${}$
 \begin{lstlisting}
 
@@ -3480,7 +3550,7 @@ ${}$
  n : number of grid points
  h = L/(n+1) constant step with
 
- function [D1, d1] = derivative_matrix_1d(n,L,order)
+ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 
 \end{lstlisting}
 \subsection{derivative\_matrix\_2\_1d}
@@ -5636,6 +5706,8 @@ ${}$
 ${}$
 \begin{lstlisting}
 
+ function y = heat_equation_fundamental_solution(t,x,d,t0,x0)
+
 \end{lstlisting}
 \subsection{heat\_equation\_fundamental\_std\_to\_time}
 ${}$
@@ -5645,6 +5717,7 @@ ${}$
 \subsection{heat\_equation\_std}
 ${}$
 \begin{lstlisting}
+ function sd = heat_equation_std(t,d)
 
 \end{lstlisting}
 \subsection{heat\_equation\_width}
@@ -6236,6 +6309,11 @@ ${}$
  function x = csmooth(x,n,p,circ)
 
 \end{lstlisting}
+\subsection{cutoff\_frequency}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{daniell\_window}
 ${}$
 \begin{lstlisting}
@@ -6636,7 +6714,7 @@ ${}$
  convert neper to db
 
 \end{lstlisting}
-\subsection{oscillator\_noisy}
+\subsection{nonlinear\_oscillator\_noisy}
 ${}$
 \begin{lstlisting}
 
@@ -7014,7 +7092,7 @@ ${}$
 \begin{lstlisting}
  test a periodogram for hidden periodic frequency components
  
- [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, significance_level)
+ [issignificant,pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, significance_level)
 
  input:
 	b    (nx * ny): image to test for presence of hidden periodicities,
@@ -7040,6 +7118,7 @@ ${}$
 	siginificance_level : 
 
  output : 
+      issignificant      : true if pattern contains significant frequency components (pn <= significance_level)
 	pn   : p-value of largest frequency component with largest ratio Shat/Sbar
              when testing all frequency components selected by fmsk
 	stat.max.ratio     : max ratio value of Shat/Sbar
@@ -7670,17 +7749,22 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{hexagonal\_pattern}
+\subsection{generate\_isotropic\_pattern}
 ${}$
 \begin{lstlisting}
- function [z, x, y, xx, yy, xe, ye] = hexagonal_pattern(fc,n,L,angle0_rad,scale,sbm,p,q)
+ function [z, x, y, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,angle0_rad,p,q,st,rotarg,scalearg)
 
  spot pattern of unit amplitude
  output : z : pattern
 	   x : x-coordinate
 	   y : y-coordinate
  
- Note : z_gap = 1 - z_spot
+ note : rotation, scaling and displacement cannot be fully independently controlled
+
+\end{lstlisting}
+\subsection{isisotropic}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \subsection{patch\_size\_1d}
@@ -7689,11 +7773,6 @@ ${}$
 
 \end{lstlisting}
 \subsection{patch\_size\_2d}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{pattern\_isotropic\_rotated}
 ${}$
 \begin{lstlisting}
 
@@ -7984,6 +8063,72 @@ ${}$
  c.f. stephens
 
 \end{lstlisting}
+\section{statistics/distributions/damped-oscillator}
+\subsection{damped\_oscillator\_1d\_discrete\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_1d\_discrete\_ir}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_1d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_1d\_discrete\_tf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_2d\_discrete\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_2d\_discrete\_ir}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_2d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_2d\_discrete\_tf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_continuous\_ir}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_continuous\_mode}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_continuous\_mode2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_continuous\_pdf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{damped\_oscillator\_continuous\_tf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{statistics/distributions/edgeworth}
 \subsection{edgeworth\_cdf}
 ${}$
@@ -8003,6 +8148,11 @@ ${}$
 
 \end{lstlisting}
 \section{statistics/distributions/exp}
+\subsection{correxprnd}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{exppdf\_max2par}
 ${}$
 \begin{lstlisting}
@@ -8025,6 +8175,11 @@ ${}$
 
 \end{lstlisting}
 \section{statistics/distributions/gamma}
+\subsection{gamma\_kurt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gamma\_mean}
 ${}$
 \begin{lstlisting}
@@ -8046,6 +8201,11 @@ ${}$
  transform modes (mu,sd) to parameters of the gamma distribution
 
 \end{lstlisting}
+\subsection{gamma\_skew}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{gamma\_std}
 ${}$
 \begin{lstlisting}
@@ -8062,6 +8222,16 @@ ${}$
 
 \end{lstlisting}
 \subsection{generalized\_gamma\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gamma\_kurt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_gamma\_skew}
 ${}$
 \begin{lstlisting}
 
@@ -8224,6 +8394,11 @@ ${}$
  where za, zb are standard normal distributed and correlated
 
 \end{lstlisting}
+\subsection{logn\_kurt}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{logn\_mean}
 ${}$
 \begin{lstlisting}
@@ -8274,6 +8449,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{lognpdf\_entropy}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_logn\_kurt}
 ${}$
 \begin{lstlisting}
 
@@ -8387,38 +8567,39 @@ ${}$
  spectral density of the discrete spatial (two-sided) bandpass filter
 
 \end{lstlisting}
-\subsection{bandpass2d\_discrete\_pdf}
+\subsection{bandpass2d\_continuous\_pdf\_exact}
 ${}$
 \begin{lstlisting}
-
-\end{lstlisting}
-\subsection{bandpass2d\_pdf\_exact}
-${}$
-\begin{lstlisting}
- function Sb = bandpass2d_pdf(fr,a,order)
+ function Sb = bandpass2d_continuous_pdf(fr,a,order)
  not normalized, max (S) = 1;
 
 \end{lstlisting}
-\subsection{bandpass2d\_pdf\_hankel}
+\subsection{bandpass2d\_continuous\_pdf\_hankel}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{bandpass2d\_pdf\_mode}
+\subsection{bandpass2d\_continuous\_pdf\_mode}
 ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{bandpass2d\_pdf\_mode2par}
+\subsection{bandpass2d\_continuous\_pdf\_mode2par}
 ${}$
 \begin{lstlisting}
  transform mode (maxima) of the bandpass spectral density into the paramter
  of the underlying distribution 
 
 \end{lstlisting}
-\subsection{bandpass2d\_pdf\_scale}
+\subsection{bandpass2d\_continuous\_pdf\_scale}
 ${}$
 \begin{lstlisting}
+
+\end{lstlisting}
+\subsection{bandpass2d\_discrete\_pdf}
+${}$
+\begin{lstlisting}
+ two dimensional spectral density of a discrete bandpass filter (dx finite)
 
 \end{lstlisting}
 \subsection{highpass1d\_continuous\_pdf}
@@ -8501,28 +8682,24 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsection{lowpass2d\_discrete\_acf}
+\subsection{lowpass2d\_continuous\_pdf}
 ${}$
 \begin{lstlisting}
- truncated, not wrapped at the end
+ radial spectral density of the pth-order lowpass in two dimensions
+ and continuous space
+ with autocorrelation
+ R = exp(-a*sqrt(x^2 + y^2))
+
+ determined by numerical integration of the exact expression
+
 
 \end{lstlisting}
-\subsection{lowpass2d\_discrete\_pdf}
+\subsection{lowpass2d\_continuous\_pdf\_hankel}
 ${}$
 \begin{lstlisting}
+ radial spectral density of a two-dimensional lowpass filter with autocorrelation
 
-\end{lstlisting}
-\subsection{lowpass2d\_pdf}
-${}$
-\begin{lstlisting}
-
-\end{lstlisting}
-\subsection{lowpass2d\_pdf\_hankel}
-${}$
-\begin{lstlisting}
- spectral density of the two-dimensional lowpass filter with autocorrelation
-
- r = exp(-a*sqrt(x^2 + y^2))
+ R = exp(-a*sqrt(x^2 + y^2))
 
  efficiently estimated with gauss-laguerre integration and 1D-FFT:
 
@@ -8535,7 +8712,18 @@ ${}$
 
 
 \end{lstlisting}
-\subsection{lowpass2d\_pdf\_series}
+\subsection{lowpass2d\_continuous\_pdf\_series}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{lowpass2d\_discrete\_acf}
+${}$
+\begin{lstlisting}
+ truncated, not wrapped at the end
+
+\end{lstlisting}
+\subsection{lowpass2d\_discrete\_pdf}
 ${}$
 \begin{lstlisting}
 
@@ -8696,6 +8884,27 @@ ${}$
 ${}$
 \begin{lstlisting}
  random numbers of the triangular distribution
+
+\end{lstlisting}
+\section{statistics/distributions/uniform}
+\subsection{uniform\_mean}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{uniform\_moment2par}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{uniform\_std}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{uniformrnd}
+${}$
+\begin{lstlisting}
 
 \end{lstlisting}
 \section{statistics/distributions/weibull}
@@ -9961,6 +10170,26 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{poisson\_noise}
+${}$
+\begin{lstlisting}
+ triggers events when the time step counter tdx reaches the value of next
+ sets the time of the next event according to the poisson random number with rate "rate"
+ there is the possibility that the random number is zero, in this case
+ several events happen simultaneously at the current step,
+ the counter "event" returns the number of events happening at the current time step
+
+\end{lstlisting}
+\subsection{random\_field\_rotated}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{random\_field\_scaled}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \section{mathematics}
 \begin{lstlisting}
 mathematical functions of various kind
@@ -11008,6 +11237,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_coherence\_2}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_combined\_spectral\_density}
 ${}$
 \begin{lstlisting}
@@ -11019,6 +11253,11 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_convexity}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_cov\_cell\_averages\_2d\_efficient}
 ${}$
 \begin{lstlisting}
 
@@ -11153,6 +11392,11 @@ ${}$
 \begin{lstlisting}
 
 \end{lstlisting}
+\subsection{test\_isisotropic}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
 \subsection{test\_ivp}
 ${}$
 \begin{lstlisting}
@@ -11234,6 +11478,21 @@ ${}$
 
 \end{lstlisting}
 \subsection{test\_parcorr}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_noise\_integration\_1d\_discrete\_acf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_noise\_integration\_1d\_discrete\_tf}
+${}$
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsection{test\_phase\_noise\_integration\_2d\_discrete\_acf}
 ${}$
 \begin{lstlisting}
 

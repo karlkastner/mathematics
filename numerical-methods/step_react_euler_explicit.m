@@ -1,4 +1,5 @@
 % 2023-07-21 12:33:59.867219986 +0200
+% Karl Kastner, Berlin
 %
 %  This program is free software: you can redistribute it and/or modify
 %  it under the terms of the GNU General Public License as published by
@@ -14,7 +15,8 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function z = step_react_euler_explicit(t,z,dt,afun,bfun)
-			a = afun(t,z);
-			b = bfun(t,z);
-			z = (1 + dt*a).*y + dt*b;
+	a = afun(t,z);
+	b = bfun(t,z);
+	z = (1 + dt*a).*y + dt*b;
 end
+

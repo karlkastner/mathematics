@@ -119,10 +119,10 @@ function prepare_analysis(obj)
 	fdx = [true; cvec(Cr(2:end)~=Cr(1:end-1))];
 
 	% quantiles
-	obj.stat.q.fr.p05 = interp1(Cr(fdx),obj.f.r,0.05,'linear');
-	obj.stat.q.fr.p50 = interp1(Cr(fdx),obj.f.r,0.50,'linear');
-	obj.stat.q.fr.p84 = interp1(Cr(fdx),obj.f.r,0.84,'linear');
-	obj.stat.q.fr.p95 = interp1(Cr(fdx),obj.f.r,0.95,'linear');
+	obj.stat.q.fr.p05 = interp1(Cr(fdx),obj.f.r(fdx),0.05,'linear');
+	obj.stat.q.fr.p50 = interp1(Cr(fdx),obj.f.r(fdx),0.50,'linear');
+	obj.stat.q.fr.p84 = interp1(Cr(fdx),obj.f.r(fdx),0.84,'linear');
+	obj.stat.q.fr.p95 = interp1(Cr(fdx),obj.f.r(fdx),0.95,'linear');
 	obj.stat.q.fr.max = obj.f.r(end);
 
 	obj.C.r = Cr;

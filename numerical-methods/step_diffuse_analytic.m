@@ -21,7 +21,7 @@
 %% rather than sampling at gridpoints
 %
 % dy/dt = e*D^2*y
-function z = diffuse_analytic(t,z,nx,dx,e)
+function z = step_diffuse_analytic(t,z,nx,dx,e)
 
 
 	% diffuse along first dimension

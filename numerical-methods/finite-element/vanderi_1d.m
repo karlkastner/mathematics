@@ -1,8 +1,20 @@
 % Fri  6 Jan 15:46:15 CET 2017
 % Karl Kästner, Berlin
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % vander monde matrix of the dth-derivative
-%function V = vanderd_1d(x,d,order)
+%function V = vanderi_1d(x,order,d)
 % TODO change definition to make d last argument
 function V = vanderi_1d(x,d,order)
 	for idx=1:order+1

@@ -18,6 +18,7 @@
 % but different regularity results in a density that is more pointed
 % and has heavier tales than the underlying distribution
 %% filter data series with a gaussian window, assumes periodic bc
+%function [ybar,f] = gaussfilt1(y,nf)
 function [ybar,f] = gaussfilt1(y,nf)
 	if (isvector(y))
 		y = cvec(y);

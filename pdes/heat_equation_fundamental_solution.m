@@ -13,6 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%%
+%% function y = heat_equation_fundamental_solution(t,x,d,t0,x0)
 function y = heat_equation_fundamental_solution(t,x,d,t0,x0)
 	y = normpdf(x,x0,sqrt(2*d*(t+t0)));
 end

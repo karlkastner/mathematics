@@ -63,7 +63,7 @@ function [y] = lowpass2d_implicit(x,rho,a,order,direct)
 
 	% order of accuracy for finite difference approximation
 	norder = 2;
-	[Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,n-1,norder,'circular');         
+	[Dx,Dy,D2x,Dxy,D2y] = derivative_matrix_2d(n,n-1,norder,{'circular','circular'});         
 
 	rD2  = (r(1)*D2x + r(2)*D2y);
 

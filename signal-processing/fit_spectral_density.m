@@ -24,12 +24,13 @@
 %		S     : 1D density or periodogram
 %		par0  : initial parameter for fit
 %		Sfun  : density model function (propobility distribution)
-%		method: objective to optimize
+%		distance: objective to optimize
 %		w     : weight certain frequency components,
 %		       can be used to suppress frequency components when w(f) = 0
 %		nf    : radius of smoothing window (for least-squares fits)
 %
-% method:
+% distance: objective to be minimized
+%
 %	mise-cramer	: minimize ( cdf(wS) - cdf(whatS))
 %			recommended default
 %			- robust against added noise
@@ -47,7 +48,7 @@
 %			 - can fail to converge when distribution becomes discrete
 %
 % function [par,Sp] = fit_spectral_density(f,S,w,density_model,par0,method,nf)
-function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
+function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 	if (nargin()<3)
 		w = 1;
 	end
@@ -55,7 +56,7 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 		error('Initial parameters has to be provided');
 	end
 	if (nargin()<6)
-		method = 'mise-cramer';
+		distance = 'hellinger';
 	end
 	if (nargin()<7||isempty(nf))
 		nf = 1;
@@ -81,12 +82,14 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 
 	if (isa(w,'function_handle'))
 		w = w(f);
+		w  = cvec(w);
 	else
 		if (~isscalar(w))
+			w  = cvec(w);
 			w_ = w(fdx);
 		end
 	end
-	w = double(w);
+	w  = double(w);
 	w_ = double(w_);
 
 	% restrict fit to positive half of the plane
@@ -118,22 +121,28 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 
 %	wSfun_ = @(x) double(wSfun(x));
 
-	switch (method)
+	switch (distance)
 	case {'cdf_l1'}
 		opt = optimset();
 		opt.Display = 'off';
 		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_cdf_l1(wSfun(par)), par0,lb,[],opt); 
 	case {'cdf_l2','cramer-von-mises','mvc'}
-		%iwS = cumint_trapezoidal(f,wS);
 		opt = optimset();
 		opt.Display = 'off';
 		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_mise_cramer(wSfun(par)), par0,lb,[],opt); 
+	case {'absolute-difference'} % note that this is equal to minimizing the maximum distance of the cdf
+	
 	case {'least-squares','ls'}
 		opt = optimset();
 		opt.Display = 'off';
 		%opt.Algorithm = 'levenberg-marquardt';
 		%lb = sqrt(eps)*zeros(size(par0));
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_least_squares(wSfun(par)),par0,lb,[],opt); 
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_least_squares(wSfun(par)),par0,lb,[],opt);
+	case {'hellinger'}
+		sqrt_wS = sqrt(wS_);
+		% TODO normalize by L
+		opt.Display = 'off';
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) sqrt(wSfun(par)) - sqrt_wS,par0,lb,[],opt); 
 	case {'log-likelihood','ll'}
 		par  = fminsearch(@(par) log_likelihood(par),par0); 
 		resn = 0;
@@ -146,15 +155,6 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	int_Sp = spectral_density_area(f,Sp);
 	Sp     = Sp/int_Sp;
 	wSp_    = wSfun(par);
-%clf
-%par0
-%par
-%subplot(2,2,1)
-%plot([wS_,wSp0,wSp_])
-%subplot(2,2,2)
-%plot([Sp,S])
-%pause()
-
 
 	% goodness of fit measures
 	% root mean square error
@@ -177,26 +177,14 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	%Sp = Sfun(par);
 	%stat.r2 = 1 - wrms(w,Sp-S).^2./wvar(w,S);
 
-	% predict density without smoothing
-	%nf = 0;
-	%f = f_;
-
-	% unfiltered
-	%Sp = Sfun(par,0);
-	%wwSp = ifftshift(trifilt1(fftshift(wSp),nf));
-	% bias corrected density estimate
-	%if (0)
-	%cS = wSp.*Sp./wwSp;
-	%else
-	%cS = Sp;
-	%end
+%	function weight(par)
+%		parc = num2cell(par);
+%		Sp_  = Sfun(f_,parc{:});
+%	end
 
 	function wSp_ = wSfun(par)
 		parc = num2cell(par);
 		Sp_  = Sfun(f_,parc{:});
-		%Sp_  = abs(real(Sp_));
-		%ISp = spectral_density_area(f,Sp);
-		%Sp  = Sp/ISp;
 		% weigh
 		wSp_ = w_.*Sp_;
 		% normalize
@@ -207,14 +195,8 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 	% note that the residual does not need to squared and summed
 	% lsqnonlin does this implicitely and more efficient when doing so
 	function res = res_least_squares(wSp_)
-		%wSp = w.*Sp;
-		%wSp = wSp/sum(mid(wSp).*diff(f));	
 		% residual
 		res = wSp_ - wS_;
-		% smooth
-		if (nf>1)
-			res = trifilt1(res,nf);
-		end
 		res = mid(res).*sqrt_df;
 	end
 
@@ -243,6 +225,7 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,method,nf,lb)
 %		res = sum(res.^2);
 		res = sum(mid(res.*res).*df_);
 	end
+
 	function res = res_cdf_l1(wSp_)
 		% weigh
 		%wSp = w.*Sp;

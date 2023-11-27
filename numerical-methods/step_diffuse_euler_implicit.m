@@ -15,7 +15,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % function z = diffuse_euler_implicit(dt,z,n,dx,e)
-function z = diffuse_euler_implicit(dt,z,n,dx,e)
+function z = step_diffuse_euler_implicit(dt,z,n,dx,e)
 	Ix = speye(n(1));
 	e_D2x = (dt*e(1))*derivative_matrix_2_1d(n(1),dx(1),2,'circular','circular',true);
 	if (1 == length(n))
@@ -23,9 +23,8 @@ function z = diffuse_euler_implicit(dt,z,n,dx,e)
 	else
 		Iy    = speye(n(2));
 		e_D2y = (dt*e(2))*derivative_matrix_2_1d(n(2),dx(2),2,'circular','circular',true);
-
-		I = speye(prod(n)) 
-		e_D2 = kron(e_D2x,Iy) + kron(Ix,e_D2y);
+		I = speye(prod(n)); 
+		e_D2 = kron(Iy,e_D2x) + kron(e_D2y,Ix);
 
 		A = I - e_D2;
 	end

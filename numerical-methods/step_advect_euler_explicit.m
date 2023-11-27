@@ -23,7 +23,7 @@ function z = advect_euler_explicit(dt,z,n,dx,a)
 		Iy  = speye(n(2));
 		a_D1y = (dt*a(2))*derivative_matrix_2_1d(n(2),dx(2),sign(a(2)),'circular','circular',true);
 
-		a_D1 = kron(a_D1x,Iy) + kron(Ix,a_D1y);
+		a_D1 = kron(I_y,a_D1x) + kron(a_D1y,Ix);
 
 		A = speye(prod(n)) - a_D1;
 		

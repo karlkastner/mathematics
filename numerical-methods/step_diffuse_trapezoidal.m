@@ -13,20 +13,19 @@
 %
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-function z = diffuse_trapezoidal(dt,z,n,dx,e)
-	% TODO use krylov
-	Ix  = speye(n(1));
-	D2x = derivative_matrix_2_1d(n(1),dx(1),2,'circular','circular',true);
-	if (1 == length(n))
-		A_l = Ix - 0.5*dt*e(1)*D2x;
-		A_r = Ix + 0.5*dt*e(1)*D2x;
-	else
+function [z,A_l,A_r] = step_diffuse_trapezoidal(dt,z,n,dx,e)
+	I  = speye(n(1));
+	D2 = (0.5*dt*e(1))*derivative_matrix_2_1d(n(1),dx(1),2,'circular','circular',true);
+	if (2 == length(n))
 		Iy  = speye(n(2));
-		D2y = derivative_matrix_2_1d(n(2),dx(2),2,'circular','circular',true);
+		D2y = (0.5*dt*e(2))*derivative_matrix_2_1d(n(2),dx(2),2,'circular','circular',true);
 
-		A_l = kron(Ix - 0.5*dt*e(1)*D2x, Iy) + kron(Ix, Iy - 0.5*dt*e(2)*D2y);
-		A_r = kron(Ix + 0.5*dt*e(1)*D2x, Iy) + kron(Ix, Iy + 0.5*dt*e(2)*D2y);
+		D2 = kron(D2y,I) + kron(Iy,D2);
+
+		I = speye(prod(n));
 	end
-	z = A_l \ (A_r*z);
+	A_l = (I - D2);
+	A_r = (I + D2);
+	z   = A_l \ (A_r*z);
 end
 

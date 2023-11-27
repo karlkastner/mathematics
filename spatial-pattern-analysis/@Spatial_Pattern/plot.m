@@ -21,7 +21,7 @@ function plot(obj,field_str,varargin)
 	var      = getfield_deep(obj,field_str);
 	lambda_c = obj.lambda_c();
 	if (~isfinite(lambda_c))
-		lambda_c = 1./obj.stat.f_50;
+		lambda_c = 1./obj.stat.q.fr.p50;
 	else
 		lambda_c = lambda_c;
 	end
@@ -111,7 +111,7 @@ function plot(obj,field_str,varargin)
 	case {'angular'}
 		fdx = obj.f.angle >= -pi/2 & obj.f.angle <= pi/2;
 		plot(obj.f.angle(fdx),var(fdx),varargin{:});
-		xlabel('Angle $\theta / \pi$','interpreter','latex');
+		xlabel('Angle $\theta$','interpreter','latex');
 		ylabel('Density $S_\theta$','interpreter','latex');
 		set(gca,'xtick',[-1/2,-1/4,0,1/4,1/2]*pi,'xticklabel',{'-\pi/2','-\pi/4','0','\pi/4','\pi/2'});
 		%xlim([-pi,pi]/2);

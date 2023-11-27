@@ -14,7 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-function [fc,Sc] = bandpass2d_pdf_mode(f0,order,L,n)
+function [fc,Sc] = bandpass2d_continuous_pdf_mode(f0,order,L,n)
 	if (1)
 		m = 100;
 		L = m./(f0/8);
@@ -23,7 +23,7 @@ function [fc,Sc] = bandpass2d_pdf_mode(f0,order,L,n)
 		df = 1./L;
 		fx = fourier_axis(L,n);
 		%S  = bandpass2d_pdf_exact(abs(fx),f0,order);
-		S = bandpass2d_pdf_hankel(L,n,f0,order);
+		S = bandpass2d_continuous_pdf_hankel(L,n,f0,order);
 		% normalize
 		%S = 2*S./sum(S*df);
 		%S_ = 2*S_./sum(S_*df);
@@ -47,7 +47,7 @@ function [fc,Sc] = bandpass2d_pdf_mode(f0,order,L,n)
 		L  = n*l0;
 		df = 1/L;
 		fx = fourier_axis(L,n*n)';
-		S = bandpass2d_pdf(abs(fx),f0,order);
+		S = bandpass2d_continuous_pdf(abs(fx),f0,order);
 		S = 2*S./sum(S*df);
 		% TODO quadratic max
 		[Sc,mdx] = max(S);

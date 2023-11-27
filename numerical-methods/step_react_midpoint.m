@@ -15,19 +15,18 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 % midpoint
 function z = step_react_midpoint(t,z,dt,afun,bfun)
+	z =  z0;
 
+	z = 
+	zmid = 0.5*(z0+z);
+	a = afun(t,zmid);
+	b = bfun(t,zmid);
+	% step
+	%y = exp(dt*a).*y0 + dt*b;
+	z = z0 + dt*(a.*y0 + b);
 		
-		z =  z0;
-
-		zmid = 0.5*(z0+z);
-		a = afun(t,zmid);
-		b = bfun(t,zmid);
-		% step
-		%y = exp(dt*a).*y0 + dt*b;
-		z = z0 + dt*(a.*y0 + b);
-		
-		if (max(abs(a*dt))>1)
-			warning([num2str(max(abs(a*dt))),'max(|a dt|)']);
-		end
+	if (max(abs(a*dt))>1)
+		warning([num2str(max(abs(a*dt))),'max(|a dt|)']);
+	end
 end
 

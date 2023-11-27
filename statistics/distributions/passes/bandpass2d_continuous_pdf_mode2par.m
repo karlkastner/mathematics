@@ -1,4 +1,4 @@
-% Fri 22 Apr 13:28:53 CEST 2022
+% Fri  7 Jan 16:11:57 CET 2022
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,18 +14,30 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function Sb = bandpass2d_pdf(fr,a,order)
-%% not normalized, max (S) = 1;
-function Sb = bandpass2d_pdf(fr,a,order)
-	% lowpass density
-	Sl = lowpass2d_pdf(fr,a,[]);
-	% bandpass density
-	Sb = 4*Sl.*(1.0-Sl);
-	% round of error
-	Sb = max(0,Sb);
-	% higher order
-	if (nargin()>2 && ~isempty(order))
-		Sb = Sb.^order;
+%
+%% transform mode (maxima) of the bandpass spectral density into the paramter
+%% of the underlying distribution 
+%
+% function [p] = spectral_density_bandpass_max2par(fc,Sc,p0)
+function par = bandpass2d_continuous_pdf_mode2par(fc,Sc,par0,pp)
+	if (nargin()<3)
+		par0 = [6*fc,1];
+	end
+	if (nargin()<4)
+		pp = [];
+	end
+	%n = 20;
+	%lc = 1/fc;
+	%L = n*lc;
+	%df = 1/L;
+	%fx = fourier_axis(L,n)';
+
+	opt = struct();
+%	opt.Algorithm = 'levenberg-marquardt';
+	par = lsqnonlin(@(par) fun(par) - [fc,Sc], par0,[0,0],[],opt);
+
+	function mode = fun(par)
+		[mode(1),mode(2)] = bandpass2d_continuous_pdf_mode(par(1),par(2));
 	end
 end
 

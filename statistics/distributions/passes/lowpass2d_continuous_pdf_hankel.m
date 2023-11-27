@@ -15,9 +15,9 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 %
-%% spectral density of the two-dimensional lowpass filter with autocorrelation
+%% radial spectral density of a two-dimensional lowpass filter with autocorrelation
 %%
-%% r = exp(-a*sqrt(x^2 + y^2))
+%% R = exp(-a*sqrt(x^2 + y^2))
 %%
 %% efficiently estimated with gauss-laguerre integration and 1D-FFT:
 %%
@@ -28,7 +28,7 @@
 %% by the slicing theorem:
 %% S2d(x,0) = F_1d^-1 (int R2d(x,y) dy)
 %%
-function [Sr,R2d_bar] = lowpass2d_pdf_hankel(L,n,a,order,m);
+function [Sr,R2d_bar] = lowpass2d_continuous_pdf_hankel(L,n,a,order,m);
 	if (nargin()<5)
 		% this is about 4-digits arrurate
 		m = 20;

@@ -24,22 +24,22 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% are resampled to a common grid interval
 
 	if (obj.stat.isisotropic)
-		lc = 1./obj.stat.fc.radial.clip;
+		lc = 1./obj.stat.fc.radial.hp;
 	else
-		lc = 1./obj.stat.fc.x.clip;
+		lc = 1./obj.stat.fc.x.hp;
 	end
 	
-	for field={'hat','clip','bar'}
+	for field={'hat','hp','bar'}
 		if (isfinite(lc))
 			% isotropic
 			iSr      = cumint_trapezoidal(obj.f.r,obj.S.radial.(field{1}));
 			% Note that when the cdf is scaled, iSr is implicitely scaled and there is no explicit division by lc!!!
 			% extrapolation is at the right hand with 1 as lim F->inf = 1
-			Si.radial.cdf.(field{1}) = interp1(obj.f.r*lc,iSr,fi.x,imethod,1);
-			Si.radial.pdf.(field{1}) = derivative1(fi.x,Si.radial.cdf.(field{1}));
+			Si.radial.cdf.(field{1}) = interp1(obj.f.r*lc,iSr,fi.radial,imethod,1);
+			Si.radial.pdf.(field{1}) = derivative1(fi.radial,double(Si.radial.cdf.(field{1})));
 			iSa = cumint_trapezoidal(obj.f.angle,obj.S.rot.angular.(field{1}));
 			Si.angular.cdf.(field{1}) = interp1(obj.f.angle,iSa,fi.angular,'linear');
-			Si.angular.pdf.(field{1}) = derivative1(fi.angular,Si.angular.cdf.(field{1}));
+			Si.angular.pdf.(field{1}) = derivative1(fi.angular,double(Si.angular.cdf.(field{1})));
 		
 			Ri.radial.(field{1})  = interp1(obj.r/lc,obj.R.radial.(field{1}),xi,imethod,0); 
 
@@ -47,21 +47,21 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 			fdx      = (obj.f.x>=0);
 			iSx      = cumint_trapezoidal(obj.f.x(fdx), obj.S.rot.x.(field{1})(fdx));
 			Si.x.cdf.(field{1}) = interp1(obj.f.x(fdx)*lc,iSx,fi.x,imethod,1);
-			Si.x.pdf.(field{1}) = derivative1(fi.x,Si.x.cdf.(field{1}));
+			Si.x.pdf.(field{1}) = derivative1(fi.x,double(Si.x.cdf.(field{1})));
 			n        = length(obj.R.rot.x.(field{1}));
 			x_       = fourier_axis(1,n);
 			Ri.x     = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.(field{1})),xi,imethod,0);
 			fdx      = (obj.f.y>=0);
 			iSy      = cumint_trapezoidal(obj.f.y(fdx), obj.S.rot.y.(field{1})(fdx));
 			Si.y.cdf.(field{1}) = interp1(obj.f.y(fdx)*lc,iSy,fi.y,imethod,1);
-			Si.y.pdf.(field{1}) = derivative1(fi.y,Si.y.cdf.(field{1}));
+			Si.y.pdf.(field{1}) = derivative1(fi.y,double(Si.y.cdf.(field{1})));
 		else
 			Si.x.pdf.(field{1})       = NaN(1,length(fi.x));
 			Si.x.cdf.(field{1})       = NaN(1,length(fi.x));
 			Si.y.pdf.(field{1})       = NaN(1,length(fi.y));
 			Si.y.cdf.(field{1})       = NaN(1,length(fi.y));
-			Si.radial.cdf.(field{1})  = NaN(1,length(fi.x));
-			Si.radial.pdf.(field{1})  = NaN(1,length(fi.x));
+			Si.radial.cdf.(field{1})  = NaN(1,length(fi.radial));
+			Si.radial.pdf.(field{1})  = NaN(1,length(fi.radial));
 			Si.angular.cdf.(field{1}) = NaN(1,length(fi.angular));
 			Si.angular.pdf.(field{1}) = NaN(1,length(fi.angular));
 			Ri.x.(field{1})           = NaN(1,length(xi));

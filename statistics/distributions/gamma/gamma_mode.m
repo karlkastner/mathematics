@@ -22,8 +22,10 @@ function [fc,Sc] = gamma_mode(a,b,flag)
 	end
 	if (nargin()<3 || ~flag)
 		Sc = gampdf(fc,a,b);
+		% note: this shortcut can yield incorrect results for certain parameter combinations
+		%Sc = (a-1).^(a-1)./b.*exp(-(a-1))./gamma(a);
 	else
-		Sc = gampdf_man(fc,a,b)
+		Sc = gampdf_man(fc,a,b);
 	end
 end
 

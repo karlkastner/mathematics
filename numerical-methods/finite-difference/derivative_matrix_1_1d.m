@@ -20,9 +20,8 @@
 %% n : number of grid points
 %% h = L/(n+1) constant step with
 %%
-%% function [D1, d1] = derivative_matrix_1d(n,L,order)
-% TODO allow optionally for circular boundary condition
-function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
+%% function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
+function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bcl,bcr,isdx)
 	if (nargin()<6)
 		isdx = false;
 	end
@@ -35,10 +34,13 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 	if (nargin() < 3 || isempty(order))
 		order = 2;
 	end
-	if (nargin() < 4 || isempty(bc))
-		bc = 'dirichlet';
+	if (nargin() < 4 || isempty(bcl))
+		bcl = 'dirichlet';
 	end
-	switch(bc)
+	if (nargin() < 4 || isempty(bcr))
+		bcr = bcl;
+	end
+	switch(bcl)
 	case {'neumann','dirichlet','circular'}
 		% nothing to do
 	otherwise
@@ -105,7 +107,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 %			d1(end-1,1) =  -1/h;
 %		end
 		D1 = spdiags(d1,-1:1,n,n);
-		switch (bc)
+		switch (bcl)
 		case ('dirichlet')
 			% nothing to do, outside value is zero
 			% TODO this depends where the boundary is placed
@@ -126,7 +128,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 %		if (strcmp(bc,'circular'))
 %			D1(1,end) = -1/h;
 %		end
-		switch (bc)
+		switch (bcr)
 		case ('dirichlet')
 			% nothing to do, outside value is zero
 			% TODO this depends where the boundary is placed
@@ -143,14 +145,16 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 		D1(1,1:2) = 1/h*[-1, 1];
 		D1(2,1:2) = 1/h*[-1, 1];
 	case {2,'2'}
-		if (~strcmp(bc,'circular'))
+		if (~strcmp(bcl,'circular'))
 			d1(1,2)     = -1/h;
 			d1(2,3)     =  1/h;
+		end	
+		if (~strcmp(bcr,'circular'))
 			d1(end-1,1) = -1/h;
 			d1(end,2)   =  1/h;
 		end
 		D1 = spdiags(d1,-1:1,n,n);
-		if (strcmp(bc,'circular'))
+		if (strcmp(bcl,'circular'))
 			D1(1,end) = -0.5/h;
 			D1(end,1) = +0.5/h;
 		end
@@ -166,7 +170,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 	case {3,'3',4}
 		D1 = spdiags(d1,-2:2,n,n);
 
-		if (strcmp(bc,'circular'))
+		if (strcmp(bcr,'circular'))
 				D1(2,end)   = -D1(2,4);
 				D1(end-1,1) = -D1(end-1,end-3);
 
@@ -179,7 +183,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bc,bcr,isdx)
 		end
 	case {6}
 		D1 = spdiags(d1,-3:3,n,n);
-		if (strcmp(bc,'circular'))
+		if (strcmp(bcl,'circular'))
 				D1(3,end)   = -D1(3,6);
 				D1(end-2,1) = -D1(end-2,end-5);
 

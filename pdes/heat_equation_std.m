@@ -13,7 +13,8 @@
 %
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-function sd = heat_equation_std(d,t)
+%% function sd = heat_equation_std(t,d)
+function sd = heat_equation_std(t,d)
 	sd = sqrt(2*d*t);
 end
 

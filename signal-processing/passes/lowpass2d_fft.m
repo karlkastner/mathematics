@@ -34,7 +34,7 @@ function y = lowpass2d_fft(x,rho,a,order)
 	rho = rho./(1 - 2*rho + rho.*rho);
 
 	% derivative matrix
-	if (nargin()<2)
+	if (nargin()<2 || isempty(a))
 		% no rotation, coordinate axis-parallel smoothing
 		D2 = rho(1)*D2x+rho(2)*D2y;
 	else
@@ -52,8 +52,6 @@ function y = lowpass2d_fft(x,rho,a,order)
 
 	y = flat(x);
 	for idx=1:order
-	end
-
 		% y = (I - rho*D)*x
 		y = pcg(@fun, y,[],sum(n));
 		y = reshape(y,n);

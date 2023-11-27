@@ -14,7 +14,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 function z = step_react_euler_implicit(t,z,dt,afun,bfun)
-% implicit euler
+	% implicit euler
 		error('TODO interate if necessary');
 		a = afun(t,z);
 		b = bfun(t,z);

@@ -27,7 +27,13 @@
 % nx : vector : sorted grid points, not necessarily sorted
 % L  : lenght of domain, will not be used if nx is scalar
 % order : [2,4] : accuracy of discretisation, only second order for variable grid 
-% 
+% bcl : left boundary condition
+%	hdirichlet : homogeneous dirichlet   y(0) = 0
+%	idirichlet : inhomogeneous dirichlet y(0) = y0
+%	neumann    : homogeneous neumann     dy/dx(0) = 0
+%	TODO	     inhomogeneous neumann   dy/dx(0) = dydx0
+%	circular   : circular                y(0) = y(L+h)
+% bcr : right boundary condition, defined as above 
 %
 % function D2 = derivative_matrix_2_1d(nx,L,order,bcl,bcr)
 function D2 = derivative_matrix_2_1d(nx,arg2,order,bcl,bcr,isdx)
@@ -47,26 +53,13 @@ function D2 = derivative_matrix_2_1d(nx,arg2,order,bcl,bcr,isdx)
 		order = 2;
 	end
 	if (nargin() < 4)
-		bcl = 'dirichlet';
+		% homogeneous dirichlet
+		bcl = 'hdirichlet';
 	end
 	if (nargin() < 5)
 		bcr = bcl;
 	end
-	switch(bcl)
-	case {'neumann','dirichlet','circular'}
-		% nothing to do
-	otherwise
-	error('unknown boundary condition');
-	end
-	switch(bcr)
-	case {'neumann','dirichlet','circular'}
-		% nothing to do
-	otherwise
-	error('unknown boundary condition');
-	end
 	if (isscalar(nx))
-		% 
-		n = nx;
 	
 		% note that this depends on the bnd:
 		% for dirichlet only interior points
@@ -88,65 +81,144 @@ function D2 = derivative_matrix_2_1d(nx,arg2,order,bcl,bcr,isdx)
 		otherwise 
 			error('order must be 2, 4 or 6');
 		end
-		D2 = spdiags(repmat(D2,n,1),-m:m,n,n);
+		D2 = spdiags(repmat(D2,nx,1),-m:m,nx,nx);
 
-		% boundaries
+		% left boundary
 		switch (lower(bcl))
+		case {'hdirichlet'}
+			switch (order)
+			case {2}
+				% nothing to do
+			otherwise
+				error('not yet implemented');
+			end	
+		case {'idirichlet'}
+			switch (order)
+			case {2}
+				D2(1,:) = 0;
+				D2(1,1) = 1;
+			otherwise
+				error('not yet implemented');
+			end
 		case {'circular'}
 			switch (order)
 			case {2}
 				D2(1,end) = D2(1,2);
-				D2(end,1) = D2(end,end-1);
+				%D2(end,1) = D2(end,end-1);
 			case {4}
 				D2(2,end)   = D2(2,4);
-				D2(end-1,1) = D2(end-1,end-3);
+				%D2(end-1,1) = D2(end-1,end-3);
 
 				D2(1,end)   = D2(1,2);
 				D2(1,end-1) = D2(1,3);
-				D2(end,2)   = D2(end,end-2);		
-				D2(end,1)   = D2(end,end-1);	
+				%D2(end,2)   = D2(end,end-2);		
+				%D2(end,1)   = D2(end,end-1);	
 			case {6}
 				D2(3,end)   = D2(3,6);
-				D2(end-2,1) = D2(end-2,end-5);
+				%D2(end-2,1) = D2(end-2,end-5);
 
 				D2(2,end)    = D2(2,4);
 				D2(2,end-1)  = D2(2,5);
-				D2(end-1,2)  = D2(end-1,end-4);		
-				D2(end-1,1)  = D2(end-1,end-3);
+				%D2(end-1,2)  = D2(end-1,end-4);		
+				%D2(end-1,1)  = D2(end-1,end-3);
 			
 				D2(1,end)    = D2(1,2);
 				D2(1,end-1)  = D2(1,3);
 				D2(1,end-2)  = D2(1,4);
+				%D2(end,3)    = D2(end,end-3);		
+				%D2(end,2)    = D2(end,end-2);		
+				%D2(end,1)    = D2(end,end-1);
+			otherwise
+				error('not yet implemented');
+			end % switch order
+		case {'neumann'}
+			% linear extrapolation
+			switch (order)
+			case {2}
+				%     [ 1 | -2, 1]/h^2
+				% bc: [-1 | 1]/h == 0
+				%     [ 0 | -1, 1]/h^2 = 0
+				%D2(1,1:3)       = 1/h^2*[1, -2, 1];
+				%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
+				D2(1,1:2)        = 1/(h*h)*[-1,1];
+				%    [1, -2 | 1]/h^2 (ode)
+				%    [   -1 | 1] = 0 (bc)
+				%    [1, -1 | 0]/h^2
+				%D2(end,end-1:end) = 1/(h*h)*[1,-1]; % was -1, 1
+			case {4}
+				D2(1:2,:) = 0;
+				%D2(end-1:end,:) = 0;
+				D2(2,1:3)       = 1/h^2*[1, -2, 1];
+				%D2(n-1,n-2:n)   = 1/h^2*[1, -2, 1];
+				D2(1,1:3)       = 1/h^2*[1, -2, 1];
+				%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
+			otherwise
+				error('not yet implemented');
+			end % switch order
+		otherwise
+			error('not yet implemented');
+		end
+
+		% right boundary
+		switch (lower(bcr))
+		case {'hdirichlet'}
+			switch (order)
+			case {2}
+				% nothing to do
+			otherwise
+				error('not yet implemented');
+			end	
+		case {'idirichlet'}
+			switch (order)
+			case {2}
+				D2(nx,:) = 0;
+				D2(nx,nx) = 1;
+			otherwise
+				error('not yet implemented');
+			end
+		case {'circular'}
+			switch (order)
+			case {2}
+				D2(end,1) = D2(end,end-1);
+			case {4}
+				D2(end-1,1) = D2(end-1,end-3);
+
+				D2(end,2)   = D2(end,end-2);		
+				D2(end,1)   = D2(end,end-1);	
+			case {6}
+				D2(end-2,1) = D2(end-2,end-5);
+
+				D2(end-1,2)  = D2(end-1,end-4);		
+				D2(end-1,1)  = D2(end-1,end-3);
+			
 				D2(end,3)    = D2(end,end-3);		
 				D2(end,2)    = D2(end,end-2);		
 				D2(end,1)    = D2(end,end-1);
-			end % if
+			end % switch order
 		case {'neumann'}
 			% linear extrapolation
-		switch (order)
-		case {2}
-			%     [ 1 | -2, 1]/h^2
-			% bc: [-1 | 1]/h == 0
-			%     [ 0 | -1, 1]/h^2 = 0
-			%D2(1,1:3)       = 1/h^2*[1, -2, 1];
-			%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
-			D2(1,1:2)        = 1/(h*h)*[-1,1];
-			%    [1, -2 | 1]/h^2 (ode)
-			%    [   -1 | 1] = 0 (bc)
-			%    [1, -1 | 0]/h^2
-			D2(end,end-1:end) = 1/(h*h)*[1,-1]; % was -1, 1
-		case {4}
-			D2(1:2,:) = 0;
-			D2(end-1:end,:) = 0;
-			D2(2,1:3)       = 1/h^2*[1, -2, 1];
-			D2(n-1,n-2:n)   = 1/h^2*[1, -2, 1];
-			D2(1,1:3)       = 1/h^2*[1, -2, 1];
-			D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
-		end
+			switch (order)
+			case {2}
+				%     [ 1 | -2, 1]/h^2
+				% bc: [-1 | 1]/h == 0
+				%     [ 0 | -1, 1]/h^2 = 0
+				%D2(1,1:3)       = 1/h^2*[1, -2, 1];
+				%D2(n,n-2:n)     = 1/h^2*[1, -2, 1];
+				% D2(1,1:2)        = 1/(h*h)*[-1,1];
+				%    [1, -2 | 1]/h^2 (ode)
+				%    [   -1 | 1] = 0 (bc)
+				%    [1, -1 | 0]/h^2
+				D2(end,end-1:end) = 1/(h*h)*[1,-1]; % was -1, 1
+			case {4}
+				D2(nx-1:nx,:) = 0;
+				D2(nx-1,nx-2:nx)   = 1/h^2*[1, -2, 1];
+				D2(nx,nx-2:nx)     = 1/h^2*[1, -2, 1];
+			otherwise
+				error('not yet implemented');	
+			end
 		otherwise
-			% homogeneous dirichlet, do nothing
+			error('not yet implemented');
 		end
-		
 	else
 		x = cvec(nx);
 		n = length(x);
@@ -162,30 +234,7 @@ function D2 = derivative_matrix_2_1d(nx,arg2,order,bcl,bcr,isdx)
 		% TODO is this exact for variable meshes? check with thesis
 		D2(1,1:3) = D2(2,1:3);
 		D2(end,end-2:end) = D2(end-1,end-2:end);
+			% TODO implement other boundary conditions
 	end
-
-
-if (0)
-	switch (lower(bcl)) % homogeneous dirichlet f(0)=f(L)=0
-		case {'dirichlet'}
-			% nothing to do
-		case {'neumann'} % homogeneous neumann df/dx(0) = 0, df/dx(L)=0
-			D2(1,1:3) = 1/h^2*[1 -2 1];
-			%2(1,1:4)       = 1/h^2*[ 2   -5    4   -1];
-			%2(1,end-3:end) = 1/h^2*[-1    4   -5    2];
-			%D2(1,1:5)       = 1/(12*h^2)*[35 -104  114  -56   11];
-			%D2(1,end-4:end) = 1/(12*h^2)*[11  -56  114 -104   35];
-		otherwise
-			error('here');
-	end % switch bcl
-	switch (lower(bcr))
-		case {'dirichlet'}
-			% nothing to do
-		case {'neumann'}
-			D2(end,end-2:end) = 1/h^2*[1 -2 1];
-		otherwise
-			error('here');
-	end% switch bcr
-end
 end % func derivative_matrix_2_1d
 

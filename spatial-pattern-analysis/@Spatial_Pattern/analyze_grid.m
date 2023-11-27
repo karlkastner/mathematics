@@ -101,11 +101,11 @@ function obj = analyze_grid(obj)
 		msk.b_ = [];
 	end
 	if (obj.opt.test_for_periodicity)
-		[isperiodic, stati] = periodogram_test_periodicity_2d(...
+		[isperiodic, p_periodic, stati] = periodogram_test_periodicity_2d(...
 					obj.b_square, obj.stat.L_square, nf_test, msk.b_, obj.msk.f_pos, obj.opt.n_mc);
-		% note, for summing up the energy, the negative half-plane must not be excluded
+		% note, for summing up the spectral energy, the negative half-plane must not be excluded
 		fdx                   = (stati.pn_all<=obj.opt.significance_level_a1) & obj.msk.f;
-		p_periodic            = stati.pn;
+		% p_periodic            = stati.pn;
 		% as S is normalized to 1 over the half plane, this is identical to the fraction of spectral
 		% energy contained in significant frequency components 
 		stati.intS_hp_sig     = 0.5*sum(S.hp(fdx))*df_square(1)*df_square(2);

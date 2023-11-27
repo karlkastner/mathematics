@@ -1,5 +1,19 @@
 % Sun Feb  1 17:31:40 CET 2015
-% Karl Kastner, Berlin
+% Karl Kästner, Berlin
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 %
 %% prediction with pw hermite polynomial
 %% c are values at support points
@@ -42,7 +56,7 @@ function [val, dval] = hp2_predict(x0,x1,c,x)
 	end
 	% first derivative
 	if (nargout()>1)
-		dX = vanderd_1d(x,1,3);
+		dX = vanderd_1d(x,3,1);
 		dC = dX*hi*t;
 		for idx=1:length(val)
 			dval(idx) = dC(idx,:)*c(sdx(idx)-1:sdx(idx)+2);	

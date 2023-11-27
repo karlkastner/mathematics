@@ -16,7 +16,7 @@
 %
 %% test a periodogram for hidden periodic frequency components
 %% 
-%% [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, significance_level)
+%% [issignificant,pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, ns, significance_level)
 %%
 %% input:
 %%	b    (nx * ny): image to test for presence of hidden periodicities,
@@ -42,6 +42,7 @@
 %%	siginificance_level : 
 %%
 %% output : 
+%%      issignificant      : true if pattern contains significant frequency components (pn <= significance_level)
 %%	pn   : p-value of largest frequency component with largest ratio Shat/Sbar
 %%             when testing all frequency components selected by fmsk
 %%	stat.max.ratio     : max ratio value of Shat/Sbar
@@ -59,7 +60,7 @@
 %%	      - values in the periodogram are not any more linearly independent
 %%	        so that the dof of the filter window is not nf^2
 %%
-function [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, n_mc, significance_level)
+function [issignificant,pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, n_mc, significance_level)
 	n = numel(b);
 	if (nargin()< 3 || isempty(L))
 		L = size(b);
@@ -185,7 +186,7 @@ function [pn,stat,out] = periodogram_test_periodicity_2d(b, L, nf, bmsk, fmsk, n
 		out.qrn = qrn;
 	end
 
-	stat.is_significant = pn < significance_level;
+	issignificant = (pn < significance_level);
 	
 	fdx = (pn_all<=significance_level);
 	stat.intShat_sig = 0.5*sum(Shat(fdx))*df(1)*df(2);
