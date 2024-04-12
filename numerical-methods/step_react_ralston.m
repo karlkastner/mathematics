@@ -19,11 +19,10 @@
 function y = step_react_ralston(t,dt,y,dy_dt_fun)
 	a   = dy_dt_fun(t,y);
 	% predictor step
-	y_  = y + dt*a;
+	y_  = y + 2/3*dt*a;
 	%y_  = y.*exp(dt*a./y);
 	% corrector-step
-	a_  = dy_dt_fun(t+dt,y_);
-	y   = y + 0.5*dt*(a + a_);
-	%y   = y.*exp(0.5*dt*(a./y + a_./y_));
+	a_  = dy_dt_fun(t+2/3*dt,y_);
+	y   = y + dt*(1/4*a + 3/4*a_);
 end
 

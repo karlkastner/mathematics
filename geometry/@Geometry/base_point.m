@@ -1,7 +1,7 @@
 % So 22. Nov 11:00:34 CET 2015
 % Karl Kastner, Berlin
 %
-%% base point (fusspunkt), i.e. point on a line with shortest distance
+%% base point (nadir or fusspunkt), i.e. point on a line with shortest distance
 %% to another point
 % x0 : point to be projected on x1-x2
 function [xb, s, ds] = base_point(x0,x1,x2)

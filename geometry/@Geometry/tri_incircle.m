@@ -1,7 +1,7 @@
 % Sat 10 Sep 10:53:52 CEST 2016
 % Karl Kastner, Berlin
 %% incircle of a triangle
-function [x0 y0 R] = tri_incircle(x,y)
+function [x0, y0, R] = tri_incircle(x,y)
 	% get edge lengths
 	xl = left(x);
 	yl = left(y);

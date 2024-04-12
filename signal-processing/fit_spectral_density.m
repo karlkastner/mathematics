@@ -154,14 +154,19 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 	Sp     = Sfun(f,parc{:});
 	int_Sp = spectral_density_area(f,Sp);
 	Sp     = Sp/int_Sp;
-	wSp_    = wSfun(par);
+	Sp_    = Sfun(f_,parc{:});
+	int_Sp_ = spectral_density_area(f,Sp_);
+	Sp_     = Sp_/int_Sp_;
+	wSp_   = wSfun(par);
 
 	% goodness of fit measures
 	% root mean square error
 	res_sqrt_df          = res_least_squares(wSp_);
 	% rmse = sqrt(1/(f_max-0) int_0^{f_max} res.^2 df)
-	stat.goodness.rmse   = sqrt(1./max(f)*sum(res_sqrt_df.*res_sqrt_df));
-	stat.goodness.r2     = 1.0 - stat.goodness.rmse.^2./wvar(w_.*inner2outer(df_),S_);
+	%stat.goodness.rmse   = sqrt(1./max(f)*sum(res_sqrt_df.*res_sqrt_df));
+	%stat.goodness.r2     = 1.0 - stat.goodness.rmse.^2./wvar(w_.*inner2outer(df_),S_);
+	stat.goodness.hd      = hellinger_distance(S_,Sp_,df_(1),w_);
+	stat.goodness.r2      = 1 - 2*stat.goodness.hd;
 
 	% l2 in difference of cdf von Mise - Cramer distance
 	stat.goodness.mise_cramer = res_mise_cramer(wSp_);

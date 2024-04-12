@@ -15,6 +15,7 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %% smooth (filter) the  2D image z with a gaussian window
 %% apply periodic boundary conditions
+% function [zbar, dof, w] = gaussfilt2(z, nf)
 function [zbar, dof, w] = gaussfilt2(z, nf)
 	
 	[w, dof] = gausswin2(size(z), nf);

@@ -14,25 +14,23 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% simulate a grid cell averaged stochastic process exp(z)
+%% simulate a grid cell averaged stationary stochastic process exp(z)
 %% where z follows a geometric Ornstein-Uhlenbeck (AR1) process
-%% with mean lmu, standard deviatian sd and stationary autocorrelation
+%% with mean lmu, standard deviatian sd and correlation length theta
 %%
-%% val = exp(z)
+%% val     = exp(z)
 %% mean(z) = lmu
-%% std(z)  ) ls
+%% std(z)) = lsd
 %% corr(z(0,0),z(x,y)) = exp(-sqrt(x^2 + y^2)/theta)
 %%
 %%
 function val = geometric_ar1_2d_grid_cell_averaged_generate(lmu,lsd,theta,L,n,varargin)
 	% grid, ordered in fourier style
-	[x,y] = fourier_axis_2d([1,1],n);
+	[x,y] = fourier_axis_2d(n./L,n);
 	dx = L(1)/n(1);
 	dy = L(2)/n(2);
-	x = x*dx;
-	y = y*dy;
-	xx = repmat(cvec(x),1,length(y));
-	yy = repmat(rvec(y),length(x),1);
+	xx = repmat(cvec(x),1,n(2));
+	yy = repmat(rvec(y),n(1),1);
 
 	% choose sd, theta, dx
 	% convariance function of the log of the values
@@ -43,7 +41,7 @@ function val = geometric_ar1_2d_grid_cell_averaged_generate(lmu,lsd,theta,L,n,va
 	mu = logn_mean(lmu,lsd);
 
 	% covariance function of the values
-	%cfun = @(x,y) logn_corr(lrfun(x,y),lmu,lmu,lsd,lsd);
+	% cfun = @(x,y) logn_corr(lrfun(x,y),lmu,lmu,lsd,lsd);
 	% covariance matrix between grid cell averages
 	cov_ = geometric_ar1_2d_grid_cell_averaged_cov(lmu,lsd,theta,xx,yy,dx,dy,varargin{:});
 
@@ -58,14 +56,24 @@ function val = geometric_ar1_2d_grid_cell_averaged_generate(lmu,lsd,theta,L,n,va
 	% here by a log normal distribution which matches the first and second
 	% moments
 	[lmu_,lsd_,lr_] = logn_moment2par_correlated(mu,sd,r);
+
 	% simulate the process
 	z = randn(n);
 
-	% correlate (convolve in fourier domain)
+	% correlate (convolve in Fourier domain)
 	z = ifft2(fft2(lr_).*fft2(z));
-	% scale and translate
-	val = exp(lmu_ + lsd_*z);
+
 	% natural order
-	val = ifftshift(val);
-end
+	% (note, this is superfluous, as z was iid before convolving, so order does not matter)
+	z = ifftshift(z);
+	
+	% make z standard normal, this does not affect the correlation structure
+	z = z/std(z(:));
+
+	% scale and translate
+	z = lmu_ + lsd_*z;
+
+	% convert to log-normal
+	val = exp(z);
+end % geometric_ar1_2d_grid_cell_averaged_generate
 

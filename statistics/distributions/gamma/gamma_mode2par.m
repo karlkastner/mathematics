@@ -14,7 +14,16 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+%% function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
+	if (xm == 0)
+		% for xm = 0, either a<1 and ym = infinite, and no inversion is possible
+		% or a = 1 for which the gamma dist becomes the exponential dist
+		a = 1;
+		% ym  = 1/b*exp(-1/b*x)
+		%  -> b = 1/y(0)
+		b = 1/ym;
+	else
 	xm = double(xm);	
 	ym = double(ym);	
 	if (nargin()<3||isempty(p0))
@@ -30,6 +39,7 @@ function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 %	end
 	a = l(1);
 	b = l(2);
+	end
 
 	% it is not clear to mear, why the univariate optimization performs worse
 	% and often does not converge, maybe bc of the condition that the maximum 

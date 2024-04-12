@@ -1,5 +1,5 @@
-% Tue  7 Nov 10:22:34 CET 2023
-% Karl Kästner, Berlin
+% 2023-06-29 11:30:13.466441896 +0200
+% Karl Kastner, Berlin
 %
 %  This program is free software: you can redistribute it and/or modify
 %  it under the terms of the GNU General Public License as published by
@@ -14,11 +14,19 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function A = downsampling_matrix(n)
-	w = [1,2,1]/4;
-	w = [1/6,2/3,1/6];
-	A = spdiags(ones(n,1)*w,-1:1,n,n);
-	A = A(1:2:end,:);
-	A(1,end) = 0.25;
+%  explicit
+%  kutta's third order rungek-kutta method 
+%
+function [y,e] = step_rk3(t,dt,y0,dy_dt_fun)
+	dy0   = dy_dt_fun(t,y0);
+	y_mid  = y0 + 0.5*dt*dy0;
+	dy_mid = dy_dt_fun(t+0.5*dt,y_mid);
+	y1   = y0 - dt*dy0 + (2*dt)*dy_mid;
+	dy1  = dy_dt_fun(t+0.5*dt,y_mid);
+	y    = y0 + dt*(dy0 + 4*dy_mid + dy1)/6;
+	if (nargout()>1)
+		y1 = y0 + dt*dy_mid;
+		e  = y - y1;
+	end
 end
 

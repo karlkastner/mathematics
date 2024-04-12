@@ -9,6 +9,7 @@ sb = 0.7;
 
 za = randn(n,1);
 zc = randn(n,1);
+
 % correlate the variables
 zb = (p*za + sqrt(1-p^2)*zc);
 
@@ -21,14 +22,14 @@ ea = exp(a);
 eb = exp(b);
 
 % test covariance
-'cov numeric'
+disp('cov numeric')
 cov(ea,eb)
 mean(exp(a+b)) - mean(ea)*mean(eb)
-'cov formula'
+disp('cov formula')
 logn_cov(p,mua,mub,sa,sb)
 
 % test correlation
-
+disp('correlation')
 corr(ea,eb)
 logn_corr(p,mua,mub,sa,sb)
 

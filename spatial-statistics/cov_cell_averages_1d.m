@@ -27,13 +27,27 @@
 %%
 %% integrals approximated by Gauss' method
 %%
-function cov_ = cov_cel_averages_1d(cfun,x,dx,order)
+function cov_ = cov_cel_averages_1d(cfun,x,dx,m,efficient)
 	if (nargin()<4)
-		oder = 2;
+		m = 2;
+	end
+	if (nargin()<5)
+		efficient = 1;
 	end
 	siz = size(x);
 	x = flat(x);
 	% weights and evaluation points of gauss integral
+
+if (efficient)
+	dxs  = dx/m;
+	cov_ = m*cfun(x);
+	for idx=1:m-1
+		% note that +/- dx is only identical when x = 0
+		cov_ = cov_ + (m-idx)*cfun(x+dxs*idx);
+		cov_ = cov_ + (m-idx)*cfun(x-dxs*idx);
+	end
+	cov_ = cov_ / (m*m);
+else
 	[w,p] = int_1d_gauss(order);
 	%[w,p] = int_1d_equal(order);
 
@@ -52,5 +66,6 @@ function cov_ = cov_cel_averages_1d(cfun,x,dx,order)
 	 end % for x2id
 	end % for x1id
 	cov_ = reshape(cov_,siz(1),siz(2));
+end
 end % cov_
 

@@ -38,7 +38,7 @@ function analyze(obj)
 			if (obj.opt.reload && exist(spname,'file'))
 				% reload
 				clear sp % runtime
-				load(spname,'sp'); %,'runtime');
+				load(spname,'sp');
 				if (~isfield(sp.stat,'p_periodic'))
 					info=imfinfo([folder,filesep,filename]);
 					A = max(info.Width,info.Height)^2;
@@ -48,6 +48,14 @@ function analyze(obj)
 					sp.imread([folder,filesep,filename]);
 					sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
 					sp.analyze_grid();
+					try
+					sp.fit_parametric_densities();
+					catch e
+						e
+						for edx=1:length(e.stack); disp(e.stack(edx)); end
+						obj.error_C{idx,3} = e;
+					end
+					sp.cast(@single);
 
 					% clear 2d varibales to save space
 					sp.clear_2d_properties();	
@@ -76,9 +84,18 @@ function analyze(obj)
 				sp.imread([folder,filesep,filename]);
 		
 				sp.analyze_grid();
+
+				try
+					sp.fit_parametric_densities();
+				catch e
+					e
+					for edx=1:length(e.stack); disp(e.stack(edx)); end
+					obj.error_C{idx,3} = e;
+				end
 		
 				% clear 2d varibales to save space
-				sp.clear_2d_properties();	
+				sp.clear_2d_properties();
+				sp.cast(@single);	
 		
 				%sp = sp_a(idx);
 				mkdir(dirname(spname));
@@ -98,7 +115,7 @@ function analyze(obj)
 			for jdx=1:length(s)
 				disp(s(jdx));
 			end	
-			obj.error_C{jdx,2} = e;
+			obj.error_C{idx,2} = e;
 		end % of try-catch
 		%if (~exist('runtime','var'))
 		%	runtime = NaN;

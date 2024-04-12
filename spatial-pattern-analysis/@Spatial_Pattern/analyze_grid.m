@@ -66,9 +66,17 @@ function obj = analyze_grid(obj)
 	% computed for the original image as a quaility indicator
 	stat.contrast = mean(obj.b_square(obj.msk.b_square & b_thresh)) - mean(obj.b_square(obj.msk.b_square & (~b_thresh)));
 
-	obj.w.x = 1-normpdf(obj.f.x,0,shp)/normpdf(0,0,shp);	
-	obj.w.y = 1-normpdf(obj.f.y,0,shp)/normpdf(0,0,shp);	
-	obj.w.r = 1-normpdf(obj.f.r,0,shp)/normpdf(0,0,shp);
+	if (obj.opt.weight)
+		obj.w.x = 1-normpdf(obj.f.x,0,shp)/normpdf(0,0,shp);	
+		obj.w.y = 1-normpdf(obj.f.y,0,shp)/normpdf(0,0,shp);	
+		obj.w.r = 1-normpdf(obj.f.r,0,shp)/normpdf(0,0,shp);
+	else
+	obj.w.x = ones(size(obj.f.x));
+	obj.w.x(1) = 0;
+	obj.w.y = ones(size(obj.f.y));
+	obj.w.r = ones(size(obj.f.r));
+	obj.w.r(1) = 0;
+	end
 
 	% 2D spectral density estimate by periodogram smoothing
 	dfr   = obj.f.rr(1,2);

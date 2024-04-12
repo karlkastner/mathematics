@@ -6,12 +6,13 @@
 %      kk[2] : number of patches with size 2
 %      ...
 %
-function kk = patch_size_2d(b)
+function [pa,area,pr,radius] = patch_size_2d(b,L)
 	b = padd2(b,1,0);
 	s = size(b);
 	visited = false(s);
-	kk = zeros(numel(b),1); %0;
-	stack = zeros(numel(b),2);
+	n = numel(b);
+	kk = zeros(n,1); %0;
+	stack = zeros(n,2);
 	for idx=2:s(1)-1
 	 for jdx=2:s(2)-1
 		k = parse_patch_iterative(idx,jdx);
@@ -23,6 +24,26 @@ function kk = patch_size_2d(b)
 		end
 	 end % for idx
 	end % for jdx
+
+	pa = kk./sum(kk);
+	area   = [1:n];
+	radius = 0:ceil(sqrt(n)/pi);
+	%  cumulative distribution of area
+	Ka = cumsum(kk);	
+	Ka = Ka/Ka(end);
+
+	% cumulative distribution of radii
+	Kr = interp1(sqrt(area)/pi,Ka,radius,'linear');
+
+	% density and raidus at mid-points
+	pr     = diff(Kr);
+	radius = mid(radius);
+
+	if (nargin()>1)
+		dx = rvec(L)./size(b);
+		area = area*dx(1)*dx(2);
+		radius = dx*radius;
+	end
 
 function k = parse_patch_iterative(i,j)
 	k = 0;

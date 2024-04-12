@@ -17,8 +17,8 @@
 %% spectral density of a fourier series where the phase undergoes brownian motion
 %% with standard deviation s per unit distance
 %
-%function [S,I] = spectral_density_brownian_phase(fx,f0,s,normalize)
-function [S,I] = spectral_density_brownian_phase(fx,f0,s,normalize)
+%function [S,I] = phase_drift_pdf(fx,f0,s,normalize)
+function [S,I] = phase_drift_pdf(fx,f0,s,normalize)
 	if (nargin()<4)
 		normalize = 0;
 	end

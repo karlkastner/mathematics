@@ -7,6 +7,12 @@
 function [x_mode,y_mode] = logn_mode(lmu,lsd)
 	x_mode = exp(lmu - lsd.^2);
 	[mu,sd] = logn_param2moment(lmu,lsd);
-	y_mode = (1 + (sd./mu).^2)./(mu.*sqrt(2*pi*log(1 + (sd./mu).^2)));
+	if (issym(lmu) || issym(lsd))
+		pi_ = sym(pi);
+	else
+		pi_ = pi;
+	end
+
+	y_mode = (1 + (sd./mu).^2)./(mu.*sqrt(2*pi_*log(1 + (sd./mu).^2)));
 end
 

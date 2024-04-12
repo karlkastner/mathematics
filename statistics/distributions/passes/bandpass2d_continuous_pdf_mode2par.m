@@ -19,13 +19,20 @@
 %% of the underlying distribution 
 %
 % function [p] = spectral_density_bandpass_max2par(fc,Sc,p0)
-function par = bandpass2d_continuous_pdf_mode2par(fc,Sc,par0,pp)
-	if (nargin()<3)
+function [p1,p2] = bandpass2d_continuous_pdf_mode2par(fc,Sc,par0,L,n) %par0,pp)
+	if (nargin()<3||isempty(par0))
 		par0 = [6*fc,1];
 	end
 	if (nargin()<4)
-		pp = [];
+		L = 100/fc;
 	end
+	if (nargin()<5)
+		n = round((L*fc)^2);
+	end
+%	if (nargin()<4)
+%		pp = [];
+%	end
+
 	%n = 20;
 	%lc = 1/fc;
 	%L = n*lc;
@@ -35,9 +42,12 @@ function par = bandpass2d_continuous_pdf_mode2par(fc,Sc,par0,pp)
 	opt = struct();
 %	opt.Algorithm = 'levenberg-marquardt';
 	par = lsqnonlin(@(par) fun(par) - [fc,Sc], par0,[0,0],[],opt);
+%	par = lsqnonlin(@(par) fun(par) - [fc,Sc], par,[0,0],[],opt);
+	p1 = par(1);
+	p2 = par(2);
 
 	function mode = fun(par)
-		[mode(1),mode(2)] = bandpass2d_continuous_pdf_mode(par(1),par(2));
+		[mode(1),mode(2)] = bandpass2d_continuous_pdf_mode(par(1),par(2),L,n);
 	end
 end
 

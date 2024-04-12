@@ -1,3 +1,5 @@
+% 2012-06-03 21:01:13 +0200
+
 javaaddpath('.')
 javaaddpath('/usr/share/java/jama.jar');
 
@@ -15,6 +17,7 @@ int = @int_2d_gauss_6;
 
 'testing phi phi'
 tic();
+% assemble_2d_phi_phi_java(P, T, @potential_coulomb)
 [A_ buf_] = assemble_2d_phi_phi(P, T, @f_coulomb, int);
 toc()
 

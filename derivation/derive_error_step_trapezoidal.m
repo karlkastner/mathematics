@@ -30,9 +30,12 @@
 
 %syms x; d=4; n=4; xx=x.^(0:n), v=vander_1d(xx,n), vd=vanderd_1d(0,n,d), simplify(vd*v^-1)
 
-syms y y1 y2 y3 y4 y5 dt e
+syms y y1 y2 y3 y4 y5 dt e erel0
+y5 = 0
+y4 = 0
 ynext  = y  + y1*dt + 1/2*y2*dt^2 + 1/6*y3*dt^3 + 1/24*y4*dt^4 + 1/120*y5*dt^5
 dynext = y1 + y2*dt + 1/2*y3*dt^2 + 1/6*y4*dt^3 + 1/24*y5*dt^4
 eq = ynext == y + dt/2*(y1 + dynext) + e
-solve(eq,e)
+e = solve(eq,e)
 
+dt0 = solve(abs(e) == e0*abs(y),dt)

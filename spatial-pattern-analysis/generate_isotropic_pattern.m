@@ -14,7 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function [z, x, y, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,angle0_rad,p,q,st,rotarg,scalearg)
+% function [z, x, y, Lx, Ly, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,angle0_rad,p,q,scale,st,rotarg,scalearg)
 %%
 %% spot pattern of unit amplitude
 %% output : z : pattern
@@ -143,12 +143,13 @@ function [z, x, y, Lx, Ly, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,a
 		a  = (idx-1)*pi/3+angle0_rad;
 		R  = full(rot2(a));
 		xy = R*[xx(:),yy(:)]';
-		x = reshape(xy(1,:),siz);
+		% projected/rotated coordinate
+		xp = reshape(xy(1,:),siz);
 
 		% cosine shifted and scaled to [0,1]
 		% nb a large perturbation of the amplitude is going to introduce stripes of connected points
 		%zi = 1/2*(1+cos(o*x));
-		zi = cos(o*x);
+		zi = cos(o*xp);
 		%(xr+d{idx})));
 
 		% transformation (harmonics)

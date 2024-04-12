@@ -14,6 +14,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
+% TODO pass boundary conditions
 function [z,Al,Ar] = step_advection_diffusion_trapezoidal(dt,dx,n,z,a,e)
 	% TODO use krylov subspace
 	D1 = (0.5*dt*a(1))*derivative_matrix_1_1d(n(1),dx(1),2,'circular','circular',true);

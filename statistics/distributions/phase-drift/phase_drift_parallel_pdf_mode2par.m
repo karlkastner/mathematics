@@ -14,9 +14,10 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 % 
-% by definition, the maximum occurrs at the oricin fc_y = 0
+%% function sy = spectral_density_brownian_phase_across_mode2par(Scy)
+%% by definition, the maximum occurrs at the oricin fc_y = 0
 %
-function sy = spectral_density_brownian_phase_across_mode2par(Scy)
+function sy = phase_drift_parallel_pdf_mode2par(Scy)
 	sy = sqrt(4./Scy);
 end
 

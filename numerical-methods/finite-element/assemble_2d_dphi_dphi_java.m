@@ -4,10 +4,10 @@
 % integrates product of the derivatives of the test functions
 %
 % T : points on the triangle point, first three points are corners (size = [1 .. 6])
-function [A buf] = assemble_2d_dphi_dphi_java(mesh, func, int)
+function [A, buf] = assemble_2d_dphi_dphi_java(mesh, func, int)
 
 	% load the integration sample point coordinates for standard triangle
-	[w b flag] = feval(int);
+	[w, b, flag] = feval(int);
 
 	% get matrix entries	
 	asm = javaObject('Assemble_2d_dphi_dphi');

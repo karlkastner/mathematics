@@ -17,7 +17,7 @@
 %% function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
 %%
 %% correlation of two log-normal random variables, where the log of the variables
-%% is correlated with r
+%% is correlated with correlation r
 function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
 	if (nargin()<2)
 		lmu_a = 0;

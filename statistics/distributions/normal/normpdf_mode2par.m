@@ -13,8 +13,14 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% function [mu,sd] = normpdf_mode2param(fc,Sc)
 function [mu,sd] = normpdf_mode2param(fc,Sc)
+	if (issym(fc) || issym(Sc))
+		pi_ = sym(pi);
+	else
+		pi_ = pi;
+	end
 	mu = fc;
-	sd = 1./(Sc*sqrt(2*pi));
+	sd = 1./(Sc*sqrt(2*pi_));
 end
 

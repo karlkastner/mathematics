@@ -24,9 +24,9 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% are resampled to a common grid interval
 
 	if (obj.stat.isisotropic)
-		lc = 1./obj.stat.fc.radial.hp;
+		lc = 1./obj.stat.fc.radial.(obj.opt.scalefield);
 	else
-		lc = 1./obj.stat.fc.x.hp;
+		lc = 1./obj.stat.fc.x.(obj.opt.scalefield);
 	end
 	
 	for field={'hat','hp','bar'}
@@ -50,7 +50,7 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 			Si.x.pdf.(field{1}) = derivative1(fi.x,double(Si.x.cdf.(field{1})));
 			n        = length(obj.R.rot.x.(field{1}));
 			x_       = fourier_axis(1,n);
-			Ri.x     = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.(field{1})),xi,imethod,0);
+			Ri.x.(field{1}) = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.(field{1})),xi,imethod,0);
 			fdx      = (obj.f.y>=0);
 			iSy      = cumint_trapezoidal(obj.f.y(fdx), obj.S.rot.y.(field{1})(fdx));
 			Si.y.cdf.(field{1}) = interp1(obj.f.y(fdx)*lc,iSy,fi.y,imethod,1);

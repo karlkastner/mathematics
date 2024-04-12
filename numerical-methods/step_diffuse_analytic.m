@@ -20,25 +20,38 @@
 %% spurious oscillations, this is avoided here, by integrating over segments
 %% rather than sampling at gridpoints
 %
+%%	z : nx x ny
+%
+% fft    : (analytic) solution via Fourier transform
+% no fft : analytic solution by convolution
+% note   : for non-smooth solutions, variant the no-fft assures positivity
+%          the "no-fft" variant is also implimented via fourier transform
+
 % dy/dt = e*D^2*y
-function z = step_diffuse_analytic(t,z,nx,dx,e)
+function z = step_diffuse_analytic(t,dx,nx,z,e)
 
-
-	% diffuse along first dimension
-	z = diffuse(e(1)*t,z,dx(1));
-	
 	% the kernel is gaussian, so the dimensions are separable
-	% convolve along x
+
+	if (simple)
+	% diffuse along first dimension
+	z = diffuse_simple(e(1)*t,z,dx(1));
+	
+	% diffuse along second dimension
 	if (length(dx)>1)
 		% convolve along y
 		z = diffuse(e(2)*t,z.',dx(2)).';
+	end
+	else
+		% TODO
 	end
 
 	%heat_equation_fundamental_solution(dt,x,d,t0,x0);
 	% g = ifft(T*fft(b))
 	% fft(g) = T*fft(b)
 
-function z = diffuse_()
+
+
+function z = diffuse_simple(te,z,dx)
 	% standard deviation of the initial unit impulse
 	sd = sqrt(12*dx);
 	t0 = heat_equation_std_to_time(sd,te);

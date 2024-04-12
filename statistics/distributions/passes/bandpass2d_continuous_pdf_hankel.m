@@ -15,6 +15,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % not normalized, max (S) = 1;
+% function Sb = bandpass2d_continous_pdf_hankel(L,n,a,order,varargin)
 function Sb = bandpass2d_continous_pdf_hankel(L,n,a,order,varargin)
 	% lowpass density
 	Sl = lowpass2d_continuous_pdf_hankel(L,n,a,[],varargin{:});

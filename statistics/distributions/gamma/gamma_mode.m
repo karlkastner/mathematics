@@ -13,6 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% function [fc,Sc] = gamma_mode(a,b,flag)
 function [fc,Sc] = gamma_mode(a,b,flag)
 	if (a<1)
 		fc = eps^2;

@@ -15,10 +15,20 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 function [fc,Sc] = bandpass2d_continuous_pdf_mode(f0,order,L,n)
+	%f_ = max(f0,1);
+	if (nargin()<3)
+		%L = 100*(8/f0);
+		L = 100*f0;
+	end
+	if (nargin() < 4)
+		n = (L/f0)^2;
+		%L = ( L / (f0/8) )^2
+	end
+
 	if (1)
-		m = 100;
-		L = m./(f0/8);
-		n = m^2;
+		% m = 100;
+		% L = m./(f0/8);
+		%n = m^2;
 		%S = bandpass2d_pdf_hankel(fx,par(1),par(2));
 		df = 1./L;
 		fx = fourier_axis(L,n);

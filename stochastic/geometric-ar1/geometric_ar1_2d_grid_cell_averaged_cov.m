@@ -13,11 +13,16 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% function cov_ = geometric_ar1_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
+%%
+%% covariance between the grid-cell-averaged values of the continuous ornstein uhlenbeck (ar1) process
 function cov_ = geometric_ar1_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
-	% correlation of logarithmic values
+	% correlation function of the logarithmic values
 	lrfun = @(x,y) exp(-hypot(x,y)/theta);
-	% covariance fucntion of the values
-	rfun = @(x,y) logn_cov(lrfun(x,y),lmu,lmu,lsd,lsd);
-	cov_ = cov_cell_averages_2d(rfun,x,y,dx,dy,varargin{:});
+	% covariance function of the values
+	cfun = @(x,y) logn_cov(lrfun(x,y),lmu,lmu,lsd,lsd);
+	% covariance between grid cell averages
+	cov_ = cov_cell_averages_2d(cfun,x,y,dx,dy,varargin{:});
 end
 

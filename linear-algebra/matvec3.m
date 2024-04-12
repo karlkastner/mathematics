@@ -16,7 +16,6 @@ function c = matvec3(A,b)
 		c(1,idx,:) = c(1,idx,:) + A(idx,jdx,:).*b(1,jdx,:);
 	 end % for jdx
 	end % for idx
-	size(c)
 %	c = shiftdim(c,-1);
 	% was chnaged from -1 to plus 1 for tri_excircle
 	c = shiftdim(c,+1);

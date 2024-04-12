@@ -18,35 +18,35 @@
 %
 classdef Spatial_Pattern < handle
 	properties
-		% pattern in real space
+		% pattern in the spatial domain
 		b
+		% extended to square domain by padding the mean value
 		b_square
 
 		% mask of pattern in real space
 		msk = struct('b',[],'f',[],'rot',[]);
-		%b_hp;
 		
-		% domain size in m	
+		% spatial extend (domain size) in m	
 		L
 
-		% spectral density
+		% periodogram and spectral density
 		S = struct();
 
 		% cumulative spectral density
 		C = struct();
 
-		% autorrelatin
+		% correlogram and autocorrelation
 		R = struct();
 		
-		% real axes (m)
+		% axes int the spatial domain (m)
 		x
 		y
 		r
 
-		% frequency axes 1/m
+		% axes in the frequency domain 1/m
 		f = struct('x',[],'y',[],'r',[]);
 
-		% windows
+		% windows for suppressing spurious frequency components
 		w 
 
 		% analysis options
@@ -71,8 +71,11 @@ classdef Spatial_Pattern < handle
 			                          , 'fminscale', 1/8 ...
 			                          , 'fmaxscale', 4 ...
 				           ) ...
+			    , 'scalefield', 'hp' ...
+			    , 'weight', true ...
 		);
-		% analysis results
+
+		% analysis statistics
 		stat = struct( );
 	end % properties
 	methods
@@ -92,13 +95,18 @@ classdef Spatial_Pattern < handle
 			% frequency interval (spacing of frequency bins)
 			df = 1./obj.L;
 		end
+		function Sc = Sc(obj)
+			if (obj.stat.isisotropic)
+				Sc = obj.stat.Sc.radial.(obj.opt.scalefield);
+			else
+				Sc = obj.stat.Sc.x.(obj.opt.scalefield);
+			end % else of isiso
+		end
 		function lambda_c = lambda_c(obj)
 			if (obj.stat.isisotropic)
-				Sc = obj.stat.Sc.radial.hp;
-				lambda_c = 1./obj.stat.fc.radial.hp;	
+				lambda_c = 1./obj.stat.fc.radial.(obj.opt.scalefield);	
 			else
-				Sc = obj.stat.Sc.x.hp;
-				lambda_c = 1./obj.stat.fc.x.hp;
+				lambda_c = 1./obj.stat.fc.x.(obj.opt.scalefield);
 			end % else of isiso
 		end % lambda_c
 	end % methods

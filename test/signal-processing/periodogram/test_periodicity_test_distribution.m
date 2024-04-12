@@ -1,6 +1,6 @@
+% 2022-05-18 17:56:44.292546603
 % Shat/Sf ~ nf^d*betarnd(a,b)
 
-if (0)
 n=100;
 nf = 3;
 nf2 = 5;
@@ -39,22 +39,4 @@ else
 %         p1 = 1-betacdf(ratio/nf^2,a,b);   
 end
 	plot(p,[q,sort(flat(r))]);
-end
-
-if (1)
-
-nt=1e4;
-n = 100;
-p =[];
-L = 1;
-nf = 5;
-for idx=1:nt
-	b = randn(n,n);
-	[p(idx),ratio,maxShat,mdx,fdx,S] = periodogram_test_periodicity_2d( b, L, nf);
-end
-sum(p>0.05)/nt
-sum(p>0.1)/nt
-sum(p>0.2)/nt
-
-end
 

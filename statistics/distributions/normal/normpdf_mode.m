@@ -14,6 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+% function [fc,Sc] = normpdf_mode(mu,sd)
 function [fc,Sc] = normpdf_mode(mu,sd)
 	fc = mu;
 	Sc = 1/(sd*sqrt(2*pi));

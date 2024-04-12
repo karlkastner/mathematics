@@ -16,7 +16,7 @@
 %
 %% plot the pattern or densities 
 %
-function plot(obj,field_str,varargin)
+function [c,cbh] = plot(obj,field_str,varargin)
 	field_C  = strsplit(field_str,'.');
 	var      = getfield_deep(obj,field_str);
 	lambda_c = obj.lambda_c();
@@ -37,8 +37,8 @@ function plot(obj,field_str,varargin)
 		axis xy
 		axis equal
 		axis tight
-		xlabel('$x/\lambda_c$','interpreter','latex');
-		ylabel('$y/\lambda_c$','interpreter','latex');
+		xlabel('Distance $x/\lambda_c$','interpreter','latex');
+		ylabel('Distance $y/\lambda_c$','interpreter','latex');
 	case {'msk'}
 	switch (field_C{2})
 	case {'f'}
@@ -54,10 +54,7 @@ function plot(obj,field_str,varargin)
 		ylabel('Wavenumber $k_y/k_c$','interpreter','latex');
 	end
 	case {'S'}
-	%switch ('hat','hp','bar'}
-	%case {'S'}
-		imagesc(fftshift(obj.f.x*lambda_c),fftshift(obj.f.y*lambda_c),fftshift(var'/lambda_c.^2));
-		%axis(4*[-1,1,-1,1]);
+		imagesc(fftshift(obj.f.x*lambda_c),fftshift(obj.f.y*lambda_c),fftshift(var/lambda_c.^2));
 		axis xy;
 		axis equal;
 		axis tight
@@ -67,20 +64,26 @@ function plot(obj,field_str,varargin)
 		colormap(flipud(gray));
 		xlabel('Wavenumber $k_x/k_c$','interpreter','latex');
 		ylabel('Wavenumber $k_y/k_c$','interpreter','latex');
+		c = colorbar();
+		title(c,'$S/\lambda_c^2$','interpreter','latex');
 	case {'R'}
 	%if (pline)
 	%	surface(fc(kdx)*obj.y,fc(kdx)*obj.x,obj.R.clip,'edgecolor','none')
 	%else
-		imagesc((obj.x)/lambda_c,(obj.y)/lambda_c,fftshift(var)');
+		imagesc((obj.x)/lambda_c,(obj.y)/lambda_c,fftshift(var));
 	%end
 	%hold on
 	%if (lineflag)
 		%plot(fc(kdx)*y_(round(jc([1,end]))),fc(kdx)*x_(round(ic([1,end]))),'r','linewidth',1.5,varargin{:});
 	%end
+		xlabel('Lag distance $x/\lambda_c$','interpreter','latex');
+		ylabel('Lag distance $y/\lambda_c$','interpreter','latex');
 		axis xy 
 		axis equal
 		axis tight
 		axis([obj.opt.xlim,obj.opt.xlim]); % rp
+		c = colorbar();
+		title(c,'$R$','interpreter','latex');
 %	otherwise
 %		error(['Unknown field ', field_str]);
 %	end

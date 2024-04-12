@@ -30,21 +30,20 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bcl,bcr,isdx)
 		arg2 = 1;
 	end
 
-
 	if (nargin() < 3 || isempty(order))
 		order = 2;
 	end
 	if (nargin() < 4 || isempty(bcl))
-		bcl = 'dirichlet';
+		bcl = 'hdirichlet';
 	end
-	if (nargin() < 4 || isempty(bcr))
+	if (nargin() < 5 || isempty(bcr))
 		bcr = bcl;
 	end
 	switch(bcl)
-	case {'neumann','dirichlet','circular'}
+	case {'neumann','hdirichlet','circular'}
 		% nothing to do
 	otherwise
-	error('unknown boundary condition');
+		error('unknown boundary condition');
 	end
 
 	if (isscalar(arg1))
@@ -61,33 +60,33 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bcl,bcr,isdx)
 	end
 
 
-	switch order
+	switch (order)
 	 case {-1,'-1'}
 		% first order backward
 		% du[i] = (1/h)(u[i+1] - u[i])
-		d1 = 1.0/h*[0 -1  1];
+		d1 = 1.0/h*[0, -1,  1];
 	 case {+1,'+1'}
 		% first order forward
 		% du[i] = (1/h)(u[i-1] - u[i])
-		d1 = 1.0/h*[-1  1  0];
+		d1 = 1.0/h*[-1,  1,  0];
 	case {'+2'}
 		% second order left
 		d1 = 1.0/h*[1/2, -2, 3/2];
 	case {2,'2'}
 		% second order central
 		% du[i] = (1/2h)*(u[i+1] - u[i-1])
-		d1 = 0.5/h*[-1  0  1];
+		d1 = 0.5/h*[-1,  0,  1];
 	case {-2,'-2'}
 		% second order right
 		d1 = 1.0/h*[-3/2, 2, -1/2];
 	case {3,'3',4}
-		d1 = 1/(12*h)*[1 -8 0 8 -1];
+		d1 = 1/(12*h)*[1, -8, 0, 8, -1];
 	case {'+3'}
 		k = -2:0;
-		d1=1/h*[ -1   18   63   46]/30;
+		d1=1/h*[ -1,   18,   63,   46]/30;
 	case {'-3'}
 		k = 0:3;
-		d1=1/h*[-46   63  -18    1]/30;
+		d1=1/h*[-46,   63,  -18,    1]/30;
 	case {6}
 		d1 = 1/(60*h)*[-1, 9, -45, 0, 45, -9, 1];
 	otherwise
@@ -108,7 +107,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bcl,bcr,isdx)
 %		end
 		D1 = spdiags(d1,-1:1,n,n);
 		switch (bcl)
-		case ('dirichlet')
+		case ('hdirichlet')
 			% nothing to do, outside value is zero
 			% TODO this depends where the boundary is placed
 		case ('neumann')
@@ -129,7 +128,7 @@ function [D1, d1] = derivative_matrix_1_1d(arg1,arg2,order,bcl,bcr,isdx)
 %			D1(1,end) = -1/h;
 %		end
 		switch (bcr)
-		case ('dirichlet')
+		case ('hdirichlet')
 			% nothing to do, outside value is zero
 			% TODO this depends where the boundary is placed
 		case ('neumann')

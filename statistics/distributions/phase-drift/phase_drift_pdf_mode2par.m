@@ -16,18 +16,39 @@
 %
 %% transform mode to parameters of the brownian phase spectral density
 %
-% function [f0, s] = spectral_density_brownian_phase_mode2par(fc,Sc)
-function [f0, s] = spectral_density_brownian_phase_mode2par(fc,Sc)
-
-	%r = root(z^3 - z^2 + z*(4*Sc^2*fc^2*pi^2 - 2) - 4*Sc^2*fc^2*pi^2, z, 1)
-	rp = [1, -1, (4*Sc^2*fc^2*pi^2 - 2), -4*Sc^2*fc^2*pi^2];
-	r = roots3(rp);
-	% choose real root
-	r = r(1);
-	p2 = (  pi^2*((4*Sc^2*fc^2*pi^2 - 1)*r^2 ...
-	      - 12*Sc^2*fc^2*pi^2 + 16*Sc^4*fc^4*pi^4 ...
-              + 2*r)/(16*Sc^2*fc^2) );
-	s = sqrt(pi/sqrt(p2));
-	f0 = fc./sqrt(2*(pi.^2*s.^4 + 1).^(1/2) - s.^4*pi^2 - 1);
-end % spectral_density_brownian_phase_mode2par
+% function [f0, s] = phase_drift_pdf_mode2par(fc,Sc)
+function [f0, s] = phase_drift_pdf_mode2par(fc,Sc,numerical)
+	if (nargin()<3 || ~numerical)
+		%r = root(z^3 - z^2 + z*(4*Sc^2*fc^2*pi^2 - 2) - 4*Sc^2*fc^2*pi^2, z, 1)
+		Sfp2 = Sc*Sc*fc*fc*pi*pi;
+		rp = [1, -1, 4*Sfp2 - 2, -4*Sfp2];
+		r = roots3(rp);
+		% choose real root
+		r	
+		r = r(1);
+		% by round off error, r can sometimes ha
+		r = real(r);
+		den1 =  2*( (2*Sfp2 - 1)*r.*r ...
+	                    + r ...
+		            + Sfp2*(-6 + 8*Sfp2) ...
+		          );
+		s = 2*sqrt(Sc.*fc./sqrt(den1));
+		den2 = (2*sqrt(1 + pi^2*s.^4) - s.^4*pi^2 - 1);
+		f0 = fc./sqrt(den2);
+		if (den1  < 0 || den2 < 0)
+			[f0, s] = phase_drift_pdf_mode2par(fc,Sc,true);
+		end
+	else
+		fc = double(fc);
+		Sc = double(Sc);
+		par = ([fc,0.5]);
+		par = lsqnonlin(@objfun,[par(1),par(2)],[0,0]);
+		f0 = par(1);
+		s = par(2);
+	end
+function res = objfun(par)
+	[fc_,Sc_] = phase_drift_pdf_mode(par(1),par(2));
+	res = [fc_-fc,Sc_-Sc];
+end
+end % phase_drift_pdf_mode2par
 

@@ -24,7 +24,11 @@ function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
 
 		% quadratic vandermonde matrix
 		% TODO allow for changing time step
-		A = vander_1d([-dt; 0; dt],2);
+		t_ = [t(1); t; t(end)];
+		% shift local to reduce round of error
+		t3 = [t_(tdx)-t_(tdx+1); zeros(1,length(tdx)); t_(tdx+2)-t_(tdx+1)];
+		% A = vander_1d([-dt; 0; dt],2);
+		A = vander_1d(t3,2);
 
 		% TODO extrapolate end-points linearly
 		val_ = [val(1); val; val(end)];

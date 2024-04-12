@@ -27,7 +27,7 @@ function obj = clear_2d_properties(obj)
 	end % for field
 	obj.f.rr = [];
 	obj.f.tt = [];
-	obj.w    = [];
+	%obj.w    = [];
 	obj.stat.stati.p1_all = [];
 	obj.stat.stati.pn_all = [];
 end

@@ -27,9 +27,11 @@
 %    0 + ( 0 + y''(t)*dt + 1/2 y''' dt^2)*dt + E =  0 + 0 + 1/2*y''(t)*dt^2 + 1/6 y''' dt^3
 %    E =  - 1/2*y''(t)*dt^2 - 1/3 y'''*dt^3
 
-syms y y1 y2 y3 y4 dt e
+syms y d1y d2y d3y d4y dt d5y e
 
-ynext  = y  + y1*dt + 1/2*y2*dt^2 + 1/6*y3*dt^3 + 1/24*y4*dt^4 + 1/120*y5*dt^5
-dynext = y1 + y2*dt + 1/2*y3*dt^2 + 1/6*y4*dt^3 + 1/24*y5*dt^4
-eq = ynext == y + dt*dynext + e
+ynext  = y  + d1y*dt + 1/2*d2y*dt^2 + 1/6*d3y*dt^3 + 1/24*d4y*dt^4 + 1/120*d5y*dt^5
+dynext = d1y + d2y*dt + 1/2*d3y*dt^2 + 1/6*d4y*dt^3 + 1/24*d5y*dt^4
+ynum = y + dt*dynext
+
+eq = ynext == ynum + e
 solve(eq,e)
