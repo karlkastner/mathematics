@@ -1,4 +1,5 @@
 % Wed 25 Nov 13:35:34 +08 2020
+% Karl Kastner, Berlin
 function [c,pdf] = skew_generalized_normal_fit(h,x,c,w)
 	if (nargin()<3)
 		mu = rvec(h)*cvec(x)

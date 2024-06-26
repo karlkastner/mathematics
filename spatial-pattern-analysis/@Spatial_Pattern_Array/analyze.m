@@ -39,70 +39,16 @@ function analyze(obj)
 				% reload
 				clear sp % runtime
 				load(spname,'sp');
+				% still analyze if p_periodic is missing
 				if (~isfield(sp.stat,'p_periodic'))
-					info=imfinfo([folder,filesep,filename]);
-					A = max(info.Width,info.Height)^2;
-					if (A > obj.opt.area_max)
-						error('Image exceeds size limit');
-					end
-					sp.imread([folder,filesep,filename]);
-					sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
-					sp.analyze_grid();
-					try
-					sp.fit_parametric_densities();
-					catch e
-						e
-						for edx=1:length(e.stack); disp(e.stack(edx)); end
-						obj.error_C{idx,3} = e;
-					end
-					sp.cast(@single);
-
-					% clear 2d varibales to save space
-					sp.clear_2d_properties();	
-		
-					%sp = sp_a(idx);
-					mkdir(dirname(spname));
-					%runtime = toc(timer)-t;
-					% save analysis of individual pattern
-					save(spname,'sp'); %,'runtime');
+					analyze_();
 				end
 			else
 				% analyze pattern
 				disp([num2str(idx), ' ', num2str(dx), ' ', filename])
-
-				info=imfinfo([folder,filesep,filename]);
-				A = max(info.Width,info.Height)^2;
-				if (A > obj.opt.area_max)
-					error('Image exceeds size limit');
-				end
-
 				sp = Spatial_Pattern();
 				sp.init();
-	
-				sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
-		
-				sp.imread([folder,filesep,filename]);
-		
-				sp.analyze_grid();
-
-				try
-					sp.fit_parametric_densities();
-				catch e
-					e
-					for edx=1:length(e.stack); disp(e.stack(edx)); end
-					obj.error_C{idx,3} = e;
-				end
-		
-				% clear 2d varibales to save space
-				sp.clear_2d_properties();
-				sp.cast(@single);	
-		
-				%sp = sp_a(idx);
-				mkdir(dirname(spname));
-				%runtime = toc(timer)-t;
-				%obj.runtime(idx,2) = runtime;
-				% save analysis of individual pattern
-				save(spname,'sp'); %,'runtime');
+				analyze_();
 
 			end % else of (reload && exist spname)
 		catch e
@@ -123,5 +69,35 @@ function analyze(obj)
 		obj.sp_a(idx,1) = sp;
 		%obj.runtime(idx,2) = runtime;
 	end % for idx (each pattern)
+
+function analyze_()
+		info=imfinfo([folder,filesep,filename]);
+		A = max(info.Width,info.Height)^2;
+		if (A > obj.opt.area_max)
+			error('Image exceeds size limit');
+		end
+
+		sp.imread([folder,filesep,filename]);
+		sp.opt.test_for_periodicity = obj.opt.test_for_periodicity;
+
+		sp.analyze_grid();
+		try
+			sp.fit_parametric_densities();
+		catch e
+			e
+			for edx=1:length(e.stack); disp(e.stack(edx)); end
+			obj.error_C{idx,3} = e;
+		end
+
+		% clear 2d varibales to save space
+		sp.clear_2d_properties();
+		sp.cast(@single);	
+
+		mkdir(dirname(spname));
+
+		% save analysis of individual pattern
+		save(spname,'sp'); %,'runtime');
+end
+
 end % analyze
 

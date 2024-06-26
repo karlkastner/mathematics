@@ -49,6 +49,7 @@ classdef Spatial_Pattern_Array < handle
 			     ,'wavelength_max', 500 ...% maximum wavelength for a pattern to be included
 			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
 			     , 'skip', 1 ...
+			     , 'field', 'hp' ...
 			    );
 		imgbase  = 'google-satellite_';
 	end
@@ -119,23 +120,23 @@ classdef Spatial_Pattern_Array < handle
 	end
 	function y = wavelength_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) 1./double(getfield_try(x,'stat.fc.radial.hp',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) 1./double(getfield_try(x,['stat.fc.radial.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = wavelength_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) 1./double(getfield_try(x,'stat.fc.x.hp',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) 1./double(getfield_try(x,['stat.fc.x.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.radial.hp',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.radial.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.x.hp',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.x.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = Sc_y(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,'stat.Sc.y.hp',NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.y.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = regularity_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end

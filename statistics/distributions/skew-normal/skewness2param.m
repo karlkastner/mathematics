@@ -4,7 +4,7 @@
 % convert skewness to skew-parameter of the skew-normal-distribution
 % azzalini
 function a = skewness2param(sk)
-	lim = (2^(1/3)*(4 - pi)^(2/3))/(pi - 2);
+	lim = skewnormal_maxsk();
 	if (abs(sk) > lim)
 		warning(['skewness has to be between +/-',num2str(lim)]);
 	end
