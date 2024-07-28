@@ -1,0 +1,4 @@
+function R = laplaceacf(x,mu,s)
+	R = cos(2*pi*x*mu)./(1 + s^2.*(2*pi).^2*x.^2);
+end
+

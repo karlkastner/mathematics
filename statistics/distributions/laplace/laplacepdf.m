@@ -1,0 +1,5 @@
+% Sat 29 Jun 10:29:30 CEST 2024
+function p = laplacepdf(x,mu,s)
+	p = exp(-abs((x-mu)./s))./(2*s);
+end
+
