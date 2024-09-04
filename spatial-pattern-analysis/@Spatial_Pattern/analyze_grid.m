@@ -149,27 +149,39 @@ function obj = analyze_grid(obj)
 
 	L_eff = effective_mask_size(obj.msk.b_square,obj.stat.L_square,-angle_deg);
 
-	% consitent smoothing of patterns whits spatial extent of high aspect ratio
+	% smoothing window for consitently estimating the spectral density 
+	% of patterns with spatial extent of high aspect ratio
 	n = size(S.hat);
-	% smoothing window
-	Ws      = zeros(n);
-	if (L_eff.x > L_eff.y)
-		m = sqrt(L_eff.x/L_eff.y);
-		nw = m;
-		sw = gausswin_dof2std(nw,obj.f.x(2)-obj.f.x(1));
-		win = normpdf(obj.f.x,0,sw);
-		Ws(:,1) = win;
-		%win = ifftshift(rectwin(fftshift(obj.f.x),0,nw*(obj.f.x(2)-obj.f.x(1))));
-	else
-		m   = sqrt(L_eff.y./L_eff.x);
-		nw  = m;
-		sw  = gausswin_dof2std(nw,obj.f.y(2)-obj.f.y(1));
-		win = normpdf(obj.f.y,0,sw);
-		Ws(1,:) = win;
-		% win = ifftshift(rectwin(fftshift(obj.f.y),0,nw*(obj.f.y(2)-obj.f.y(1))));
+	if (L_eff.x < obj.stat.L_square(1))
+		% when the pattern is shorter along the x-axis, then the
+		% y-component is averaged over fewer samples and has to be smoothed
+		%m   = sqrt(L_eff.x/L_eff.y);
+		nwy   = (obj.stat.L_square(1)/L_eff.x);
+		swy  = gausswin_dof2std(nwy,obj.f.y(2)-obj.f.y(1));
 		% gaussian window equivalent to m-degrees of freedom
+		winy = normpdf(obj.f.y,0,swy);
+		%winx = ifftshift(rectwin(fftshift(obj.f.x),0,nw*(obj.f.x(2)-obj.f.x(1))));
+	else
+		winy = zeros(n,1);
+		winy(1) = 1;
 	end
-	Ws = Ws/sum(Ws(:));
+ 	if (L_eff.y < obj.stat.L_square(2))
+		% when the pattern is shorter along the y-axis, then the
+		% x-component is averaged over fewer samples and has to be smoothed
+		%m   = sqrt(L_eff.y./L_eff.x);
+		nwx   = obj.stat.L_square(2)./L_eff.y;
+		% gaussian window equivalent to m-degrees of freedom
+		swx  = gausswin_dof2std(nwx,obj.f.x(2)-obj.f.x(1));
+		winx = normpdf(obj.f.y,0,swx);
+		% winy = ifftshift(rectwin(fftshift(obj.f.y),0,nw*(obj.f.y(2)-obj.f.y(1))));
+	else
+		winx = zeros(1,n(2));
+		winx(1) = 1;
+	end
+	Ws = cvec(winx)*rvec(winy);
+	% the tails of the gaussian might be truncated, thus normalization
+	% is necessary to ensure unit area
+	Ws = Ws/sum(Ws,'all');
 
 	% for patterns with known direction, such as computer generated patterns, the direction angle_deg can be specified
 	if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
