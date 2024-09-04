@@ -1,19 +1,22 @@
-function w = normalwrappedpdf_width(mu,s,p)
+% 2024-06-29 15:31:54.785646609 +0200
+function [w,xl,xr,istruncated] = normalmirroredpdf_width(mu,s,p)
 	if (nargin()<3)
 		p = 0.5;
 	end
 	mu = abs(mu);
-	[fc, Sc] = normalwrappedpdf_mode(mu,s);
-	S0 = normalwrappedpdf(0,mu,s);
+	[fc, Sc] = normalmirroredpdf_mode(mu,s);
+	S0 = normalmirroredpdf(0,mu,s);
 	% left
 	if (S0 > p*Sc)
-		w = NaN;
+		istruncated = true;
+		xl = 0;
 	else
+		istruncated = false;
 		xl = max(mu - s, 0.5*mu);
-		xl = fzeros(@(x) normalwrappedpdf(x,mu,s)- 0.5*Sc,xl);
-		xr = mu+s;	
-		xl = fzeros(@(x) normalwrappedpdf(x,mu,s) - 0.5*Sc,xr);
+		xl = fzero(@(x) normalmirroredpdf(x,mu,s)- 0.5*Sc,xl);
 	end
+	xr = mu+s;	
+	xr = fzero(@(x) normalmirroredpdf(x,mu,s) - 0.5*Sc,xr);
 	w = xr - xl;
 end
 

@@ -43,7 +43,7 @@ function obj = analyze_grid(obj)
 
 	% removal of spurious low frequency components
 	% we assume that spurious low frequency components are predominantly isotropic
-	[S.hp, whp, fhp, shp] = suppress_low_frequency_lobe(S.hat,obj.msk.b_square,obj.stat.L_square);
+	[S.hp, whp, fhp, shp, nf_lf, dSminmaxrel] = suppress_low_frequency_lobe(S.hat,obj.msk.b_square,obj.stat.L_square);
 	%[S.hp, w] = suppress_low_frequency_components_1(obj,S.hat)
 
 	% fraction of spectral energy retained after removing spurious low-frequency components by highpass filtering
@@ -124,6 +124,7 @@ function obj = analyze_grid(obj)
 	%fr_periodic = stati.fr_max;
 	catch e
 		disp(e);
+		disp(e.stack);
 		p_periodic= NaN;
 		stati = struct();
 		%fr_periodic = NaN;
@@ -131,7 +132,7 @@ function obj = analyze_grid(obj)
 	stat.stati = stati;
 
 	% determine if pattern is isotropic (spotted, gapped, labyrinthic)
-	% or anisotropic (banded)
+	% or anisotropic (striped)
 	% note: presmoothed with Sbar works better than with Shat
 	%nt   = pi*n(1);
 	%nc   = 2*pi*f_50/dfr;
@@ -148,6 +149,28 @@ function obj = analyze_grid(obj)
 
 	L_eff = effective_mask_size(obj.msk.b_square,obj.stat.L_square,-angle_deg);
 
+	% consitent smoothing of patterns whits spatial extent of high aspect ratio
+	n = size(S.hat);
+	% smoothing window
+	Ws      = zeros(n);
+	if (L_eff.x > L_eff.y)
+		m = sqrt(L_eff.x/L_eff.y);
+		nw = m;
+		sw = gausswin_dof2std(nw,obj.f.x(2)-obj.f.x(1));
+		win = normpdf(obj.f.x,0,sw);
+		Ws(:,1) = win;
+		%win = ifftshift(rectwin(fftshift(obj.f.x),0,nw*(obj.f.x(2)-obj.f.x(1))));
+	else
+		m   = sqrt(L_eff.y./L_eff.x);
+		nw  = m;
+		sw  = gausswin_dof2std(nw,obj.f.y(2)-obj.f.y(1));
+		win = normpdf(obj.f.y,0,sw);
+		Ws(1,:) = win;
+		% win = ifftshift(rectwin(fftshift(obj.f.y),0,nw*(obj.f.y(2)-obj.f.y(1))));
+		% gaussian window equivalent to m-degrees of freedom
+	end
+	Ws = Ws/sum(Ws(:));
+
 	% for patterns with known direction, such as computer generated patterns, the direction angle_deg can be specified
 	if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
 		angle_deg = obj.opt.angle;
@@ -158,13 +181,20 @@ function obj = analyze_grid(obj)
 	L = obj.stat.L_square;
 	df = 1./obj.stat.L_square;
 	n  = obj.stat.n_square;
+	% prepare output
+	fc = struct();
+	Sc = struct();
+	regularity = struct();
 	for field = {'hp','hat','bar'}
 		% normalize volume of density to 1
 		S.(field{1})   = periodogram_normalize_2d(S.(field{1}),df_square);
 		%S.(field{1})   = 2*S.(field{1})/(sum(sum(S.(field{1})))*df(1)*df(2));
 		% autocorrelaton
-		R.(field{1})   = 0.5*(n(1)*n(2))./(L(1)*L(2))*real(ifft2(S.(field{1})));
+		R.(field{1})   = (n(1)*n(2))./(L(1)*L(2))*real(ifft2(S.(field{1})));
 
+		% rotate periodogram/density
+		S.rot.(field{1}) = fft_rotate(S.(field{1}),-angle_deg);
+		R.rot.(field{1}) = fft_rotate(R.(field{1}),-angle_deg);
 
 		% maximum of the 2d periodogram / density
 		[Sc.(field{1}),cdx] = max(S.(field{1}),[],'all');
@@ -176,27 +206,52 @@ function obj = analyze_grid(obj)
 		fc.xx.(field{1}) = obj.f.x(imax);
 		fc.yy.(field{1}) = obj.f.y(jmax);
 
-		% rotate periodogram/density
-		S.rot.(field{1}) = fft_rotate(S.(field{1}),-angle_deg);
-		R.rot.(field{1}) = fft_rotate(R.(field{1}),-angle_deg);
+	end
 
+
+	% convolve
+	% TODO this actually only needs one fft in the direction of the smoothing
+	R.rot.con = fft2(Ws).*fft2(S.rot.hp);
+	S.rot.con = ifft2(R.rot.con);
+	R.rot.con = real(R.rot.con);
+	R.rot.con = R.rot.con/R.rot.con(1);
+	% rotate back
+	S.con = fft_rotate(S.rot.con,+angle_deg);
+	R.con = fft_rotate(R.rot.con,+angle_deg);
+
+	for field = {'hp','hat','bar','con'}
 		% radial periodogram
 		[S_,~] = periodogram_radial(S.(field{1}),L);
 		S.radial.(field{1}) = S_.normalized;
+		% angular periodogram
+		[S.angular.(field{1}),obj.f.angle] = periodogram_angular(S.(field{1}),L,nf_s_);
+
 	
 		% angular periodogram
-		[S.rot.angular.(field{1}),obj.f.angle] = periodogram_angular(S.rot.(field{1}),L,nf_s_); 
+		[S.rot.angular.(field{1}),obj.f.angle] = periodogram_angular(S.rot.(field{1}),L,nf_s_);
+		% over half-circle
+		S.rot.angular_p.(field{1}) = ( 2*cvec(S.rot.angular.(field{1})) ...
+			                      .* (  cvec(obj.f.angle) >= -pi/2 ...
+			                          & cvec(obj.f.angle) <   pi/2 ...
+                                                 ) ...
+                                             );
 
 
 		% density perpendicular to bands
-		S.rot.x.(field{1}) = mean(S.rot.(field{1}),2);
+		S.rot.x.(field{1})  = sum(S.rot.(field{1}),2)*df(2);
+		% over positive half-axis
+		S.rot.xp.(field{1}) = ( 2*S.rot.x.(field{1}) .* (cvec(obj.f.x) >= 0) );
+
 		% density parallel to bands
-		S.rot.y.(field{1}) = mean(S.rot.(field{1}),1)';
+		S.rot.y.(field{1}) = (sum(S.rot.(field{1}),1)')*df(1);
 
 		% normalize the area of density to 1 over the positive half-axis
-		S.rot.x.(field{1}) = periodogram_normalize(S.rot.x.(field{1}),df_square(1));
+		%fullaxsis = false;
+		%S.rot.x.(field{1}) = periodogram_normalize(S.rot.x.(field{1}),df_square(1),false);
+
 		% normalize area under density to 1 over the entire axis
-		S.rot.y.(field{1}) = periodogram_normalize(S.rot.y.(field{1}),df_square(2));
+		%fullaxis = true;
+		%S.rot.y.(field{1}) = periodogram_normalize(S.rot.y.(field{1}),df_square(2),true);
 
 		% autocorrelation in direction perpendictular to bands
 		R.rot.x.(field{1}) = mean(R.rot.(field{1}),2);
@@ -212,29 +267,32 @@ function obj = analyze_grid(obj)
 		[R.radial.(field{1}),obj.r] = autocorr_radial(R.(field{1}),L);
 
 		% density maxima
+		% TODO extreme3
 		[Sc.radial.(field{1}),id]  = max(S.radial.(field{1}));
 		fc.radial.(field{1})       = obj.f.r(id);
-		[Sc.x.(field{1}),id]       = max(cvec(S.rot.x.(field{1})).*(obj.f.x>=0));
+		[Sc.x.(field{1})]          = max(cvec(S.rot.x.( field{1}))); %.*(obj.f.x>=0));
+		[Sc.xp.(field{1}),id]      = max(cvec(S.rot.xp.(field{1})));
 		fc.x.(field{1})            = obj.f.x(id);
 		[Sc.y.(field{1}),id]       = max(cvec(S.rot.y.(field{1})).*(obj.f.y>=0));
 		% this should be the first field for anisotropic patterns, but we compute it anyway
 		fc.y.(field{1})            = obj.f.y(id);
-		[Sc.angular.(field{1}),id] = max(S.rot.angular.(field{1}));
+		[Sc.angular.(field{1})]    = max(S.rot.angular.(field{1}));
+		[Sc.angular_p.(field{1}),id] = max(S.rot.angular_p.(field{1}));
 		fc.angular.(field{1})      = obj.f.angle(id);
 
+		if (isisotropic)
+			regularity.(field{1}) = Sc.radial.(field{1}) .* fc.radial.(field{1});
+			%[Sc.ref,ldx] = S.radial.hp);
+			%lc       = 1./obj.f.r(ldx);
+		else
+			%regularity = Sc.x.hp .* fc.x.hp;
+			regularity.(field{1}) = Sc.xp.(field{1}) .* fc.x.(field{1});
+			%[Sc,ldx] = max(Sx);
+			%lc       = 1./abs(obj.f.x(ldx));
+		end
 	end % for field
 
 	obj.msk.rot.f = fft_rotate(obj.msk.f,-angle_deg);
-
-	if (isisotropic)
-		regularity = Sc.radial.hp .* fc.radial.hp;
-		%[Sc.ref,ldx] = S.radial.hp);
-		%lc       = 1./obj.f.r(ldx);
-	else
-		regularity = Sc.x.hp .* fc.x.hp;
-		%[Sc,ldx] = max(Sx);
-		%lc       = 1./abs(obj.f.x(ldx));
-	end
 
 	% store reasults
 	stat.L_eff         = L_eff;
@@ -249,9 +307,12 @@ function obj = analyze_grid(obj)
 	stat.nf_test       = nf_test;
 	stat.p_isotropic   = p_isotropic;
 	stat.p_periodic    = p_periodic;
+	% TODO this should also be hat, hp, 
 	stat.regularity    = regularity;
 	stat.siz           = n;
 	stat.centroid      = centroid;
+	stat.dSminmaxrel   = dSminmaxrel;
+	stat.Ws = Ws;
 
 	obj.stat = stat;
 	obj.R = R;
@@ -259,5 +320,6 @@ function obj = analyze_grid(obj)
 
 	obj.stat.analyzed = true;
 	obj.stat = setfield_deep(obj.stat,'runtime.analysis',toc(timer));
+
 end % analyze_grid
 

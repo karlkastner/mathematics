@@ -1,13 +1,21 @@
 % Di 2. Feb 11:55:44 CET 2016
-% ref: david lane (hyperstat)
+% Karl Kastner, Berlin
+%
+% method below is based on rank transformation:
+% page 144, eq 21 in conover 1999 3rd ed 
+% n.b. this is recommended for sample sizes larger 20
+%
+% further reading:
 % hojo 1931, 1933
-% page 144, eq 21 in conover 3rd ed 
+% chu 1955
+% cadwell 1952
+% david lane (hyperstat)
 %
 %% median and its confidence intervals under assumption of normality
-%% se_me = sqrt(1/2 pi) 1.25331 * sd/sqrt(n)
+%% se_me = sqrt(pi/2)*sd/sqrt(n) = 1.25331*sd/sqrt(n)
 function [pl, pm, pu] = median_ci(n,P)
 	%z = (norminv(1-P));
-	z = (norminv(P));
+	z = (norminv(1-(1-P)/2));
 	d = z*sqrt(n);
 
 	if (1 == mod(n,2))

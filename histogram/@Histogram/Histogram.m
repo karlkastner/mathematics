@@ -40,6 +40,7 @@ classdef Histogram < handle
 		s  = stdS(h,edge,v);
 		s2 = varS(h,edge,v);
 		[wh e] = stairsS(h,edge);
+		[density_wh, centre] = density(h,edge_A);
 		function centre = centreS(edge)
 			centre = 0.5*(edge(1:end-1)+edge(2:end));
 		end

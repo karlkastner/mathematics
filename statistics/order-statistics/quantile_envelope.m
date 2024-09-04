@@ -13,21 +13,31 @@ function [C2, level, midP] = quantile_envelope(X,Y,Z,x0,y0,p)
 	while (true)
 		% compute mid-level contour
 %		midZ = p_*upperZ+(1-p_)*lowerZ;
+		C = Contour();
+		[Cc, level] = C.extract(X,Y,Z',[lowerZ,midZ,upperZ]);
+if (0)
 		C = contourc(X,Y,Z',[lowerZ,midZ,upperZ]);
 		% extract centre-contour
 		[Cc level] = extract_contour(C);
+end
+
 		% mid contour
 		m = 0;
-		C2 = {};
+		%C2 = {};
+		nc = 0;
+		C2 = struct('X',[],'Y',[],'level',[]);
 		% test which samples are contained
 		for jdx=1:length(level)
 			if (abs(level(jdx)-midZ) < 1e-7)
 				% there can be several modes, count each of them
-				C_   = [Cc{jdx}(1,:)',Cc{jdx}(2,:)'];
+				%C_   = [Cc{jdx}(1,:)',Cc{jdx}(2,:)'];
+				C_ = [cvec(Cc(jdx).X), cvec(Cc(jdx).Y)];
 				flag = inpoly([x0,y0],C_);
 				% count number of points contained in contour
 				m = m+sum(flag);
-				C2{end+1} = Cc{jdx};
+				%C2{end+1} = Cc{jdx};
+				nc = nc+1;
+				C2(nc) = Cc(jdx);
 			end
 		end
 		midP = m/n;

@@ -13,7 +13,7 @@
 % 
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
-function [fm,sf] = laplacewrappedpdf_mode2par(fc,Sc)
+function [fm,sf] = laplacemirroredpdf_mode2par(fc,Sc)
 	% type requirement for lsqnonlin
 	fc = double(fc);
 	Sc = double(Sc);
@@ -26,7 +26,7 @@ function [fm,sf] = laplacewrappedpdf_mode2par(fc,Sc)
 	sf = par(2);
 	
 function res = resfun(par)
-	[fc_,Sc_] = laplacewrappedpdf_mode(par(1),par(2));
+	[fc_,Sc_] = laplacemirroredpdf_mode(par(1),par(2));
 	res = [fc_-fc,Sc_-Sc];
 end
 

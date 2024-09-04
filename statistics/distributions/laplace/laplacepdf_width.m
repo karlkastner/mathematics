@@ -1,3 +1,4 @@
+% 2024-06-29 11:49:32.647009759 +0200
 function w = laplacepdf_width(x0,s,p0)
 	if (nargin()<3)
 		p0 = 0.5;

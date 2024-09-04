@@ -18,6 +18,7 @@
 %
 function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% n.b. for higher than linear, posisitivty of density can be violated
+	% TODO make class member
 	imethod = 'linear';
 	% resample 1d-densities
 	% for computing the joint normalized density of.pdf patterns, the patterns
@@ -40,23 +41,30 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 			iSa = cumint_trapezoidal(obj.f.angle,obj.S.rot.angular.(field{1}));
 			Si.angular.cdf.(field{1}) = interp1(obj.f.angle,iSa,fi.angular,'linear');
 			Si.angular.pdf.(field{1}) = derivative1(fi.angular,double(Si.angular.cdf.(field{1})));
-		
+			fdai = (fi.angular>=-pi/2 & fi.angular<pi/2);
+			Si.angular_p.pdf.(field{1}) = 2*cvec(Si.angular.pdf.(field{1})).*cvec(fdai);
 			Ri.radial.(field{1})  = interp1(obj.r/lc,obj.R.radial.(field{1}),xi,imethod,0); 
 
 			% anisotropic
 			fdx      = (obj.f.x>=0);
+			fdxi     = (fi.x>=0);
 			iSx      = cumint_trapezoidal(obj.f.x(fdx), obj.S.rot.x.(field{1})(fdx));
 			Si.x.cdf.(field{1}) = interp1(obj.f.x(fdx)*lc,iSx,fi.x,imethod,1);
 			Si.x.pdf.(field{1}) = derivative1(fi.x,double(Si.x.cdf.(field{1})));
+			Si.xp.pdf.(field{1}) = 2*Si.x.pdf.(field{1}).*(fdxi);
 			n        = length(obj.R.rot.x.(field{1}));
 			x_       = fourier_axis(1,n);
 			Ri.x.(field{1}) = interp1(fftshift(x_)/lc,fftshift(obj.R.rot.x.(field{1})),xi,imethod,0);
-			fdx      = (obj.f.y>=0);
+			% full axis for y
+			%fdx      = (obj.f.y>=0);
+			%fdx      = true(size(obj.f.y));
+			[void,fdx] = sort(obj.f.y);
 			iSy      = cumint_trapezoidal(obj.f.y(fdx), obj.S.rot.y.(field{1})(fdx));
 			Si.y.cdf.(field{1}) = interp1(obj.f.y(fdx)*lc,iSy,fi.y,imethod,1);
 			Si.y.pdf.(field{1}) = derivative1(fi.y,double(Si.y.cdf.(field{1})));
 		else
 			Si.x.pdf.(field{1})       = NaN(1,length(fi.x));
+			Si.xp.pdf.(field{1})       = NaN(1,length(fi.x));
 			Si.x.cdf.(field{1})       = NaN(1,length(fi.x));
 			Si.y.pdf.(field{1})       = NaN(1,length(fi.y));
 			Si.y.cdf.(field{1})       = NaN(1,length(fi.y));
@@ -64,6 +72,7 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 			Si.radial.pdf.(field{1})  = NaN(1,length(fi.radial));
 			Si.angular.cdf.(field{1}) = NaN(1,length(fi.angular));
 			Si.angular.pdf.(field{1}) = NaN(1,length(fi.angular));
+			Si.angular_p.pdf.(field{1}) = NaN(1,length(fi.angular));
 			Ri.x.(field{1})           = NaN(1,length(xi));
 			Ri.radial.(field{1})      = NaN(1,length(xi));
 		end % else of if isfinite lc

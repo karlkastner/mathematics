@@ -4,9 +4,9 @@
 %% mode (maximum) of the log-normal density
 %
 % function [x_mode,y_mode] = logn_mode(lmu,lsd)
-function [x_mode,y_mode] = logn_mode(lmu,lsd)
+function [x_mode,y_mode] = lognpdf_mode(lmu,lsd)
 	x_mode = exp(lmu - lsd.^2);
-	[mu,sd] = logn_param2moment(lmu,lsd);
+	[mu,sd] = lognpdf_param2moment(lmu,lsd);
 	if (issym(lmu) || issym(lsd))
 		pi_ = sym(pi);
 	else

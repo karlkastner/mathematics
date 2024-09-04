@@ -86,5 +86,6 @@ function [g, alpha, obj] = imread(obj,filename)
 	obj.L   = n.*obj.stat.dxy;
 	obj.b   = b;
 	obj.msk.b = msk;
-end
+	obj.stat.filename = filename;
+end % imread
 

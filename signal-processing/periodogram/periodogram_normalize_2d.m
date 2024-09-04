@@ -14,9 +14,8 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-% note S(x,0) and S(0,y) are conventionally weighted by 1/2
-%      S(0,0) by 1/4
+% normalize the volume of the two dimensional density Sxy to 1
 function S =  periodogram_normalize_2d(S,df)
-	S = 2*S./(sum(S,'all')*df(1)*df(2));
+	S = S./(sum(S,'all')*df(1)*df(2));
 end
 

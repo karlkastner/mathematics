@@ -13,19 +13,21 @@
 % 
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
-function [fm,sf] = normpdf_wrapped_mode2par(fc,Sc)
+function [fm,sf] = normalmirroredpdf_mode2par(fc,Sc)
 	% type requirement for lsqnonlin
 	fc = double(fc);
 	Sc = double(Sc);
 
-	par0 = [fc,0.1./Sc];
+	%par0 = [fc,0.1./Sc];
+	[par0(1),par0(2)] = normpdf_mode2par(fc,2*Sc);
+	par0(2)=0.5*par0(2);
 	% [par,resnorm,residual,exitflag] 
-	par = lsqnonlin(@resfun,par0);
+	par = lsqnonlin(@resfun,par0,[0,0])
 	fm = par(1);
 	sf = par(2);
 	
 function res = resfun(par)
-	[fc_,Sc_] = normpdf_wrapped_mode(par(1),par(2));
+	[fc_,Sc_] = normalmirroredpdf_mode(par(1),par(2));
 	res = [fc_-fc,Sc_-Sc];
 end
 

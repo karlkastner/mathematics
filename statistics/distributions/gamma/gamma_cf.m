@@ -14,6 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
+%% characteristic function of the gamma distribution
 function cf = gamma_cf(x,a,b)
 	cf = (1 - 2i*pi*x.*b).^-a;
 end

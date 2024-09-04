@@ -30,7 +30,7 @@ function fit_parametric_densities(obj)
 	% fit parametric density models in direction perpendicular to bands
 	% this is computed anyway for all patterns, but only meaningfull for banded patterns
 	%
-	% pdf_C = {@phase_drift_pdf,@bandpass_continuous_pdf,@lognpdf,@gampdf,@normpdf_wrapped};
+	% pdf_C = {@phase_drift_pdf,@bandpass_continuous_pdf,@lognpdf,@gampdf,@normalmirroredpdf};
 
 	% phase drift
 	[par0(1),par0(2)] = phase_drift_pdf_mode2par(fc.x.(field),Sc.x.(field));
@@ -49,8 +49,7 @@ function fit_parametric_densities(obj)
 	stat.fit.x.bandpass.stat = fitstat;
 
 	% log-normal
-	[par0(1),par0(2)] = logn_mode2par(fc.x.(field),Sc.x.(field));
-	%[par0(1),par0(2)] = logn_mode2par(fc.x.hat,Sc.x.hat);
+	[par0(1),par0(2)] = lognpdf_mode2par(fc.x.(field),Sc.x.(field));
 	Sfun = @lognpdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.rot.x.logn  = Sfit;
@@ -58,7 +57,7 @@ function fit_parametric_densities(obj)
 	stat.fit.x.logn.stat = fitstat;
 
 	% gamma
-	[par0(1),par0(2)] = gamma_mode2par(fc.x.hp,Sc.x.hp);
+	[par0(1),par0(2)] = gampdf_mode2par(fc.x.hp,Sc.x.hp);
 	par0(1) = max(par0(1),1);
 	Sfun = @gampdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
@@ -66,14 +65,14 @@ function fit_parametric_densities(obj)
 	stat.fit.x.gamma.par  = par;
 	stat.fit.x.gamma.stat = fitstat;
 
-	% wrapped-normal
-	[par0(1),par0(2)] = normpdf_wrapped_mode2par(fc.x.hp,Sc.x.hp);
+	% mirrored-normal
+	[par0(1),par0(2)] = normalmirroredpdf_mode2par(fc.x.hp,Sc.x.hp);
 	%par0(1) = max(par0(1),1);
-	Sfun = @normpdf_wrapped;
+	Sfun = @normalmirroredpdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf);
-	S.rot.x.normpdf_wrapped  = Sfit;
-	stat.fit.x.normpdf_wrapped.par  = par;
-	stat.fit.x.normpdf_wrapped.stat = fitstat;
+	S.rot.x.normalmirroredpdf  = Sfit;
+	stat.fit.x.normalmirroredpdf.par  = par;
+	stat.fit.x.normalmirroredpdf.stat = fitstat;
 
 	% fit parametric density models in the direction perpendicular to the bands
 	fy = obj.f.y;
@@ -122,7 +121,7 @@ function fit_parametric_densities(obj)
 	stat.fit.radial.bandpass.stat = fitstat;
 
 	% log-normal
-	[par0(1),par0(2)] = logn_mode2par(fc.radial.hat,Sc.radial.hat);
+	[par0(1),par0(2)] = lognpdf_mode2par(fc.radial.hat,Sc.radial.hat);
 	Sfun = @lognpdf;
 
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
@@ -131,20 +130,20 @@ function fit_parametric_densities(obj)
 	stat.fit.radial.logn.stat = fitstat;
 
 	% gamma
-	[par0(1),par0(2)] = gamma_mode2par(fc_,Sc.radial.(field));
+	[par0(1),par0(2)] = gampdf_mode2par(fc_,Sc.radial.(field));
 	Sfun = @gampdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r(2:end),S.radial.hat(2:end),obj.w.r(2:end),Sfun,par0,obj.opt.objective,nf);
 	S.radial.gamma  = Sfit;
 	stat.fit.radial.gamma.par  = par;
 	stat.fit.radial.gamma.stat = fitstat;
 
-	% wrapped normal
-	[par0(1),par0(2)] = normpdf_wrapped_mode2par(fc.radial.(field),Sc.radial.(field));
-	Sfun = @normpdf_wrapped;
+	% mirrored normal
+	[par0(1),par0(2)] = normalmirroredpdf_mode2par(fc.radial.(field),Sc.radial.(field));
+	Sfun = @normalmirroredpdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf);
-	S.radial.normpdf_wrapped  = Sfit;
-	stat.fit.radial.normpdf_wrapped.par  = par;
-	stat.fit.radial.normpdf_wrapped.stat = fitstat;
+	S.radial.normalmirroredpdf  = Sfit;
+	stat.fit.radial.normalmirroredpdf.par  = par;
+	stat.fit.radial.normalmirroredpdf.stat = fitstat;
 
 	% flat density of white noise
 	S.fit.radial.white = mean(S.radial.hat)*ones(size(S.radial.hat));
@@ -162,5 +161,6 @@ function fit_parametric_densities(obj)
 
 	obj.stat = stat;
 	obj.S    = S;
-end
+end % function fit_parametric_densities
+
 

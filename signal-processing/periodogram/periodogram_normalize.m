@@ -15,7 +15,13 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 % note: conventionally, S(0) is weighted by 1/2
-function S = periodogram_normalize(S,df)
-	S = 2*S/(sum(S)*df);
+function S = periodogram_normalize(S,df,fullaxis)
+	if (fullaxis)
+		% full axis
+		S = S/(sum(S)*df);
+	else
+		% half axis
+		S = 2*S/(sum(S)*df);
+	end
 end
 

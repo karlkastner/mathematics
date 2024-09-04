@@ -17,17 +17,29 @@
 % function [z, x, y, Lx, Ly, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,angle0_rad,p,q,scale,st,rotarg,scalearg)
 %%
 %% spot pattern of unit amplitude
+%% the corresponing gapped patterns is z_gap = 1 - z_spot
 %% output : z : pattern
 %%	   x : x-coordinate
 %%	   y : y-coordinate
-%% 
-%% note : rotation, scaling and displacement cannot be fully independently controlled
-% s_r,fc_r,order_r
-% s_s,rho_s,order_s
-% Note : z_gap = 1 - z_spot
-
+%%
+%% input:
+%%	fc : characteristic frequency
+%%	n  : image size in pixels
+%%	L  : spatial extent
+%%	angle0 : angle of rotation
+%%	p,q: control harmonics
+%%	scale : adjust L and n so that the domain is an integer multiple of the wavelength
+%%	st : stochastic translation
+%%	rotarg : stochastic rotation
+%%	scalearg : stochastic length scale
+%%
+%%      note that rotation, scaling and displacement cannot be fully independently controlled
+%%
+%
 % TODO make stoch parameters independent of L and n
 % TODO make correlation parameters for rot and scale similar
+% s_r,fc_r,order_r
+% s_s,rho_s,order_s
 function [z, x, y, Lx, Ly, xx, yy, xe, ye] = generate_isotropic_pattern(fc,n,L,angle0_rad,p,q,scale,st,rotarg,scalearg)
 	if (nargin()<4 || isempty(angle0_rad))
 		% rotation of pattern

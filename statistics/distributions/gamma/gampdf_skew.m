@@ -14,7 +14,8 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function sk = gamma_skew(a,b)
+%% skewness of the gamma distribution
+function sk = gampdf_skew(a,b)
 	sk = 2./sqrt(a);
 end
 

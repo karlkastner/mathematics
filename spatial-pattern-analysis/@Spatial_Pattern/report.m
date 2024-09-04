@@ -20,13 +20,13 @@ function report(obj)
 	lambda_c = obj.lambda_c();
 	if (obj.stat.isisotropic)
 		fprintf('Isotropic\n');
-		fprintf('S_{cr}/lambda_c  %f\n',obj.stat.Sc.radial.clip/lambda_c);
-		fprintf('S_{ct}           %f\n',obj.stat.Sc.angular.clip);
+		fprintf('S_{rc}/lambda_c  %f\n',obj.stat.Sc.radial.hp/lambda_c);
+		fprintf('S_{tc}^+         %f\n',obj.stat.Sc.angular_p.hp);
 		fprintf('L_{eff}/lambda_c %f\n',obj.stat.L_eff.r/lambda_c);
 	else
 		fprintf('Anisotropic\n');
-		fprintf('S_{cx}/lambda_c  %f\n',obj.stat.Sc.x.clip/lambda_c);
-		fprintf('S_{cy}/lambda_c  %f\n',obj.stat.Sc.y.clip/lambda_c);
+		fprintf('S_{xc}^+/lambda_c  %f\n',obj.stat.Sc.xp.hp/lambda_c);
+		fprintf('S_{yc}/lambda_c  %f\n',obj.stat.Sc.y.hp/lambda_c);
 		fprintf('L_{eff}/lambda_c %f\n',obj.stat.L_eff.r/lambda_c);
 	end
 	fprintf('\lambda_c        %f\n',lambda_c);

@@ -14,7 +14,8 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function k = gamma_kurt(a,b)
+%% kurtosis of the gamma distribution
+function k = gampdf_kurt(a,b)
 	k = 6./a + 3;
 end
 

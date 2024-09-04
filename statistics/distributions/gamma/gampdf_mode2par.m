@@ -14,8 +14,8 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
-function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
+%% function [a,b] = gampdf_mode2par(xm,ym,p0,varargin)
+function [a,b] = gampdf_mode2par(xm,ym,p0,varargin)
 	if (xm == 0)
 		% for xm = 0, either a<1 and ym = infinite, and no inversion is possible
 		% or a = 1 for which the gamma dist becomes the exponential dist
@@ -30,7 +30,7 @@ function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 		% normal approximation
 		[mu,sd] = normpdf_mode2par(xm,ym);
 		% now we know that
-		[p0(1), p0(2)] = gamma_moment2par(mu,sd);
+		[p0(1), p0(2)] = gampdf_moment2par(mu,sd);
 	end
 	opt = optimset('MaxFunEvals',1e4,'MaxIter',1e3,'Display','off');
 	[l,resn,res,flag] = lsqnonlin(@resfun,p0,[],[],opt);
@@ -51,7 +51,7 @@ function [a,b] = gamma_mode2par(xm,ym,p0,varargin)
 	%a(2)= lsqnonlin(@(b) log(gampdf(xm,a,ym./(a-1)))-log(ym),b0);
 
 function res = resfun(l)
-	[xm_,ym_] = gamma_mode(l(1),l(2),varargin{:});
+	[xm_,ym_] = gampdf_mode(l(1),l(2),varargin{:});
 	res       = [xm-xm_; log(ym)-log(ym_+eps)];
 end
 

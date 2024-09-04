@@ -100,22 +100,33 @@ function [c,cbh] = plot(obj,field_str,varargin)
 		% TODO no magic numbers
 		xlim(obj.opt.xlim);
 	case {'x'}
-		fdx = obj.f.x>=0;
-		plot(obj.f.x(fdx)*lambda_c,var(fdx)/lambda_c,varargin{:});
+		plot(fftshift(obj.f.x)*lambda_c,fftshift(var)/lambda_c,varargin{:});
 		xlabel('Wavenumber $k_x/k_c$','interpreter','latex');
 		ylabel('Density $S_x/\lambda_c$','interpreter','latex');
 		xlim(obj.opt.xlim);
+	case {'xp'}
+		plot(fftshift(obj.f.x)*lambda_c,fftshift(var)/lambda_c,varargin{:});
+		xlabel('Wavenumber $k_x/k_c$','interpreter','latex');
+		ylabel('Density $S_x^+/\lambda_c$','interpreter','latex');
+		xlim(obj.opt.xlim);
 	case {'y'}
-		fdx = obj.f.y>=0;
-		plot(obj.f.y(fdx)*lambda_c,var(fdx)/lambda_c,varargin{:});
+		plot(fftshift(obj.f.y)*lambda_c,fftshift(var)/lambda_c,varargin{:});
 		xlabel('Wavenumber $k_y/k_c$','interpreter','latex');
 		ylabel('Denisty $S_y / \lambda_c$','interpreter','latex');
-		xlim(obj.opt.xlim);
+		xlim(obj.opt.ylim);
 	case {'angular'}
+		plot(obj.f.angle,var,varargin{:});
+		xlabel('Angle $\theta$','interpreter','latex');
+		ylabel('Density $S_\theta$','interpreter','latex');
+		set(gca,'xtick',[-1/2,-1/4,0,1/4,1/2]*pi,'xticklabel',{'-\pi/2','-\pi/4','0','\pi/4','\pi/2'});
+		%xlim([-pi,pi]/2);
+		xlim([-1,1]*pi/2);
+		ylim([0,ceil(10.1*max(var))/10]);
+	case {'angular_p'}
 		fdx = obj.f.angle >= -pi/2 & obj.f.angle <= pi/2;
 		plot(obj.f.angle(fdx),var(fdx),varargin{:});
 		xlabel('Angle $\theta$','interpreter','latex');
-		ylabel('Density $S_\theta$','interpreter','latex');
+		ylabel('Density $S_\theta^+$','interpreter','latex');
 		set(gca,'xtick',[-1/2,-1/4,0,1/4,1/2]*pi,'xticklabel',{'-\pi/2','-\pi/4','0','\pi/4','\pi/2'});
 		%xlim([-pi,pi]/2);
 		xlim([-1,1]*pi/2);

@@ -13,7 +13,7 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
+function [Shat, whp, fhp, shp, nf, dSminSmaxrel] = suppress_low_frequency_lobe(Shat,msk,L)
 	siz = size(Shat);
 	[fx_i,fy_i,frr_i] = fourier_axis_2d([1,1],siz);
 	[fx,fy,frr] = fourier_axis_2d(L,siz);
@@ -21,6 +21,7 @@ function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	% radial density, including low-frequency components
 	[Sr, fr] = periodogram_radial(Shat,L);
 	Sr0 = Sr.normalized;
+
 	% radial distribution (cdf)
 	iS = cumsum(Sr.normalized)*(fr(2)-fr(1));
 	iS = iS/iS(end);
@@ -61,7 +62,11 @@ function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	% the frequency of the minimum is used for separating the densities
 	[mindx,maxdx] = minmax(Sr_smooth.normalized(2:end));
 	mindx = mindx+1;	
+	maxdx = maxdx+1;
 	fhp = fr(mindx);
+
+	% separator, this has maximum 1 for perfect sepatation and 0 for no separation
+	dSminSmaxrel = (Sr_smooth.normalized(maxdx)-Sr_smooth.normalized(mindx))/(Sr_smooth.normalized(maxdx)+Sr_smooth.normalized(mindx));
 
 	% remove spurious low-frequency components by multiplication
 	% with Fourier window
@@ -80,5 +85,5 @@ function [Shat, whp, fhp, shp, nf] = suppress_low_frequency_lobe(Shat,msk,L)
 	%w = 1-normpdf(frr_i,0,s)/norm;
 	Shat = whp.*Shat;
 
-end
+end % suppress_low_frequency_lobe
 

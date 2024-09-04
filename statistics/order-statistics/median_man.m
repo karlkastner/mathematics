@@ -5,7 +5,7 @@
 %% c is a P value for the confidence interval,
 %% default is 0.95 (2-sigma)
 %% median of the colums of X
-function [m s l u] = median_man(X,P)
+function [m, s, l, u] = median_man(X,P)
 	if (isempty(X))
 		m = NaN(class(X));
 		s = NaN(class(X));

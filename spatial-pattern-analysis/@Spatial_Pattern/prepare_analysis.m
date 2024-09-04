@@ -103,8 +103,9 @@ function prepare_analysis(obj)
 
 	% 2D periodogram, not yet normalized
 	obj.S.hat  = abs(fft2(obj.msk.b_square.*b_square)).^2;
-	% normalize
-	obj.S.hat = obj.S.hat/(0.5*sum(obj.S.hat,'all')*df(1)*df(2));
+
+	% normalize volume of the two-dimensional density to 1
+	obj.S.hat = obj.S.hat/(sum(obj.S.hat,'all')*df(1)*df(2));
 
 	% radial density (radial periodogram)
 	[Sr, obj.f.r,Cr] = periodogram_radial(obj.S.hat,L);

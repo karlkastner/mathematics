@@ -73,7 +73,8 @@ end
 		Sa = A*flat(Sxy);
 	end
 	end
-	% normalize spectrum over the half-circle
-	Sa = 2*Sa./(sum(Sa)*out.da);
+	% normalize spectrum over the full-circle
+	Sa = Sa./(sum(Sa)*out.da);
+	
 end
 

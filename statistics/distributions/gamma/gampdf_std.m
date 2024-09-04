@@ -14,7 +14,9 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function sd = gamma_std(a,b)
+%% standard deviation of the gamma distribution
+function sd = gampdf_std(a,b)
 	s2 = a.*b.*b;
 	sd = sqrt(s2);
 end
+
