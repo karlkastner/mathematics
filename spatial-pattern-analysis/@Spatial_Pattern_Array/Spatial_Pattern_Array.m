@@ -24,7 +24,8 @@ classdef Spatial_Pattern_Array < handle
 		% centroid coordinates
 		centroid   = [];
 		% sampling resolution
-		dx_sample
+		%dx_sample
+		level_a
 		fr_max_target;
 		% processing errors
 		error_C    = {};
@@ -36,13 +37,21 @@ classdef Spatial_Pattern_Array < handle
 		type       = '';
 		%e(end:n)           = {[]};
 		%filename_C(end:n)   = {''};
-		opt = struct( ... 
-			      'test_for_periodicity',true ...
+		%resolution = [];
+		knnobj_C   = [];
+		img_C      = [];
+		opt = struct( ...
+			      'folder_img', 'img/%s/%g/' ...
+			     ,'folder_mat', 'img/%s/analysis/%g/' ...
+			     ,'match_by_knn', true ...
+			     ,'imgbase', 'google-satellite_' ...
+			     ,'test_for_periodicity',true ...
 			     ,'area_max', 4e6 ...
 			     ,'cmd_str', 'LD_LIBRARY_PATH= python3 vegetation_patterns_fetch_polygons_google_satellite.py %s %g' ...
 			     ,'dx0', 2 ...
 			     ,'dx_max', 4 ...
 			     ,'dx_min', 0.5 ...
+			     , 'd_max', 1e-4 ...
 			     ,'regularity_min', 0.4 ... % minimum regularity of patterns included in the analysis
 			     ,'reload', true ...
 			     ,'tail_trim_scale', 3 ...
@@ -50,17 +59,21 @@ classdef Spatial_Pattern_Array < handle
 			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
 			     , 'skip', 1 ...
 			     , 'field', 'con' ...
+			     , 'analyze', true ...
 			    );
-		imgbase  = 'google-satellite_';
 	end
 
 	methods
-	function obj = Spatial_Pattern_Array(centroid,dx_sample)
+	function obj = Spatial_Pattern_Array(centroid,level_a,dx_sample)
+		%dx_sample)
 		if (nargin()>0)
 			obj.centroid = centroid;
 		end
-		if (nargin()>1)
-			obj.dx_sample = dx_sample;
+		if (nargin()>1 && ~isempty(level_a))
+			obj.level_a = level_a;
+		end
+		if (nargin()>2)
+			obj.level_a = cvec(obj.resolution2level(dx_sample));
 		end
 		obj.runtime = NaN(obj.n,1);
 		obj.region_id = ones(obj.n,1);
@@ -68,8 +81,22 @@ classdef Spatial_Pattern_Array < handle
 		obj.filename_C = repmat({''},obj.n,1);
 
 	end
-
 	% pseudo members
+	function level = resolution2level(obj,dx)
+		level = round(-log2(dx/obj.opt.dx0))+1;
+		level(dx <= 0) = NaN;
+	end
+	function level_min = level_min(obj)
+		level_min = obj.resolution2level(obj.opt.dx_max);
+		%level_min = round(-log2(obj.opt.dx_min/obj.opt.dx0))+1;
+	end
+	function level_max = level_max(obj)
+		level_max = obj.resolution2level(obj.opt.dx_min);
+		%level_max = round(-log2(obj.opt.dx_max/obj.opt.dx0))+1;
+	end
+	function dx = resolution(obj,level)
+		dx = obj.opt.dx0*2.^(-level+1);
+	end
 	function n = n(obj)
 		n = size(obj.centroid,1);
 	end

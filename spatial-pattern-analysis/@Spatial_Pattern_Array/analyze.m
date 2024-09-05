@@ -23,40 +23,51 @@ function analyze(obj)
 	for idx=1:n
  		t = toc(timer);
 		disp(sprintf('%s %d/%d Minutes spend %0.0f remaining %0.0f',obj.type,idx,n,t/60,t/(idx-1)*(n-idx+1)/60));
-		dx = obj.dx_sample(idx);
+		% dx    = obj.dx_sample(idx);
+		level = obj.level_a(idx);
 		try
-			if (~isfinite(dx)||(dx<=0))
-				error('sampling resolution not specified');	
+			clear sp
+			if (~isfinite(level)) % isfinite(dx) || (dx<=0))
+				error('Sampling resolution not specified');	
 			end
-			dx = min(obj.opt.dx_max,max(obj.opt.dx_min,dx));
+			level = min(max(level,obj.level_min),obj.level_max);
+			% dx = min(obj.opt.dx_max,max(obj.opt.dx_min,dx));
+			% the next line should not be necessary
+			% TODO apply to level
 			% generate filename
-			[folder,filename,folder_a] = obj.generate_filename(idx,dx);
-			mkdir([folder,filesep,'analysis']);
+			[folder,filename,folder_a] = obj.generate_filename(idx,level);
+			mkdir(folder_a); %[folder,filesep,'analysis']);
 			spname = [folder_a,filesep,filename(1:end-4),'.mat'];
 			obj.filename_C{idx} = filename;
 			% check if image has already been analyzed
 			if (obj.opt.reload && exist(spname,'file'))
 				% reload
 				clear sp % runtime
+				disp('reloading');
 				load(spname,'sp');
 				% still analyze if p_periodic is missing
-				if (~isfield(sp.stat,'p_periodic'))
-					analyze_();
-				end
+				%if (~isfield(sp.stat,'p_periodic'))
+				%	analyze_();
+				%end
 			else
 				% analyze pattern
+				dx    = obj.resolution(level);
 				disp([num2str(idx), ' ', num2str(dx), ' ', filename])
 				sp = Spatial_Pattern();
 				sp.init();
-				analyze_();
-
+				if (obj.opt.analyze)
+					disp('analyzing');
+					analyze_();
+				else
+					disp('skipping analysis');
+				end
 			end % else of (reload && exist spname)
 		catch e
 			%disp(base);
 			sp = Spatial_Pattern();
 			sp.init();
 			%runtime = NaN;
-			disp(e)
+			disp(e);
 			s = e.stack;
 			for jdx=1:length(s)
 				disp(s(jdx));

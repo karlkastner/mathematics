@@ -51,7 +51,7 @@ end
 
 sp = Spatial_Pattern('b',b,'msk.b',bmsk,'L',L*[1,1]);
 sp.analyze_grid();
-v
+
 subplot(2,2,1)
 sp.plot('S.rot.xp.con')
 hold on
@@ -62,7 +62,7 @@ hold on
 end
 legend('none','x','y','x and y')
 
-end
+else
 
 % mass experiment
 
@@ -110,7 +110,7 @@ b = real(b);
 
 for idx=1:4
 bmsk = true(nx);
-m    = 100/fc;
+m    = 10/fc;
 switch (idx)
 case {1}
 	% mask nothing
@@ -191,4 +191,6 @@ for idx=1:4
 	plot(fx,Sy_hat_sd(:,idx));
 	hold on
 	plot(fx,Sy_con_sd(:,idx));
+end
+
 end
