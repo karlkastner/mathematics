@@ -76,8 +76,8 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 	sqrt_df = sqrt(df_);
 
 	%n   = length(f);
-	
-	% store initial f	
+
+	% store initial f
 	%f = f;
 
 	if (isa(w,'function_handle'))
@@ -99,11 +99,11 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 	%if (~isscalar(w))
 	%	w = w(fdx);
 	%end
-	
+
 	% normalize
 	%int_S = spectral_density_area(f,S);
 	%S     = S/int_S;
-	
+
 	% weigh input distribution
 	% (mainly for suppression of spurious-low frequency components)
 	wS_  = w_.*S_;
@@ -115,7 +115,7 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 
 	iwS_ = cumint_trapezoidal(f_,wS_);
 
-	par0 = double(par0);	
+	par0 = double(par0);
 	wSp0 = wSfun(par0);
 	wSp0 = double(wSp0);
 
@@ -125,13 +125,13 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 	case {'cdf_l1'}
 		opt = optimset();
 		opt.Display = 'off';
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_cdf_l1(wSfun(par)), par0,lb,[],opt); 
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_cdf_l1(wSfun(par)), par0,lb,[],opt);
 	case {'cdf_l2','cramer-von-mises','mvc'}
 		opt = optimset();
 		opt.Display = 'off';
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_mise_cramer(wSfun(par)), par0,lb,[],opt); 
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) res_mise_cramer(wSfun(par)), par0,lb,[],opt);
 	case {'absolute-difference'} % note that this is equal to minimizing the maximum distance of the cdf
-	
+
 	case {'least-squares','ls'}
 		opt = optimset();
 		opt.Display = 'off';
@@ -142,9 +142,9 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 		sqrt_wS = sqrt(wS_);
 		% TODO normalize by L
 		opt.Display = 'off';
-		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) sqrt(wSfun(par)) - sqrt_wS,par0,lb,[],opt); 
+		[par,stat.resn,res,stat.exitflag] = lsqnonlin(@(par) sqrt(wSfun(par)) - sqrt_wS,par0,lb,[],opt);
 	case {'log-likelihood','ll'}
-		par  = fminsearch(@(par) log_likelihood(par),par0); 
+		par  = fminsearch(@(par) log_likelihood(par),par0);
 		resn = 0;
 	otherwise
 		error('Undefined objective function')
@@ -209,14 +209,14 @@ function [par,Sp,stat] = fit_spectral_density(f,S,w,Sfun,par0,distance,nf,lb)
 		% weigh
 		%wSp = w.*Sp;
 		% renormalize
-		%wSp = wSp/sum(mid(wSp).*diff(f));	
+		%wSp = wSp/sum(mid(wSp).*diff(f));
 		% log-likelihood
 		ll   = log(wS_./wSp_);
 		%res   = (log(Sp+Sflat) + S./(Sp+Sflat));
 		ll(wSp_==0) = 0;
 		ll  = sum(mid(ll).*df_);
 	end
-	
+
 	function res = res_mise_cramer(wSp_)
 		% weigh
 		%wSp = w.*Sp;

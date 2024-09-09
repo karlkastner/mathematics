@@ -28,7 +28,7 @@ function [Sc] = bandpass1d_continuous_pdf_scale(fc,p,pp,numeric)
 	if (isempty(pp) && ~numeric)
 		kc = 2*pi*fc;
 		% IS = kc./(2*pi) * 4.^(1-p)./(2*p-1).*pi.*p.*binom(2*p-1,p-1)
-		IS = kc.*2.^(1-2*p).*binom(2*(p-1),p-1);
+		IS = kc.*2.^(1-2*p).*binomial(2*(p-1),p-1);
 		if (isnan(IS))
 			% stirlings approximation
 			IS = kc./sqrt(4*pi*(p-1));

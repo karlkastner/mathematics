@@ -95,8 +95,11 @@ function analyze_()
 		try
 			sp.fit_parametric_densities();
 		catch e
-			e
-			for edx=1:length(e.stack); disp(e.stack(edx)); end
+			disp(e);
+			disp(e.identifier);
+			for edx=1:length(e.stack);
+				disp(e.stack(edx));
+			end
 			obj.error_C{idx,3} = e;
 		end
 
@@ -107,7 +110,7 @@ function analyze_()
 		mkdir(dirname(spname));
 
 		% save analysis of individual pattern
-		save(spname,'sp'); %,'runtime');
+		save(spname,'sp');
 end
 
 end % analyze

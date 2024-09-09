@@ -153,29 +153,29 @@ classdef Spatial_Pattern_Array < handle
 		if (nargin()<2) idx=1:obj.n; end
 		y = arrayfun(@(x) 1./double(getfield_try(x,['stat.fc.x.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
-	function y = Sc_r(obj,idx)
+	function y = Src(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
 		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.radial.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
-	function y = Sc_x(obj,idx)
+	function y = Sxpc(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.x.',obj.opt.field],NaN)),obj.sp_a(idx));
+		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.xp.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
-	function y = Sc_y(obj,idx)
+	function y = Syc(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
 		y = arrayfun(@(x) double(getfield_try(x,['stat.Sc.y.',obj.opt.field],NaN)),obj.sp_a(idx));
 	end
 	function y = regularity_r(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = obj.Sc_r(idx)./obj.wavelength_r(idx);
+		y = obj.Src(idx)./obj.wavelength_r(idx);
 	end
 	function y = regularity_x(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = obj.Sc_x(idx)./obj.wavelength_x(idx);
+		y = obj.Sxpc(idx)./obj.wavelength_x(idx);
 	end
 	function y = regularity_y(obj,idx)
 		if (nargin()<2) idx=1:obj.n; end
-		y = obj.Sc_y(idx)./obj.wavelength_y(idx);
+		y = obj.Syc(idx)./obj.wavelength_y(idx);
 	end
 	end % methods
 end % class Spatial_Pattern_Array

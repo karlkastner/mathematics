@@ -3,6 +3,7 @@
 %
 %% vecotrised binomial coefficient
 %% b = N!/K!(N-K)!
+%% TODO this function is deprecated, better use "binomial"
 function B = nchoosek_man(N,K)
 	% TODO computing the nominator completely can cause overflow
 	%	factorial_man(N,N-K)./factorial(K);

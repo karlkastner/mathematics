@@ -33,28 +33,46 @@ function fit_parametric_densities(obj)
 	% pdf_C = {@phase_drift_pdf,@bandpass_continuous_pdf,@lognpdf,@gampdf,@normalmirroredpdf};
 
 	% phase drift
+	try
 	[par0(1),par0(2)] = phase_drift_pdf_mode2par(fc.x.(field),Sc.x.(field));
 	Sfun = @phase_drift_pdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[0,0]);
 	S.rot.x.phase_drift = Sfit;
 	stat.fit.x.phase_drift.par  = par;
 	stat.fit.x.phase_drift.stat = fitstat;
+	catch e
+		S.rot.x.phase_drift = NaN(size(S.rot.x.hat));
+		stat.fit.x.phase_drift.par = [NaN,NaN];
+		stat.fit.x.phase_drift.stat = struct();
+	end
 
 	% bandpass
+	try
 	par0 = [fc.rr.(field), bandpass1d_continuous_pdf_max2par(fc.x.(field),Sc.x.(field),10)];
-	Sfun = @bandpass1d_continuous_pdf;	
+	Sfun = @bandpass1d_continuous_pdf;
 	[par,Sfit,fitstat]       = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[0,0.5]);
 	S.rot.x.bandpass         = Sfit;
 	stat.fit.x.bandpass.par  = par;
 	stat.fit.x.bandpass.stat = fitstat;
+	catch e
+		S.rot.x.bandpass = NaN(size(S.rot.x.hat));
+		stat.fit.x.bandpass.par = [NaN,NaN];
+		stat.fit.x.bandpass.stat = struct();
+	end
 
 	% log-normal
+	try
 	[par0(1),par0(2)] = lognpdf_mode2par(fc.x.(field),Sc.x.(field));
 	Sfun = @lognpdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.x,S.rot.x.hat,obj.w.x,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.rot.x.logn  = Sfit;
 	stat.fit.x.logn.par  = par;
 	stat.fit.x.logn.stat = fitstat;
+	catch e
+	S.rot.x.logn         = NaN(size(S.rot.x.hat));
+	stat.fit.x.logn.par  = [NaN,NaN];
+	stat.fit.x.logn.stat = struct();
+	end
 
 	% gamma
 	[par0(1),par0(2)] = gampdf_mode2par(fc.x.hp,Sc.x.hp);
@@ -93,7 +111,7 @@ function fit_parametric_densities(obj)
 
 	% periodic
 	flag = obj.f.x>=0;
-	[mv,mdx] = max(S.rot.x.hat.*flag); 
+	[mv,mdx] = max(S.rot.x.hat.*flag);
 	S.fit.x.periodic = zeros(size(S.rot.x.hat));
 	S.fit.x.periodic(mdx) = sum(S.rot.x.hat.*flag);
 	stat.fit.x.periodic.stat.goodness.hd = hellinger_distance(S.rot.x.hat(flag),S.fit.x.periodic(flag),dfx,obj.w.x(flag));
@@ -114,20 +132,26 @@ function fit_parametric_densities(obj)
 
 	% bandpass
 	par0 = [fc_, bandpass1d_continuous_pdf_max2par(fc_,Sc.radial.(field),10)];
-	Sfun = @bandpass1d_continuous_pdf;	
+	Sfun = @bandpass1d_continuous_pdf;
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[0,0.5]);
 	S.radial.bandpass = Sfit;
 	stat.fit.radial.bandpass.par  = par;
 	stat.fit.radial.bandpass.stat = fitstat;
 
 	% log-normal
+	try
 	[par0(1),par0(2)] = lognpdf_mode2par(fc.radial.hat,Sc.radial.hat);
 	Sfun = @lognpdf;
-
 	[par,Sfit,fitstat] = fit_spectral_density(obj.f.r,S.radial.hat,obj.w.r,Sfun,par0,obj.opt.objective,nf,[-inf,0]);
 	S.radial.logn  = Sfit;
 	stat.fit.radial.logn.par  = par;
 	stat.fit.radial.logn.stat = fitstat;
+	catch e
+		S.radial.logn             = NaN(size(S.radial.hat));
+		stat.fit.radial.logn.par  = [NaN,NaN];
+		stat.fit.radial.logn.stat = struct();
+	end
+
 
 	% gamma
 	[par0(1),par0(2)] = gampdf_mode2par(fc_,Sc.radial.(field));
@@ -153,7 +177,7 @@ function fit_parametric_densities(obj)
 
 	% periodic
 	flag = obj.f.r>=0;
-	[mv,mdx] = max(S.radial.hat.*flag); 
+	[mv,mdx] = max(S.radial.hat.*flag);
 	S.fit.radial.periodic = zeros(size(S.radial.hat));
 	S.fit.radial.periodic(mdx) = sum(S.radial.hat.*flag);
 	stat.fit.radial.periodic.stat.goodness.hd = hellinger_distance(S.radial.hat(flag),S.fit.radial.periodic(flag),dfr,obj.w.r(flag));

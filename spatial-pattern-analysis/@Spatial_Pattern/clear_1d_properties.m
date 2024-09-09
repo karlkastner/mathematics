@@ -24,5 +24,6 @@ function obj = clear_1d_properties(obj)
 		obj.C = [];
 		obj.R = [];
 		obj.f = []; % x,y,r,a
+		obj.w.r = [];
 end
 

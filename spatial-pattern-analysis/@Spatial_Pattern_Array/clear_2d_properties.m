@@ -1,5 +1,5 @@
-% 2022-09-26 14:32:10.449630621 +0200
-% Karl Kastner, Berlin
+% Mon  9 Sep 16:32:47 CEST 2024
+% Karl Kästner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -13,23 +13,11 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function obj = clear_2d_properties(obj)
-	% remove 2d grid fields to save memory and disk space
-	obj.b = [];
-	obj.b_square = [];
-	obj.msk      = [];
-	obj.stat.qq = [];
-	for field = {'hat','hp','bar','con'}
-		obj.S.(field{1}) = [];
-		obj.R.(field{1}) = [];
-		obj.S.rot.(field{1}) = [];
-		obj.R.rot.(field{1}) = [];
-	end % for field
-	obj.f.rr = [];
-	obj.f.tt = [];
-	%obj.w    = [];
-	obj.stat.stati.p1_all = [];
-	obj.stat.stati.pn_all = [];
-	obj.stat.Ws = [];
+%
+%
+function clear_2d_properties(obj)
+	for idx=1:length(obj.sp_a)
+		obj.sp_a(idx).clear_2d_properties();
+	end
 end
 
