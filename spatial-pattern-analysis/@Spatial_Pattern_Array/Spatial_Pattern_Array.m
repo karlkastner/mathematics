@@ -18,7 +18,6 @@
 %% container class for Spatial_Pattern objects
 classdef Spatial_Pattern_Array < handle
 	properties
-
 		% array of spatial pattern objets
 		sp_a	   = Spatial_Pattern();
 		% centroid coordinates
@@ -31,37 +30,42 @@ classdef Spatial_Pattern_Array < handle
 		error_C    = {};
 		% file names
 		filename_C = [];
+		% world region indices
 		region_id  = [];
+		% world region strings
 		region_C   = '';
+		% runtime of analyzis
 		runtime    = [];
+		% either isotropic or anisotropic
 		type       = '';
-		%e(end:n)           = {[]};
-		%filename_C(end:n)   = {''};
-		%resolution = [];
+		% object for knnsearch for matching input files based on centroid coordinates
 		knnobj_C   = [];
+		% pathes and filenames of satellite images
 		img_C      = [];
+		% options
 		opt = struct( ...
-			      'folder_img', 'img/%s/%g/' ...
-			     ,'folder_mat', 'img/%s/analysis/%g/' ...
-			     ,'match_by_knn', true ...
-			     ,'imgbase', 'google-satellite_' ...
-			     ,'test_for_periodicity',true ...
-			     ,'area_max', 4e6 ...
-			     ,'cmd_str', 'LD_LIBRARY_PATH= python3 vegetation_patterns_fetch_polygons_google_satellite.py %s %g' ...
-			     ,'dx0', 2 ...
-			     ,'dx_max', 4 ...
-			     ,'dx_min', 0.5 ...
-			     , 'd_max', 1e-4 ...
-			     ,'regularity_min', 0.4 ... % minimum regularity of patterns included in the analysis
-			     ,'reload', true ...
-			     ,'tail_trim_scale', 3 ...
-			     ,'wavelength_max', 500 ...% maximum wavelength for a pattern to be included
-			     ,'wavelength_min', 1 ...% minimum wavelength for a pattern to be included
-			     , 'skip', 1 ...
-			     , 'field', 'con' ...
-			     , 'analyze', true ...
+			       'analyze', true ... % (new) satellite images are only anlyzed if true
+			     , 'area_max', 4e6 ... % maximum area in pixels, to avoid out of memory
+			     , 'base_str', ''  ... % base of input/output files 
+			     , 'cmd_str', 'LD_LIBRARY_PATH= python3 vegetation_patterns_fetch_polygons_google_satellite.py %s %g' ...
+			     , 'd_max', 1e-4 ...   % maximum distance for matching files based on centroid coordinates
+			     , 'dx0', 2 ...	   % initial sampling resolution
+			     , 'dx_max', 4 ...	   % max sampling resolution
+			     , 'dx_min', 0.5 ...   % min sampling resolution
+			     , 'field', 'con' ...  % state analysis results based on consistently estimated densities
+			     , 'folder_img', 'img/%s/%g/' ... % folder for satellite images
+			     , 'folder_mat', 'img/%s/analysis/%g/' ... % folder for individual analysis results of each image
+			     , 'imgbase', 'google-satellite_' ... % basename for satellite images
+			     , 'match_by_knn', true ... % if true, file names are matched by nn search of centroid coordinates
+			     , 'regularity_min', 0.4 ... % minimum regularity of patterns included in the analysis
+			     , 'reload', true ... % reuse anlysis computed during previous run
+			     , 'skip', 1 ...      % skip every skip-1 pattern for quick test
+			     , 'tail_trim_scale', 3 ... % skale for heuristically determining the sampling resolution
+			     , 'test_for_periodicity', true ... % test for periodicity during analysis
+			     , 'wavelength_max', 500 ... % maximum wavelength for a pattern to be included
+			     , 'wavelength_min', 1 ... % minimum wavelength for a pattern to be included
 			    );
-	end
+	end % properties
 
 	methods
 	function obj = Spatial_Pattern_Array(centroid,level_a,dx_sample)

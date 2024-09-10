@@ -6,3 +6,4 @@ function a = autocorr_periodic(y)
 	a = ifft(abs(fft(y)).^2);
 	a = a./a(1,:);
 end
+

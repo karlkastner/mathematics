@@ -4,7 +4,7 @@
 %% estimate sample autocorrelation function
 %
 % function acf = autocorr(y,numLags,correct_bias)
-function acf = autocorr(y,numLags,correct_bias)
+function acf = autocorr_fft(y,numLags,correct_bias)
 	if (isvector(y))
 		y = cvec(y);
 	end
@@ -22,21 +22,18 @@ function acf = autocorr(y,numLags,correct_bias)
 	end
 	%F = fft(y-mean(y),nFFT);
 	F   = fft(y,nFFT);
-	F   = F.*conj(F);
-	acf = ifft(F);
-	acf = acf(1:(numLags+1),:); % Retain non-negative lags
-	%acf = acf./acf(1); % Normalize
+	S   = F.*conj(F);
+	acf = ifft(S);
+	acf = acf(1:(numLags+1),:);
 	acf = real(acf);
-	%acf = bsxfun(@times,acf,1./acf(1,:));
+	% normalize
 	acf = acf./acf(1,:);
 
 	% correct for bias
 	if (nFFT > n)
-%nargin() > 2 && correct_bias)
+	%if (nargin() > 2 && correct_bias)
 		n = length(y);
 		l = numLags+1;
-		
-		%size(y,1);
 		acf = acf.*(n./(n-(1:l)'));
 	end
 end

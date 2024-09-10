@@ -46,7 +46,7 @@ function obj = fetch(obj,inshpname,outshpname)
     	dx = obj.resolution(level);
     
         % fetch patterns that are not yet well resolved at current resolution
-        cmd_str = sprintf(obj.opt.cmd_str,obj.type,dx);
+        cmd_str = sprintf(obj.opt.cmd_str,obj.type,obj.opt.base_str,dx);
         system(cmd_str);
     
         % for each pattern
@@ -126,7 +126,7 @@ function obj = fetch(obj,inshpname,outshpname)
     end % while dx >= dx_min
     % final fetching for coarse resolution patterns
     if (obj.opt.dx_min < obj.opt.dx_max)
-        cmd_str = sprintf(obj.opt.cmd_str,obj.type,obj.opt.dx_max);
+        cmd_str = sprintf(obj.opt.cmd_str,obj.type,obj.opt.base_str,dx);
         system(cmd_str);
     end
 end % fetch
