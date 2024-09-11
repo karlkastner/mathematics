@@ -13,6 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% clear data of 2D member variables to save memory
 function obj = clear_2d_properties(obj)
 	% remove 2d grid fields to save memory and disk space
 	obj.b = [];

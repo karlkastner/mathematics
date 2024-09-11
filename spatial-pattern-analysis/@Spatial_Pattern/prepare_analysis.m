@@ -14,6 +14,9 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+%
+%% compute quantiles of the patterns spectrum, these are used to determine
+%% the target sampling resolution
 function prepare_analysis(obj)
 	timer = tic();
 
@@ -21,12 +24,12 @@ function prepare_analysis(obj)
 	L = obj.L;
 		
 	b     = obj.b;
-	%msk.b = obj.msk.b;
+
 	if (isempty(obj.msk.b))
 		obj.msk.b = true(size(b));
 	else
 		if (0 == max(obj.msk.b))
-			error('Spatial_Pattern','Masked area is empty');
+			error('Spatial_Pattern:EmptyArea','Masked area is empty');
 		end
 	end
 
@@ -36,7 +39,7 @@ function prepare_analysis(obj)
 	case {'double'}
 		b = double(b);
 	otherwise
-		error('Dataype must be single or double');
+		error('Spatial_Pattern:DataType','Dataype must be single or double');
 	end
 
 	% convert mask to logical
@@ -49,12 +52,12 @@ function prepare_analysis(obj)
 	if (n_(1)>n(1))
 		% TODO implement
 		% note : this is not necessary as the current input files have dx=dy	
-		error('not yet implemented');
+		error('SpatialPattern','not yet implemented');
 	end
 	if (n_(2)>n(2))
 		% TODO implement
 		% note : this is not necessary as the current input files have dx=dy	
-		error('not yet implemented');
+		error('Spatial_Pattern','not yet implemented');
 	end
 	n = n_;
 

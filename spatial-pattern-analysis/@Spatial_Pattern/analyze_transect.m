@@ -14,10 +14,14 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% analyze 1D transect through a spatial pattern,
+%% analyze a spatial pattern along a one-dimensional transect,
 %% either remotely sensed or model generated
 %
-function analyze(obj)
+% TODO this function needs to be updated, as it has not been maintened since
+%      pattern analysis was switched to two-dimension with the first revision
+%      of the accompanying manuscript
+%
+function analyze_transect(obj)
 	stat   = obj.stat;
 	S      = obj.S; 
 	R      = obj.R;

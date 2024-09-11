@@ -51,17 +51,21 @@ classdef Spatial_Pattern < handle
 
 		% analysis options
 		opt = struct( ... 
-			       'datatype', 'single' ...
-			     , 'n_mc', 100 ... % number of repetitions for monte-carlo
-			     , 'nf_test_min', 3 ...
-			     , 'nf_test_scale', 1 ...
-			     , 'objective', 'least-squares' ...
-			     , 'p_fmsk', 0.8 ...
-			     , 'significance_level_a1', 0.05 ...
-			     , 'test_for_periodicity', true ...
-			     , 'xlim', [0, 2.5] ...
-			     , 'ylim', [-2.5, 2.5] ...
-			     , 'transect', struct('mseg_scale', 20 ... % 6 % TODO, this can become critical, when pattern too short
+			      'datatype', 'single' ...
+			    % interpolation method for resampling densities
+			    , 'imethod', 'linear' ...
+			    , 'n_mc', 100 ... % number of repetitions for monte-carlo
+			    , 'nf_test_min', 3 ...
+			    , 'nf_test_scale', 1 ...
+			    ... % objective for fitting densities
+			    , 'objective', 'least-squares' ...
+			    , 'p_fmsk', 0.8 ...
+			    , 'scalefield', 'con' ...
+			    ... % level for characterising patterns as periodic or not
+			    , 'significance_level_a1', 0.05 ...
+			    , 'test_for_periodicity', true ...
+			    % options for transect analysis
+			    , 'transect', struct( 'mseg_scale', 20 ... % 6 % TODO, this can become critical, when pattern too short
 						  , 'fitmethod', 'ls' ...
 			                          ,'nb', [] ...
 			     			  ... % levels for confidence intervals for density plots
@@ -72,8 +76,11 @@ classdef Spatial_Pattern < handle
 			                          , 'fminscale', 1/8 ...
 			                          , 'fmaxscale', 4 ...
 				           ) ...
-			    , 'scalefield', 'hp' ...
+			    ... % weigh frequency components when fitting parametric densities
 			    , 'weight', true ...
+			    % plot limits
+			    , 'xlim', [0, 2.5] ...
+			    , 'ylim', [-2.5, 2.5] ...
 		);
 
 		% analysis statistics
@@ -85,24 +92,39 @@ classdef Spatial_Pattern < handle
 				obj = setfield_deep(obj,varargin{idx},varargin{idx+1});
 			end % for idx
 		end % constructor Spatial_Pattern
-		function n = n(obj)
-			if (isvector(obj.b))
-				n = length(obj.b);
-			else
-				n = size(obj.b);
-			end
-		end
+
+		function area_msk = area_msk(obj)
+			% spatial resolution
+			dx       = obj.stat.L_square ./ obj.stat.n_square;
+			area_msk = sum(obj.msk.b_square,'all')*dx(1)*dx(2);
+		end % area_msk
+
+		function centroid = centroid(obj)
+			nmsk = sum(obj.msk.b_square(:));
+			centroid.x = sum(obj.msk.b_square*cvec(obj.x))./nmsk;
+			centroid.y = sum(rvec(obj.y)*obj.msk.b_square)./nmsk;
+			% covariance of coordinates
+			sx2 = sum(obj.msk.b_square*(cvec(obj.x)-centroid.x).^2)./nmsk;
+			sy2 = sum(obj.msk.b_square*(cvec(obj.y)-centroid.y).^2)./nmsk;
+			sxy = sum(obj.msk.b_square*((cvec(obj.x)-centroid.x).*(cvec(obj.y)-centroid.y)))./nmsk;
+			centroid.C = [sx2,sxy;
+		        	      sxy,sy2];
+		end % centroid
+
 		function df  = df(obj)
 			% frequency interval (spacing of frequency bins)
 			df = 1./obj.L;
-		end
-		function Sc = Sc(obj)
-			if (obj.stat.isisotropic)
-				Sc = obj.stat.Sc.radial.(obj.opt.scalefield);
+		end % df
+
+		function isanalyzed = isanalyzed(obj)
+			% TODO there should be a field for this that is reset upon load
+                        if (isfield(obj.stat,'p_periodic'))             
+				isanalyzed = true;	
 			else
-				Sc = obj.stat.Sc.x.(obj.opt.scalefield);
-			end % else of isiso
-		end
+				isanalyzed = false;
+			end
+		end % isanalyzed
+
 		function lambda_c = lambda_c(obj)
 			if (obj.stat.isisotropic)
 				lambda_c = 1./obj.stat.fc.radial.(obj.opt.scalefield);	
@@ -110,5 +132,21 @@ classdef Spatial_Pattern < handle
 				lambda_c = 1./obj.stat.fc.x.(obj.opt.scalefield);
 			end % else of isiso
 		end % lambda_c
+
+		function n = n(obj)
+			if (isvector(obj.b))
+				n = length(obj.b);
+			else
+				n = size(obj.b);
+			end
+		end % n
+
+		function Sc = Sc(obj)
+			if (obj.stat.isisotropic)
+				Sc = obj.stat.Sc.radial.(obj.opt.scalefield);
+			else
+				Sc = obj.stat.Sc.x.(obj.opt.scalefield);
+			end % else of isiso
+		end % Sc
 	end % methods
 end % classdef Spatial_Pattern

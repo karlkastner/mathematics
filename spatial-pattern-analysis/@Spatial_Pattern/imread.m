@@ -14,7 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% read an image file containing a pattern, mask and geospatial data
+%% read an image of a pattern, its mask and geospatial data
 function [g, alpha, obj] = imread(obj,filename)
 	g = GeoImg();
 	g.read(filename);
@@ -23,7 +23,7 @@ function [g, alpha, obj] = imread(obj,filename)
 
 	%[img, map, alpha] = imread(filename);
 	if (~isempty(g.map))
-		error('Convert indexed images to grayscale or RGB first');
+		error('Spatial_Pattern:ImageIsIndexed','Convert indexed images to grayscale or RGB first');
 	end
 	switch (obj.opt.datatype)
 	case {'single'}
@@ -31,7 +31,7 @@ function [g, alpha, obj] = imread(obj,filename)
 	case {'double'}
 		b = double(b);
 	otherwise
-		error('Dataype must be single or double');
+		error('Spatial_Pattern:DataType','Dataype must be single or double');
 	end
 	if (3 == ndims(b))
 		% sloppy conversion to grayscale
@@ -45,21 +45,11 @@ function [g, alpha, obj] = imread(obj,filename)
 
 	n = size(b);
 
-	%try
-		%out = readpgw([filename(1:end-4),'.pgw']);
-		%dxy = g.dxy;
-		obj.stat.pgw = g.pgw;
-		obj.stat.xy0 = g.xy0;
-		obj.stat.dxy = g.dxy;
-		obj.stat.bangle_rad = g.angle;
-		obj.stat.date = g.info.FileModDate;
-	%catch
-	%	dxy = 1;
-	%	obj.stat.pgw = [];
-	%	obj.stat.dxy = NaN;
-	%	obj.stat.xy0 = [NaN,NaN];
-	%	obj.stat.bangle_rad = NaN;
-	%end
+	obj.stat.pgw = g.pgw;
+	obj.stat.xy0 = g.xy0;
+	obj.stat.dxy = g.dxy;
+	obj.stat.bangle_rad = g.angle;
+	obj.stat.date = g.info.FileModDate;
 
 	try
 		% try to load mask from file
@@ -68,12 +58,10 @@ function [g, alpha, obj] = imread(obj,filename)
 		nmsk = size(msk);
 		if (rms(nmsk(1:2)-n(1:2))>0)
 			mskfilename
-			disp('mask size does not match');
-			error('msksize');
+			error('SpatialPattern:MaskSize','Mask size must match image size');
 		end
 	catch
 		% use alpha data
-		%disp('Unable to load mask, analyzing whole area');
 		if (~isempty(g.alpha))
 			% note that we can even alias the maks, but we do not do this here
 			msk = g.alpha > 0;
@@ -81,7 +69,6 @@ function [g, alpha, obj] = imread(obj,filename)
 		msk = true(n);
 		end
 	end % catch of try
-	%end % else of ~ isempty alpha
 
 	obj.L   = n.*obj.stat.dxy;
 	obj.b   = b;

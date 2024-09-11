@@ -18,8 +18,7 @@
 %
 function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 	% n.b. for higher than linear, posisitivty of density can be violated
-	% TODO make class member
-	imethod = 'linear';
+	imethod = obj.opt.imethod;
 	% resample 1d-densities
 	% for computing the joint normalized density of.pdf patterns, the patterns
 	% are resampled to a common grid interval
@@ -30,7 +29,7 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 		lc = 1./obj.stat.fc.x.(obj.opt.scalefield);
 	end
 	
-	for field={'hat','hp','bar'}
+	for field={'hat','hp','bar','con'}
 		if (isfinite(lc))
 			% isotropic
 			iSr      = cumint_trapezoidal(obj.f.r,obj.S.radial.(field{1}));
@@ -79,5 +78,5 @@ function [Si,Ri,obj] = resample_functions(obj,xi,fi)
 		[obj.stat.Sc.angular_resampled.pdf.(field{1}),id] = max(Si.angular.pdf.(field{1}));
 	        obj.stat.fc.angular_resampled.pdf.(field{1})      = fi.angular(id);
 	end % for field
-end % function
+end % function resample_functions
 

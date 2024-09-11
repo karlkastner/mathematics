@@ -13,6 +13,8 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%% clear data of 1D (and 2D) member variables, to save memory
 function obj = clear_1d_properties(obj)
 		% clear 2d properties first
 		obj.clear_2d_properties();

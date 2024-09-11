@@ -18,15 +18,16 @@
 %
 function report(obj)
 	lambda_c = obj.lambda_c();
+	field = obj.opt.scalefield;
 	if (obj.stat.isisotropic)
 		fprintf('Isotropic\n');
-		fprintf('S_{rc}/lambda_c  %f\n',obj.stat.Sc.radial.hp/lambda_c);
-		fprintf('S_{tc}^+         %f\n',obj.stat.Sc.angular_p.hp);
+		fprintf('S_{rc}/lambda_c  %f\n',obj.stat.Sc.radial.(field)/lambda_c);
+		fprintf('S_{tc}^+         %f\n',obj.stat.Sc.angular_p.(field));
 		fprintf('L_{eff}/lambda_c %f\n',obj.stat.L_eff.r/lambda_c);
 	else
 		fprintf('Anisotropic\n');
-		fprintf('S_{xc}^+/lambda_c  %f\n',obj.stat.Sc.xp.hp/lambda_c);
-		fprintf('S_{yc}/lambda_c  %f\n',obj.stat.Sc.y.hp/lambda_c);
+		fprintf('S_{xc}^+/lambda_c  %f\n',obj.stat.Sc.xp.(field)/lambda_c);
+		fprintf('S_{yc}/lambda_c  %f\n',obj.stat.Sc.y.(field)/lambda_c);
 		fprintf('L_{eff}/lambda_c %f\n',obj.stat.L_eff.r/lambda_c);
 	end
 	fprintf('\lambda_c        %f\n',lambda_c);

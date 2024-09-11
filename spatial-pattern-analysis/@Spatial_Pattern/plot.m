@@ -14,8 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% plot the pattern or densities 
-%
+%% plot the pattern, its density or autocorrelation
 function [c,cbh] = plot(obj,field_str,varargin)
 	field_C  = strsplit(field_str,'.');
 	var      = getfield_deep(obj,field_str);
@@ -89,7 +88,7 @@ function [c,cbh] = plot(obj,field_str,varargin)
 %	end
 
 	otherwise
-		error(['Unknown field ', field_str]);
+		error('Spatial_Pattern:UnknownField', ['Unknown field ', field_str]);
 	end
 	else
 	switch (field_C{end-1})
@@ -132,7 +131,7 @@ function [c,cbh] = plot(obj,field_str,varargin)
 		xlim([-1,1]*pi/2);
 		ylim([0,ceil(10.1*max(var(fdx)))/10]);
 	otherwise
-		error(['Unknown field ', field_str]);
+		error('Spatial_Pattern:UnknownField',['Unknown field ', field_str]);
 	end % switch field_C{end-1}
 	end % of else ~isvector
 end %

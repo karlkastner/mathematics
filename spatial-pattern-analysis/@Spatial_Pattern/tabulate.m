@@ -15,6 +15,7 @@
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
 %% summarize properties of multiple patterns in a single struct
+%% TODO function is deprecated, either remove or update
 %
 function tab = tabulate(obj)
 	tab = struct();

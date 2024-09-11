@@ -22,13 +22,13 @@ function analyze(obj)
 	% process each pattern
 	for idx=1:n
  		t = toc(timer);
-		disp(sprintf('%s %d/%d Minutes spend %0.0f remaining %0.0f',obj.type,idx,n,t/60,t/(idx-1)*(n-idx+1)/60));
+		str = sprintf('%s Pattern %d/%d Time %0.0f min spend %0.0f min remaining',obj.type,idx,n,t/60,t/(idx-1)*(n-idx+1)/60);
 		% dx    = obj.dx_sample(idx);
 		level = obj.level_a(idx);
 		try
 			clear sp
 			if (~isfinite(level)) % isfinite(dx) || (dx<=0))
-				error('Sampling resolution not specified');	
+				error('Spatial_Pattern_Array:SamplingResolutionNotSpecified','Sampling resolution not specified');	
 			end
 			level = min(max(level,obj.level_min),obj.level_max);
 			% dx = min(obj.opt.dx_max,max(obj.opt.dx_min,dx));
@@ -42,31 +42,34 @@ function analyze(obj)
 			% check if image has already been analyzed
 			if (obj.opt.reload && exist(spname,'file'))
 				% reload
-				clear sp % runtime
-				disp('reloading');
+				clear sp
 				load(spname,'sp');
-				% still analyze if p_periodic is missing
-				%if (~isfield(sp.stat,'p_periodic'))
-				%	analyze_();
-				%end
+				% analyze pattern if output file exists but
+				% pattern not yet analyzed, this is the case 
+				% after determining the sampling resolution
+				% at the first run
+				if (~sp.isanalyzed());
+					dx    = obj.resolution(level);
+					disp([str,' analyzing ',num2str(dx)]);
+					analyze_();
+				else
+					disp([str,' reloading']);
+				end
 			else
 				% analyze pattern
 				dx    = obj.resolution(level);
-				disp([num2str(idx), ' ', num2str(dx), ' ', filename])
 				sp = Spatial_Pattern();
 				sp.init();
 				if (obj.opt.analyze)
-					disp('analyzing');
+					disp([str,' analyzing ',num2str(dx)]);
 					analyze_();
 				else
-					disp('skipping analysis');
+					disp([str, ' skipping']);
 				end
 			end % else of (reload && exist spname)
 		catch e
-			%disp(base);
 			sp = Spatial_Pattern();
 			sp.init();
-			%runtime = NaN;
 			disp(e);
 			s = e.stack;
 			for jdx=1:length(s)
@@ -74,18 +77,14 @@ function analyze(obj)
 			end	
 			obj.error_C{idx,2} = e;
 		end % of try-catch
-		%if (~exist('runtime','var'))
-		%	runtime = NaN;
-		%end 
 		obj.sp_a(idx,1) = sp;
-		%obj.runtime(idx,2) = runtime;
 	end % for idx (each pattern)
 
 function analyze_()
 		info=imfinfo([folder,filesep,filename]);
 		A = max(info.Width,info.Height)^2;
 		if (A > obj.opt.area_max)
-			error('Image exceeds size limit');
+			error('Spatial_Pattern_Array:ImageExceedsSizeLimit','Image exceeds size limit');
 		end
 
 		sp.imread([folder,filesep,filename]);

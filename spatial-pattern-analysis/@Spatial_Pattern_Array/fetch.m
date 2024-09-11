@@ -71,7 +71,7 @@ function obj = fetch(obj,inshpname,outshpname)
                         info=imfinfo([folder,filesep,filename]);
                         A = max(info.Width,info.Height)^2;
                         if (A > obj.opt.area_max)
-                            error('Image exceeds size limit');
+                            error('Spatial_Pattern_Array:ImageExceedsSizeLimit','Image exceeds size limit');
                         end
         
                         sp = Spatial_Pattern();
@@ -126,6 +126,7 @@ function obj = fetch(obj,inshpname,outshpname)
     end % while dx >= dx_min
     % final fetching for coarse resolution patterns
     if (obj.opt.dx_min < obj.opt.dx_max)
+    	dx = obj.resolution(level);
         cmd_str = sprintf(obj.opt.cmd_str,obj.type,obj.opt.base_str,dx);
         system(cmd_str);
     end

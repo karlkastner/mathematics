@@ -14,6 +14,7 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
+%% cast member variables to (single) to save memory
 function obj = cast(obj,type)
 	field_C = {'x','y','r'};
 	for idx=1:length(field_C)

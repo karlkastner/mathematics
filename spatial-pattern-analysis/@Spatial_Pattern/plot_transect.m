@@ -13,9 +13,12 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% plot 1D pattern
+%% plot a 1D pattern
 %
-function transect_plot(obj,meta)
+%% note: this function is not maintained, as pattern analysis was switched to
+%%       two-dimensions with the first revision of the accompanying manuscript
+%
+function plot_transect(obj,meta)
 	% plots
 	fflag = meta.pflag;
 
