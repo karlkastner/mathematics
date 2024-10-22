@@ -1,19 +1,22 @@
 % 2024-01-24 12:40:44.370170282 +0100
+% Karl Kastner, Berlin
+%
+%% a multigrid iteration cycle
 function cycle(obj,k)
 	if (size(obj.s(k).x,1) > 1)
 		% pre-smooth, hackbusch 2.5.2.b
-		for idx=1:obj.m
+		for idx=1:obj.opt.npresmooth
 			obj.jacobi_step(k);
 		end	
 
-		for gdx=1:obj.gamma
+		for gdx=1:obj.opt.gamma
 		% n.b. for the w-cycle, this is simply repated twice
 		% residual
 		obj.resfun(k);
 
 		% downsample (restrict)
 		for idx=1:obj.nvar
-			obj.s(k+1).b(:,:,idx) = downsample_2d(obj.s(k).res(:,:,idx));
+			obj.s(k+1).b(:,:,idx) = downsample_2d(obj.s(k).res(:,:,idx),'fw');
 		end
 
 		% initialize
@@ -30,10 +33,11 @@ function cycle(obj,k)
 		end % for gamma
 
 		% post-smooth
-		for idx=1:obj.m
+		for idx=1:obj.opt.npostsmooth
 			obj.jacobi_step(k);
 		end
 	else
+if (isempty(obj.fun))
 		% solve the nvxnv system here
 		A = cell2mat(obj.s(k).a);
 if (1)
@@ -41,6 +45,10 @@ if (1)
 else
 		obj.s(k).x(1,1,1:obj.nvar) = cvec(squeeze(obj.s(k).b)) ./ diag(A); 
 end
+else
+	obj.s(k).x(1,1,1,1:obj.nvar) = 0;
+end
+
 %		for idx=1:obj.nvar
 %			obj.s(k).x(idx) = obj.s(k).b(idx)./(obj.s(k).a(:,:,idx));
 %			obj.s(k).x(idx) = obj.s(k).b(idx)./(obj.s(k).a(:,:,idx));

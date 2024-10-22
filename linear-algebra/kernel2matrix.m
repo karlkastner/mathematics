@@ -1,4 +1,6 @@
 % Sun 11 Jul 12:19:45 CEST 2021
+% Karl Kastner, Berlin
+%% set up a 2D discretization matrix from a 3x3 kernel
 % TODO allow for dirichlet and neumann boundary conditions
 function M = kernel2matrix(n,K);
 	nn  = prod(n);
@@ -7,8 +9,8 @@ function M = kernel2matrix(n,K);
 	% row index
 	r = repmat((1:n(1))',n(2),1);
 	% column index
-	c = flat(repmat((1:n(2)),n(1),1));
-	k = 0;
+	c  = flat(repmat((1:n(2)),n(1),1));
+	k  = 0;
 	sk = size(K);
 	if (any(mod(sk,2)~=1))
 		error('kernel must be odd');

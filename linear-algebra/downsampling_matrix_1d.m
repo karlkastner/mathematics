@@ -30,6 +30,8 @@ function A = downsampling_matrix(n,mode)
 		A = spdiags(ones(n,1)*w,-1:1,n,n);
 		A = A(1:2:end,:);
 		A(1,end) = 0.25;
+		%buf = [id,2*id-1,ones(n/2,1); id, 2*id, 2*ones(n/2,1); id, mod(2*id+1,n),ones(n/2,1)];
+		%P = sparse(buf(:,1),buf(:,2),buf(:,3));
 	otherwise 
 		error('here');
 	end

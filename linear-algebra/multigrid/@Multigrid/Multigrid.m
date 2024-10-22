@@ -1,4 +1,7 @@
 % 2024-01-10 19:59:21.792153268 +0100
+% Karl Kastner, Berlin
+%
+%% multigrid on structured 2D grid
 classdef Multigrid < handle
 	properties
 		% a : nvar x nvar x 1 or nvar x nvar x (nx*ny)
@@ -16,22 +19,28 @@ classdef Multigrid < handle
 		n
 		% jacobi-iteration parameters
 		o = 2/3;
-		% cycle counter, 1 = v-cycle, 2 = w-cycle
-		gamma = 1;
-		% number of pre and post-smoothing iterations per kevek
-		m = 1;
-		% maximum number of cycles
-		maxiter = 1000;
-		% relative tolerance for stopping iterations
-		reltol = sqrt(eps);
 		% level coefficients and variables
 		s = struct();
 		% number of independent variables
 		nvar
 		% spatial discretization dx = L/n
 		dx
+		fun
 		% 
-		% opt = struct('ndiag',1);	
+		% opt = struct('ndiag',1);
+		opt = struct('operatord_dependent_grid_transfer', false, ...
+			     'downsampling_mode','fw' ...	
+				... % relative tolerance for stopping iterations
+				,'reltol', sqrt(eps) ...
+				,'abstol', 1e-12 ...
+				... % maximum number of cycles
+				,'maxiter', 1000 ...
+				... % number of pre and post-smoothing iterations per cycle
+				,'npresmooth',  1 ...
+				,'npostsmooth', 1 ...
+				... % cycle counter, 1 = v-cycle, 2 = w-cycle
+				,'gamma', 1 ...
+				);
 	end % properties
 	methods
 		function obj = Multigrid()
