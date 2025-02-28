@@ -14,7 +14,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function sd = uniform_std(a,b)
-	sd = sqrt(1/12)*(b-a);
+function s2 = uniform_std(a,b)
+	s2 = (1/12)*(b-a).^2;
 end
 

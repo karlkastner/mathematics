@@ -10,39 +10,13 @@ function [x,rmse,res,iter,out] = gauss_newton(fun,x,tol,maxiter,method,jfun,L,n,
 	if (nargin()<4)
 		maxiter = 10;
 	end
-	iter = 1;
+	x       = cvec(x);
+	iter = 0;
 	resold = 0;
 	while (1)
-pflag = 0;
-if (0)
-n_ = sqrt(length(x));
-h = reshape(x,n_,n_);
-clf
-imagesc(h)
-plot(rms(h-mean(h)))
-pause
-end
-if (pflag)
-n_ = sqrt(length(x));
-h = reshape(x,n_,n_);
-figure(1);
-clf
-%subplot(2,4,6)
-%plot(h0(:,round(end/2),:))
-%hold on
-plot(h(:,round(end/2)))
-%plot(diff(h(:,round(end/2))))
-end
+		iter = iter+1;
 
 		res = fun(x);
-		if (pflag)% == iter)
-			res_ = reshape(res,n_,n_);
-			hold on
-			plot(res_(:,round(end/2)))
-		%	plot(resold(:,round(end/2)))
-drawnow
-resold = res_;
-		end 
 		rmse(iter) = rms(res,'all');
 		if (rmse(iter) <= abstol)
 			disp('converged');
@@ -52,10 +26,9 @@ resold = res_;
 			disp('maxiter reached');
 			break;
 		end
-		iter = iter+1;
 		switch (method)
 		case {'direct'}
-			[J] = jfun(x);
+			J = jfun(x);
 			c =  (J \ res);
 			out.J = J;
 		case {'ilu-ks'}
@@ -90,56 +63,26 @@ resold = res_;
 			error('unknown method');
 		end
 			
-		a = 1;
 		% line search
+		a = 1;
 		liter = 0;
 		while(1)
 			liter = liter+1;
 			x_ = x - a*c;
-
-%fun
-%dbstop swe_simplified_1d_dzdt
-%		[res,bl] = fun(x);
-if (0)
-%condest(J)
-%sum(J(:))
-close all
-global bl
-a
-whos x
-whos bl
-plot([x,res,[diag(J,-1);NaN],diag(J),[diag(J,+1);NaN],-c/30])
-legend('x','res','l','c','r')
-%x_,-NaN*a*c,res,cvec(bl)])
-%NaN*diag(J)])
-%imagesc(isfinite(J))
-%%plot(isfinite(res))
-pause
-end
-%min(x_(:))
 			res_ = fun(x_);
-%max(res_)
-			if (rms(res_,'all')<rms(res,'all'))
-%			x_ = x - 0.5*a*c;
+			rms_ = rms(res_,'all');
+			if (rms_<rmse(iter)) % (res,'all'))
+				rmse(iter) = rmsr_;
 				x = x_;
 				break;
 			end
 			a = a/2;
 			if (a < sqrt(eps))
-				disp('not a descend direction')
+				disp('not a descend direction');
 				iter = maxiter+1;
-				break; %error('here')
+				break;
 			end
 		end
-if(pflag)
-rms(res_,'all')
-	c_ = reshape(c,n_,n_);
-			hold on
-			plot(-c_(:,round(end/2)))
-			plot(-a*c_(:,round(end/2)))
-pause()
-end
-a
 
 	end
 

@@ -16,6 +16,8 @@
 %
 % noise where spectral energy decays by one order per octave
 % note that this is different to brownian noise (see brownian noise generator)
+%
+%%% function [e,T,fx,fy,frr] = pink_noise_2d(n,L);
 function [e,T,fx,fy,frr] = pink_noise_2d(n,L);
 	[e,T,fx,fy,frr] = coloured_noise_2d(n,L,2.0);
 end

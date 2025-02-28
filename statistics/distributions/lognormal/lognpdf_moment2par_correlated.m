@@ -1,4 +1,4 @@
-% Wed 29 Mar 11:20:01 CEST 2023
+% Wed 29 Mar 16:23:12 CEST 2023
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,29 +14,17 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
-%%
-%% correlation of two log-normal random variables, where the log of the variables
-%% is correlated with correlation r
-function corr_eaeb = logn_corr(lmu_a,lmu_b,lsd_a,lsd_b,lr)
-	if (nargin()<2)
-		lmu_a = 0;
-	end
-	if (nargin()<3)
-		lmu_b = 0;
-	end
-	if (nargin()<4)
-		lsd_a = 1;
-	end
-	if (nargin()<5)
-		lsd_b = 1;
-	end
-	% standard deviation
-	sd_ea = lognpdf_std(lmu_a,lsd_a);
-	sd_eb = lognpdf_std(lmu_b,lsd_b);
-	% covariance
-	cov_eaeb = lognpdf_cov(lmu_a,lmu_b,lsd_a,lsd_b,lr);
-	% correlation
-	corr_eaeb = cov_eaeb ./(sd_ea.*sd_eb);
+% let x1 = exp(z1), x2 = exp(z2) be two log-normal variables
+% with E(x1) = mu1, Var(xi) = mui, corr(x1,x2) = r
+%
+% then this function determines
+%
+% E(zi) = lmui, Var(zi) = lsdi, corr(z1,z2) = lr
+%
+function [lmu1,lmu2,lsd1,lsd2,lr] = lognpdf_moment2par_correlated(mu1,mu2,sd1,sd2,r)
+	[lmu1,lsd1]     = lognpdf_moment2par(mu1,sd1);
+	[lmu2,lsd2]     = lognpdf_moment2par(mu2,sd2);
+	% lr = log(1 + r.*(exp(lsd.^2) - 1))./lsd.^2;
+	lr = log(r.*sqrt((exp(lsd1.^2) - 1).*(exp(lsd2.^2) - 1)) + 1)./(lsd1.*lsd2);
 end
 

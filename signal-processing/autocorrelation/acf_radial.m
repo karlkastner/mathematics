@@ -1,4 +1,5 @@
 % 2022-07-11 09:54:04.582898046 +0200
+% function R = radial_acf(R,L)
 function R = radial_acf(R,L)
 	n = size(R);
 	if (nargin()<2)

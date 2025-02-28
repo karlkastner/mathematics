@@ -14,14 +14,14 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function [z,A] = step_advection_diffusion_implicit_euler(dt,dx,n,z,a,e)
+function [z,A] = step_advect_diffuse_implicit_euler(dt,dx,n,z,a,e)
 	% TODO use krylov
 	D1 = (dt*a(1))*derivative_matrix_1_1d(n(1),dx(1),2,'circular','circular',true);
 	D2 = (dt*e(1))*derivative_matrix_2_1d(n(1),dx(1),2,'circular','circular',true);
 	I  = speye(n(1));
 	if (length(n)>1)
-		D1y = (0.5*dt*a(2))*derivative_matrix_1_1d(n(2),dx(2),2,'circular','circular',true);
-		D2y = (0.5*dt*e(2))*derivative_matrix_2_1d(n(2),dx(2),2,'circular','circular',true);
+		D1y = (dt*a(2))*derivative_matrix_1_1d(n(2),dx(2),2,'circular','circular',true);
+		D2y = (dt*e(2))*derivative_matrix_2_1d(n(2),dx(2),2,'circular','circular',true);
 		Iy  = speye(n(2));
 		D1  = kron(Iy,D1) + kron(D1y,I);
 		D2  = kron(Iy,D2) + kron(D2y,I);

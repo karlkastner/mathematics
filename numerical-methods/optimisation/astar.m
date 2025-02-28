@@ -1,6 +1,6 @@
 % Fri  5 Oct 15:38:10 CEST 2018
 %
-%% astar path finding alforithm
+% find shortest path to and from x0,y0
 function [x,y,passed] = astar(val,x0,y0,p)
 	% mouth to source: value must decrease
 	x = [];

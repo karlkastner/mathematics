@@ -18,7 +18,7 @@
 %
 %% cov(ea,eb) = cov(exp(mua + sa*za),exp(mub + sb*zb))
 %% where za, zb are standard normal distributed and correlated
-function cov_eaeb = logn_cov(r, mu_za, mu_zb, s_za, s_zb)
+function cov_eaeb = lognpdf_cov(mu_za, mu_zb, s_za, s_zb, r)
 	if (nargin()<2)
 		mu_za = 0;
 	end
@@ -47,8 +47,8 @@ function cov_eaeb = logn_cov(r, mu_za, mu_zb, s_za, s_zb)
 		%	     = exp(1 + r
 
 	% this neglects the contribution by mu_za, scaled in later
-	Eea      = logn_mean(mu_za,s_za);
-	Eeb      = logn_mean(mu_zb,s_zb);
+	Eea      = lognpdf_mean(mu_za,s_za);
+	Eeb      = lognpdf_mean(mu_zb,s_zb);
 	Eeaeb    = exp(0.5*(s_za.*s_za + 2*r*s_za.*s_zb + s_zb.*s_zb));
 	cov_eaeb = exp(mu_za + mu_zb).*Eeaeb - Eea*Eeb;
 end

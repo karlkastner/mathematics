@@ -1,4 +1,4 @@
-% Wed 29 Mar 11:20:01 CEST 2023
+% Tue 28 Feb 17:25:12 CET 2023
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -13,30 +13,26 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
-%
-%% function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
-%%
-%% correlation of two log-normal random variables, where the log of the variables
-%% is correlated with correlation r
-function corr_eaeb = logn_corr(lmu_a,lmu_b,lsd_a,lsd_b,lr)
-	if (nargin()<2)
-		lmu_a = 0;
-	end
-	if (nargin()<3)
-		lmu_b = 0;
-	end
-	if (nargin()<4)
-		lsd_a = 1;
-	end
-	if (nargin()<5)
-		lsd_b = 1;
-	end
-	% standard deviation
-	sd_ea = lognpdf_std(lmu_a,lsd_a);
-	sd_eb = lognpdf_std(lmu_b,lsd_b);
-	% covariance
-	cov_eaeb = lognpdf_cov(lmu_a,lmu_b,lsd_a,lsd_b,lr);
-	% correlation
-	corr_eaeb = cov_eaeb ./(sd_ea.*sd_eb);
+% this is not grid averaged
+function [a,x,y,a0,z0] = geometric_ou_2d_generate(lmu,lsd,theta,L,n)
+	x = ((0:n-1)'/n-0.5)*L;
+	x = ifftshift(x);
+	y = x;
+	%acfun = @(x1,x2,y1,y2) exp(-theta*hypot(x2-x1,y2-y1));
+	%ac = acfun(0,x,0,y');
+	acfun = @(x,y) exp(-theta*hypot(x,y));
+	ac = acfun(x,y');
+	%ac = ifftshift(ac);
+	% generate correlated normals
+	z0 = randn(n);
+	S  = real(fft2(ac));
+	df = 1/L;
+	S  = S/(sum(S,'all')*df^2);
+	T  = sqrt(S);
+	z  = ifft2(T.*fft2(z0));
+	z  = z/std(z,[],'all');
+	a  = exp(lmu+lsd*z);
+	z0 = z0/std(z0,[],'all');
+	a0 = exp(lmu+lsd*z0);
 end
 

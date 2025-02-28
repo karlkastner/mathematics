@@ -17,6 +17,7 @@
 % second order for the reaction equation
 %
 function [y,e] = step_react_heun(t,dt,y0,dy_dt_fun)
+	% TODO for stochastic steps, the random numbers at the second step have to be the same
 	dy0 = dy_dt_fun(t,y0);
 	% predictor step
 	yp  = y0 + dt*dy0;

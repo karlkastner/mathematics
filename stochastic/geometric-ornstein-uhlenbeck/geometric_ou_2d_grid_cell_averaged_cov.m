@@ -1,4 +1,4 @@
-% Wed 29 Mar 11:20:01 CEST 2023
+% Wed 29 Mar 16:58:33 CEST 2023
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,29 +14,15 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function corr_eaeb = logn_corr(lr,lmu_a,lmu_b,lsd_a,lsd_b)
+%% function cov_ = geometric_ou_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
 %%
-%% correlation of two log-normal random variables, where the log of the variables
-%% is correlated with correlation r
-function corr_eaeb = logn_corr(lmu_a,lmu_b,lsd_a,lsd_b,lr)
-	if (nargin()<2)
-		lmu_a = 0;
-	end
-	if (nargin()<3)
-		lmu_b = 0;
-	end
-	if (nargin()<4)
-		lsd_a = 1;
-	end
-	if (nargin()<5)
-		lsd_b = 1;
-	end
-	% standard deviation
-	sd_ea = lognpdf_std(lmu_a,lsd_a);
-	sd_eb = lognpdf_std(lmu_b,lsd_b);
-	% covariance
-	cov_eaeb = lognpdf_cov(lmu_a,lmu_b,lsd_a,lsd_b,lr);
-	% correlation
-	corr_eaeb = cov_eaeb ./(sd_ea.*sd_eb);
+%% covariance between the grid-cell-averaged values of the continuous ornstein uhlenbeck (ou) process
+function cov_ = geometric_ou_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
+	% correlation function of the logarithmic values
+	lrfun = @(x,y) exp(-hypot(x,y)/theta);
+	% covariance function of the values
+	cfun = @(x,y) lognpdf_cov(lmu,lmu,lsd,lsd,lrfun(x,y));
+	% covariance between grid cell averages
+	cov_ = cov_cell_averages_2d(cfun,x,y,dx,dy,varargin{:});
 end
 

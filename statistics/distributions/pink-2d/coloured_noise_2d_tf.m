@@ -17,7 +17,7 @@
 %% transfer function of coloured noise
 function [T,fx,fy,frr] = coloured_noise_2d_tf(n,L,p);
 	% spectral density of coloured noise
-	[fx,fy,frr] = fourier_axis_2d(n,L);
+	[fx,fy,frr] = fourier_axis_2d(L,n);
 	% S = 1./frr^p;
 	% T = sqrt(S);
 	% transfer function
