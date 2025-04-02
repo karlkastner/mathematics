@@ -1,4 +1,3 @@
-% Wed 18 May 13:50:47 CEST 2022
 % Karl Kästner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -24,6 +23,10 @@ function prepare_analysis(obj)
 	L = obj.L;
 		
 	b     = obj.b;
+	if (isempty(L))
+		warning('Physical dimensions not given, using pixels');
+		L = n;
+	end
 
 	if (isempty(obj.msk.b))
 		obj.msk.b = true(size(b));
@@ -62,7 +65,7 @@ function prepare_analysis(obj)
 	n = n_;
 
 	% make square
-	b_square = b;
+	obj.b_.square = b;
 	obj.msk.b_square = obj.msk.b;
 
 	% resize, to make domain square
@@ -70,12 +73,12 @@ function prepare_analysis(obj)
 	L    = L.*nmax./n;
  	if (n(1) < nmax)
 		n(1) = nmax;
-		b_square(nmax,1) = 0;
+		obj.b_.square(nmax,1) = 0;
 		obj.msk.b_square(nmax,1) = false;
 	end
 	if (n(1) > n(2))
 		nmax = n(1);
-		b_square(1,nmax) = 0;
+		obj.b_.square(1,nmax) = 0;
 		obj.msk.b_square(1,nmax) = false;
 	end
 	df   = 1./L;
@@ -93,26 +96,62 @@ function prepare_analysis(obj)
 	[obj.f.x,obj.f.y,obj.f.rr,obj.f.tt] = fourier_axis_2d(L,n);
 
 	% the weighted mean allows for feathering the transition
-	stat.mean_b  = wmean(double(obj.msk.b_square(:)),b_square(:));
+	stat.mean_b  = wmean(double(obj.msk.b_square(:)),obj.b_.square(:));
 
 	% subtract mean
-	b_square  = (b_square - stat.mean_b);
+	% note that his is superfluluous, since S(0) is later set to zero
+	obj.b_.square  = (obj.b_.square - stat.mean_b);
 
 	% rms = std, because mean has been subtracted
-	stat.sd_b = wrms(obj.msk.b_square(:),b_square(:));
+	stat.sd_b = wrms(obj.msk.b_square(:),obj.b_.square(:));
 
 	% normalize
-	b_square = b_square/stat.sd_b;
+	obj.b_.square = obj.b_.square/stat.sd_b;
 
-	% 2D periodogram, not yet normalized
-	obj.S.hat  = abs(fft2(obj.msk.b_square.*b_square)).^2;
+	% Fourier transform
+	fb = fft2(obj.msk.b_square.*obj.b_.square);
+	if (~isempty(obj.source))
+		fe = fft2(obj.source);
+	end
+
+	% 2D periodogram, not normalized
+	obj.S.hat    = conj(fb).*fb;
+	if (~isempty(obj.source))
+		% source spectrum
+		obj.S.e.hat  = conj(fe).*fe;
+		% cross-spectrum between pattern and source
+		obj.S.be.hat = conj(fb).*fe; 
+	end
+
+	%if (~isempty(obj.source.S))
+	%	obj.S.hat = obj.S.hat./obj.source.S;
+	%	obj.S.hat(1) = 0;
+	%	fdx = obj.source.S == 0;
+	%	obj.S.hat(fdx) = 0;
+	%end
 
 	% normalize volume of the two-dimensional density to 1
-	obj.S.hat = obj.S.hat/(sum(obj.S.hat,'all')*df(1)*df(2));
+	iSb = (sum(obj.S.hat,'all')*df(1)*df(2));
+	obj.S.hat = obj.S.hat/iSb;
+	if (~isempty(obj.source))
+		iSe = (sum(obj.S.e.hat,'all')*df(1)*df(2));
+		obj.S.e.hat = obj.S.e.hat/iSe;
+		obj.S.be.hat = obj.S.be.hat/sqrt(iSb*iSe);
+	end
 
 	% radial density (radial periodogram)
-	[Sr, obj.f.r,Cr] = periodogram_radial(obj.S.hat,L);
-	obj.S.radial.hat = Sr.normalized;
+	[Sbr, obj.f.r,Cr] = periodogram_radial(obj.S.hat,L);
+	obj.S.radial.hat = Sbr.normalized;
+	if (~isempty(obj.source))
+		Ser = periodogram_radial(obj.S.e.hat,L);
+		obj.S.e.radial  = Ser.normalized;
+		Sber = periodogram_radial(obj.S.be.hat,L);
+		% TODO normalization of the cross spectrum
+		obj.S.be.radial = Sber.mu;
+		% transfer function
+		obj.T.radial = obj.S.be.radial./obj.S.e.radial;
+		obj.S.coherence.radial = abs(Sber.mu).^2./(Sbr.mu.*Ser.mu)
+	end
 
 	% cumulative distribution
 	%Cr = periodogram_cumulative(Sr.normalized,obj.f.r,'radial');
@@ -130,7 +169,6 @@ function prepare_analysis(obj)
 	obj.stat.q.fr.max = obj.f.r(end);
 
 	obj.C.r = Cr;
-	obj.b_square = b_square;
 	obj.stat = setfield_deep(obj.stat,'runtime.prepare_analysis',toc(timer));
 end
 

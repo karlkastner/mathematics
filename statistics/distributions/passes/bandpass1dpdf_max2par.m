@@ -14,20 +14,19 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
+%% function [p] = bandpass1dpdf_mode2par(fc,Sc,p0)
+%%
 %% transform mode (maxima) of the bandpass spectral density into the paramter
 %% of the underlying distribution 
 %
-% function [p] = spectral_density_bandpass_max2par(fc,Sc,p0)
-function [p] = bandpass1d_continuous_pdf_max2par(fc,Sc,p0,pp)
+function [p] = bandpass1dpdf_max2par(fc,Sc,p0)
 	if (nargin()<3)
 		p0 = 1;
 	end
-	if (nargin()<4)
-		pp = [];
-	end
 	% n.b: lsqnonlin works much more reliable than fzero
 	p0 = double(p0);
+	fc = double(fc);
 	Sc = double(Sc);
-	p  = lsqnonlin(@(p) bandpass1d_continuous_pdf_scale(fc,abs(p),pp) - Sc, p0,0);
+	p  = lsqnonlin(@(p) bandpass1dpdf_max(fc,abs(p)) - Sc, p0, 0);
 end
 

@@ -14,17 +14,20 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% normaliztation scale of the spatial bandpass density
 %
-% function [Sc] = bandpass1d_continuous_pdf_scale(fc,p,pp,numeric)
-function [Sc] = bandpass1d_continuous_pdf_scale(fc,p,pp,numeric)
+%% function [Sc] = bandpass1d_continuous_pdf_scale(fc,p,pp,numeric)
+%%
+%% maximum of the spectral density of the spatial bandpass in one dimension
+%% in continuous space
+%% identical to normaliztation factor of the spatial bandpass density
+%
+function [Sc] = bandpass1dpdf_max(fc,p,pp,numeric)
 	if (nargin()<3)
 		pp = [];
 	end
 	if (nargin()<4)
 		numeric = false;
 	end
-%	else
 	if (isempty(pp) && ~numeric)
 		kc = 2*pi*fc;
 		% IS = kc./(2*pi) * 4.^(1-p)./(2*p-1).*pi.*p.*binom(2*p-1,p-1)

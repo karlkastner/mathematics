@@ -32,7 +32,7 @@ function [val0, t0, ddv_dt2] = extreme3(t,val,tdx)
 
 		% TODO extrapolate end-points linearly
 		val_ = [val(1); val; val(end)];
-		% this has shifted by 1 due to padding one value
+		% the shift of 1 compensates for the padding of one value
 		val3 = [val_(tdx); val_(tdx+1); val_(tdx+2)];
 		%val3 = [val(max(1,tdx-1)); val(tdx); val(min(nt,tdx+1))];
 

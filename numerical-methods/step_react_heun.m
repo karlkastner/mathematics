@@ -14,9 +14,9 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-% second order for the reaction equation
-%
-function [y,e] = step_react_heun(t,dt,y0,dy_dt_fun)
+%% second order accurate for the reaction equation
+%% note: time step has to be adapted externally
+function [y,emax,dt_next] = step_react_heun(t,dt,y0,dy_dt_fun,abstol,reltol)
 	% TODO for stochastic steps, the random numbers at the second step have to be the same
 	dy0 = dy_dt_fun(t,y0);
 	% predictor step
@@ -26,7 +26,24 @@ function [y,e] = step_react_heun(t,dt,y0,dy_dt_fun)
 	dyp = dy_dt_fun(t+dt,yp);
 	y   = y0 + 0.5*dt*(dy0 + dyp);
 	if (nargout()>1)
-		e = 0.5*dt*(dy0 - dyp);
+		% The time step is optimal for Euler's method,
+		% thus larger than what would be required for Heun's method 
+		%
+		% y_euler = y0 + dt*dy0;
+		% e_euler = 2*abs(y_euler - y_heun)
+		%         = 2*dt*abs(dy0 - 1/2*(dy0+dyp))
+		%	  =   dt*abs(dy0 - dyp)
+		% C dt^2  = e_euler
+		% C dt_next^2 = tol
+		% dt_next^2/dt^2 = e_euler/tol
+		% dt_next = dt*sqrt(tol/e)
+		rmsy0 = rms(y0);
+		tol   = max(abstol,reltol*rmsy0); 
+		e     = 0.5*dt*(dy0 - dyp);
+		% note that only the Linf (max) norm is suitable for PDEs
+		% as changes might be concentrated in specific locations
+		emax    = max(abs(e));
+		dt_next = dt*sqrt(tol/emax);
 	end
 end
 

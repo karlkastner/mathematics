@@ -1,12 +1,14 @@
 % Sat 26 Jun 21:04:19 CEST 2021
-% c.f. berkeley lecture notes, this is just the squared
+% Karl Kastner, Berlin
 %
-% spectral density (S) of the spatial (two-sided) pth-order recursive lowpass
-% identical power spectrum of the ar1 process of pth-recursive order
-% S = |F|^p, where F is fourier transform of the autocorrelation function of a first order lowpass
-%
-% function [S_lp,S_lp1] = spectral_density_lowpass(f,arg2,order,dx,varargin)
-function [S_lp, S_lp1] = lowpass1d_continuous_pdf(fx,arg2,order,dx,normalize,varargin)
+%% function [S_lp,S_lp1] = spectral_density_lowpass(f,arg2,order,dx,varargin)
+%%
+%% spectral density (S) of the spatial (two-sided) pth-order recursive lowpass
+%% identical power spectrum of the ar1 process of pth-recursive order
+%% S = |F|^p, where F is fourier transform of the autocorrelation function of a first order lowpass
+%% c.f. berkeley lecture notes, this is just the squared
+%%
+function [S_lp, S_lp1] = lowpass1d_discrete_pdf(fx,arg2,order,dx,normalize,varargin)
 	if (nargin()<3||isempty(order))
 		order = 1;
 	end

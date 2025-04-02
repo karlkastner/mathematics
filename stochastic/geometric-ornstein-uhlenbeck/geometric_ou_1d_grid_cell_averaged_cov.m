@@ -17,9 +17,12 @@
 %% function cov_ = geometric_ar1_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
 %%
 %% covariance between the grid-cell-averaged values of the continuous ornstein uhlenbeck (ar1) process
-function cov_ = geometric_ar1_1d_grid_cell_averaged_cov(lmu,lsd,theta,x,dx,varargin)
+function cov_ = geometric_ou_1d_grid_cell_averaged_cov(lmu,lsd,theta,x,dx,varargin)
 	% correlation function of the logarithmic values
 	lrfun = @(x) exp(-abs(x)/theta);
+	% TODO allow for wrap
+	% i.e. lrfun = sum_i=0^nL-1 exp(x+i*L)/theta)
+
 	% covariance function of the values
 	cfun = @(x) logn_cov(lrfun(x),lmu,lmu,lsd,lsd);
 	% covariance between grid cell averages

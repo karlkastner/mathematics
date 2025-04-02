@@ -14,9 +14,9 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
+%% function [S,R,r] = bandpass2d_discrete_pdf(L,n,Lf,p,q);
 %
 %% two dimensional spectral density of a discrete bandpass filter (dx finite)
-% function [S,R,r] = bandpass2d_discrete_pdf(L,n,Lf,p,q);
 function [S,R,r] = bandpass2d_discrete_pdf(L,n,Lf,p,q);
 	if (nargin()<5)
 		q = 1;

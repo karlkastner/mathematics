@@ -1,9 +1,10 @@
-%Sat 26 Jun 23:13:56 CEST 2021
-% spectral density of a bandpass
+% Sat 26 Jun 23:13:56 CEST 2021
+% Karl Kastner, Berlin
 %
+%% function [S_bp, S_bp1] = spectral_density_bandpass_discrete(fx,arg2,order,dx,varargin)
 %% spectral density of the discrete spatial (two-sided) bandpass filter
-%
-% function [S_bp, S_bp1] = spectral_density_bandpass_discrete(fx,arg2,order,dx,varargin)
+%% in discrete space
+%%
 function [S_bp, S_bp1] = bandpass1d_discrete_pdf(fx,arg2,order,dx,normalize,varargin)
 	if (nargin()<3 || isempty(order))
 		order = 1;
@@ -36,5 +37,5 @@ end
 		I = spectral_density_area(fx,S_bp);
 		S_bp = S_bp./I;
 	end
-end % spectral_density_bandpass_discrete 
+end % bandpass2d_discrete_pdf
 

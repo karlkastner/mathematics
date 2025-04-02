@@ -1,5 +1,5 @@
-% Wed 29 Mar 16:58:33 CEST 2023
-% Karl Kastner, Berlin
+% Fri  7 Jan 16:11:57 CET 2022
+% Karl Kästner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -14,15 +14,19 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function cov_ = geometric_ou_2d_grid_cell_averaged_cov(lmu,lsd,theta,x,y,dx,dy,varargin)
+%% function [p] = bandpass1dpdf_mode2par(fc,Sc,p0)
 %%
-%% covariance between the grid-cell-averaged values of the continuous ornstein uhlenbeck (ou) process
-function cov_ = geometric_ou_2d_grid_cell_averaged_cov(lmu,lsd,ltheta,x,y,dx,dy,varargin)
-	% correlation function of the logarithmic values
-	lrfun = @(x,y) exp(-hypot(x,y)/ltheta);
-	% covariance function of the values
-	cfun = @(x,y) lognpdf_cov(lmu,lmu,lsd,lsd,lrfun(x,y));
-	% covariance between grid cell averages
-	cov_ = cov_cell_averages_2d(cfun,x,y,dx,dy,varargin{:});
+%% transform mode (maxima) of the bandpass spectral density into the paramter
+%% of the underlying distribution 
+%
+function [fc,p] = bandpass1dpdf_mode2par(fc,Sc,p0)
+	if (nargin()<3)
+		p0 = 1;
+	end
+	% n.b: lsqnonlin works much more reliable than fzero
+	p0 = double(p0);
+	fc = double(fc);
+	Sc = double(Sc);
+	p  = lsqnonlin(@(p) bandpass1dpdf_max(fc,abs(p)) - Sc, p0, 0);
 end
 

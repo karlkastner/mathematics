@@ -86,6 +86,7 @@ function [Sr, fri, Cr, count, A] = periodogram_radial(S2d,L)
 
 	fdx = id_Sr < s(1);
 
+	S2d2 = S2d.^2;
 	% half-sum of 2d-bins per 1d-bin
 if (0)
 	sumS = 0.5*( accumarray(id_Sr(:),p(:).*S2d(:),s,@sum) ...
@@ -96,6 +97,8 @@ if (0)
 else
 	sumS = 0.5*( accumarray(id_Sr(fdx),p(fdx).*S2d(fdx),s,@sum) ...
 	           + accumarray(id_Sr(fdx)+1,(1-p(fdx)).*S2d(fdx), s, @sum) );
+	sumS2 = 0.5*( accumarray(id_Sr(fdx),p(fdx).*S2d2(fdx),s,@sum) ...
+	           + accumarray(id_Sr(fdx)+1,(1-p(fdx)).*S2d2(fdx), s, @sum) );
 	% nt : number of 2d-bins per 1d-bin
 	count = (   accumarray(id_Sr(fdx),p(fdx),s,@sum) ...
 	          + accumarray(id_Sr(fdx)+1,(1-p(fdx)), s, @sum) );
@@ -103,14 +106,23 @@ end
 
 	% strip successor of last bin
 	sumS  = sumS(1:end-1);
+	sumS2 = sumS2(1:end-1);
 	count = count(1:end-1);
 
 	% integral
 	Sr.mu = sumS./count;
-	Sr.mu(count==0) = 0;
-	
+	Sr.var = (sumS2./count) - (sumS./count).^2;
+	Sr.se2 = Sr.var./sqrt(count);
+	fdx = (count == 0);
+	Sr.mu(fdx) = 0;
+	Sr.var(fdx) = 0;
+	Sr.se2(fdx) = 0;
+
 	% normalize
-	Sr.normalized = Sr.mu./(sum(mid(Sr.mu)).*dfi);
+	scale = 1./(sum(mid(Sr.mu)).*dfi);
+	Sr.normalized = scale*Sr.mu;
+	Sr.var = scale^2*Sr.var;
+	Sr.se2 = scale^2*Sr.se2;
 
 	% cumulative distribution
 	if (nargout()>2)                                           

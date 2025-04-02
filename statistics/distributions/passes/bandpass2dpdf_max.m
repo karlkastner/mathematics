@@ -1,4 +1,4 @@
-% Fri 22 Apr 13:28:53 CEST 2022
+% Fri  3 Mar 13:08:40 CET 2023
 % Karl Kastner, Berlin
 %
 % This program is free software: you can redistribute it and/or modify
@@ -14,18 +14,11 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-%% function Sb = bandpass2d_continuous_pdf(fr,a,order)
-%% not normalized, max (S) = 1;
-function Sb = bandpass2d_continuous_pdf(fr,a,order)
-	% lowpass density
-	Sl = lowpass2d_continuous_pdf(fr,a,[]);
-	% bandpass density
-	Sb = 4*Sl.*(1.0-Sl);
-	% round of error
-	Sb = max(0,Sb);
-	% higher order
-	if (nargin()>2 && ~isempty(order))
-		Sb = Sb.^order;
-	end
+%
+%% Sc = max(S(fx,fy)) : maximum of the bandpass density in two dimensions in continuous space
+%
+function [Sc] = bandpass2dpdf_max(fc,p)
+%	Sc = 1./(1/2*pi*fc^2*2^(4*p)/(2*p+1)*gamma(2*p+2)*gamma(2*p-1)/(gamma(4*p)));
+	Sc = 2*(2*p+1)*gamma(4*p)./(pi*fc^2*2^(4*p)*gamma(2*p+2)*gamma(2*p-1));
 end
 

@@ -20,8 +20,15 @@ classdef Spatial_Pattern < handle
 	properties
 		% pattern in the spatial domain
 		b
-		% extended to square domain by padding the mean value
-		b_square
+		% pattern extended to square domain by padding the mean value
+		% and pattern predicted by linear filter from the spatial
+		% heterogeneity map
+		b_ = struct('square',[],'lin',[]);
+
+		% spatial heterogeneity map
+		% source noise spectrum
+		%source = struct('S',[]);
+		source
 
 		% mask of pattern in real space
 		msk = struct('b',[],'f',[],'rot',[]);
@@ -31,6 +38,9 @@ classdef Spatial_Pattern < handle
 
 		% periodogram and spectral density
 		S = struct();
+
+		% transfer function
+		T = struct();
 
 		% cumulative spectral density
 		C = struct();
@@ -47,7 +57,8 @@ classdef Spatial_Pattern < handle
 		f = struct('x',[],'y',[],'r',[]);
 
 		% windows for suppressing spurious frequency components
-		w 
+		w
+
 
 		% analysis options
 		opt = struct( ... 
@@ -82,6 +93,7 @@ classdef Spatial_Pattern < handle
 			    ... % plot limits
 			    , 'xlim', [0, 2.5] ...
 			    , 'ylim', [-2.5, 2.5] ...
+			    , 'suppress_low_frequency_components', true ...
 		);
 
 		% analysis statistics

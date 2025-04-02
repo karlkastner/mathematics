@@ -14,13 +14,23 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %
-% let x1 = exp(z1), x2 = exp(z2) be two log-normal variables
-% with E(x1) = mu1, Var(xi) = mui, corr(x1,x2) = r
-%
-% then this function determines
-%
-% E(zi) = lmui, Var(zi) = lsdi, corr(z1,z2) = lr
-%
+%% mean, variance and correlation of the log of two correlated log-normal random varibales
+%%
+%% let
+%%	z_i = exp(lz_i),	i = 1,2
+%% with
+%%	E(z_i) = mui
+%%	Var(z_i) = sd_i^2
+%%	corr(z_1,z_2) = r
+%%
+%% then this function determines the log-moments:
+%%
+%% 	E(lz_i) = lmu_i
+%%	Var(lz_i) = lsd_i^2
+%%	corr(lz_1,lz)2) = lr
+%%
+%% which are identical with the parameters of the log-normal functions in matlab
+%%
 function [lmu1,lmu2,lsd1,lsd2,lr] = lognpdf_moment2par_correlated(mu1,mu2,sd1,sd2,r)
 	[lmu1,lsd1]     = lognpdf_moment2par(mu1,sd1);
 	[lmu2,lsd2]     = lognpdf_moment2par(mu2,sd2);

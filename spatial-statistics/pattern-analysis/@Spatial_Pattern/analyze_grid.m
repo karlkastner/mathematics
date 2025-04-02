@@ -27,6 +27,7 @@ function obj = analyze_grid(obj)
 
 	% for quicker access, R,S,stat are fetched here and later written back
 	S    = obj.S;
+	T    = obj.T;
 	R    = obj.R;
 	stat = obj.stat;
 
@@ -35,40 +36,47 @@ function obj = analyze_grid(obj)
 	centroid = obj.centroid();	
 
 	% removal of spurious low frequency components
-	% we assume that spurious low frequency components are predominantly isotropic
-	[S.hp, whp, fhp, shp, nf_lf, dSminmaxrel] = suppress_low_frequency_lobe(S.hat,obj.msk.b_square,obj.stat.L_square);
+	% assumes that spurious low frequency components are predominantly isotropic
+	if (obj.opt.suppress_low_frequency_components)
+	[S.hp, whp, f_hp, sd_hp, nf_lf, dSminmaxrel] = suppress_low_frequency_lobe(S.hat,obj.msk.b_square,obj.stat.L_square);
+	else
+		S.hp = S.hat;
+		whp = 1;
+		f_hp = 0;
+		dSminmaxrel = NaN;
+	end
 	%[S.hp, w] = suppress_low_frequency_components_1(obj,S.hat)
 
 	% fraction of spectral energy retained after removing spurious low-frequency components by highpass filtering
 	stat.p_S_hp = sum(whp.*S.hat,'all')./sum(S.hat,'all');
 
 	% note that due to the high pass filtering, b_hp has positive and negative values
-	b_hp = ifft2(sqrt(whp).*fft2(obj.b_square));
+	b_hp = ifft2(sqrt(whp).*fft2(obj.b_.square));
 
 	% prescale image for thresholding
 	% there is a matlab bug that double images need to be scaled
 	b_scaled = (   (b_hp - min(b_hp(obj.msk.b_square))) ...
 		     / (max(b_hp(obj.msk.b_square)) ...
-		     - min(b_hp(obj.msk.b_square))));
+		     -  min(b_hp(obj.msk.b_square))));
 	stat.thresh_b      = graythresh(b_scaled(obj.msk.b_square));
 
 	% threshold
-	b_thresh      = b_scaled>stat.thresh_b;
+	obj.b_.thresh      = b_scaled>stat.thresh_b;
 
 	% fraction of ground covered by vegetation
-	stat.coverage = (   sum(b_thresh(obj.msk.b_square),'all') ...
+	stat.coverage = (   sum(obj.b_.thresh(obj.msk.b_square),'all') ...
 		          / sum(obj.msk.b_square,'all') );
 
 	% contrast between vegetated and unvegetated areas
 	% computed for the original image as a quaility indicator
-	stat.contrast = (  mean(obj.b_square(obj.msk.b_square & b_thresh)) ...
-			 - mean(obj.b_square(obj.msk.b_square & (~b_thresh))));
+	stat.contrast = (  mean(obj.b_.square(obj.msk.b_square & obj.b_.thresh)) ...
+			 - mean(obj.b_.square(obj.msk.b_square & (~obj.b_.thresh))));
 
 	% weights for density fits, exclude spurious low-frequency components
-	if (obj.opt.weight)
-		obj.w.x = 1-normpdf(obj.f.x,0,shp)/normpdf(0,0,shp);	
-		obj.w.y = 1-normpdf(obj.f.y,0,shp)/normpdf(0,0,shp);	
-		obj.w.r = 1-normpdf(obj.f.r,0,shp)/normpdf(0,0,shp);
+	if (obj.opt.suppress_low_frequency_components & obj.opt.weight)
+		obj.w.x = 1-normpdf(obj.f.x,0,sd_hp)/normpdf(0,0,sd_hp);	
+		obj.w.y = 1-normpdf(obj.f.y,0,sd_hp)/normpdf(0,0,sd_hp);	
+		obj.w.r = 1-normpdf(obj.f.r,0,sd_hp)/normpdf(0,0,sd_hp);
 	else
 		obj.w.x = ones(size(obj.f.x));
 		obj.w.x(1) = 0;
@@ -76,6 +84,7 @@ function obj = analyze_grid(obj)
 		obj.w.r = ones(size(obj.f.r));
 		obj.w.r(1) = 0;
 	end
+	obj.w.xp = obj.w.x.*(obj.f.x>0);
 
 	% 2D spectral density estimate by periodogram smoothing
 	dfr   = obj.f.rr(1,2);
@@ -94,7 +103,7 @@ function obj = analyze_grid(obj)
 	obj.msk.f(sdx(fdx)) = true;
 
 	% exlude spurious low-frequency components from the test
-	obj.msk.f = obj.msk.f & (obj.f.rr > fhp);
+	obj.msk.f = obj.msk.f & (obj.f.rr > f_hp);
 
 	% by symmetry, the negative-half plane can be excluded
 	obj.msk.f_pos = obj.msk.f & cvec(obj.f.x) >= 0;
@@ -108,7 +117,7 @@ function obj = analyze_grid(obj)
 	end
 	if (obj.opt.test_for_periodicity)
 		[isperiodic, p_periodic, stati] = periodogram_test_periodicity_2d(...
-					obj.b_square, obj.stat.L_square, nf_test, msk.b_, obj.msk.f_pos, obj.opt.n_mc);
+					obj.b_.square, obj.stat.L_square, nf_test, msk.b_, obj.msk.f_pos, obj.opt.n_mc);
 		% note, for summing up the spectral energy, the negative half-plane must not be excluded
 		fdx                   = (stati.pn_all<=obj.opt.significance_level_a1) & obj.msk.f;
 		% p_periodic            = stati.pn;
@@ -181,7 +190,7 @@ function obj = analyze_grid(obj)
 	Ws = Ws/sum(Ws,'all');
 
 	% for patterns with known direction, such as computer generated patterns, the direction angle_deg can be specified
-	if (isfield('angle',obj.opt) && ~isempty(obj.opt.angle))
+	if (isfield('angle_deg',obj.opt) && ~isempty(obj.opt.angle_deg))
 		angle_deg = obj.opt.angle;
 	end
 
@@ -228,16 +237,24 @@ function obj = analyze_grid(obj)
 	S.con = fft_rotate(S.rot.con,+angle_deg);
 	R.con = fft_rotate(R.rot.con,+angle_deg);
 
+	if (~isempty(obj.source))
+		R.e.rot.con  = fft2(Ws).*fft2(S.e.hat);
+		S.e.rot.con  = ifft2(R.e.rot.con);
+		R.be.rot.con = fft2(Ws).*fft2(S.be.hat);
+		S.be.rot.con = ifft2(R.be.rot.con);
+		obj.T.rot.con = S.be.rot.con/S.e.rot.con;
+	end
+
 	for field = {'hp','hat','bar','con'}
 		% radial periodogram
 		[S_,~] = periodogram_radial(S.(field{1}),L);
 		S.radial.(field{1}) = S_.normalized;
 		% angular periodogram
 		[S.angular.(field{1}),obj.f.angle] = periodogram_angular(S.(field{1}),L,nf_s_);
-
 	
-		% angular periodogram
+		% angular periodogram, rotated
 		[S.rot.angular.(field{1}),obj.f.angle] = periodogram_angular(S.rot.(field{1}),L,nf_s_);
+
 		% over half-circle
 		S.rot.angular_p.(field{1}) = ( 2*cvec(S.rot.angular.(field{1})) ...
 			                      .* (  cvec(obj.f.angle) >= -pi/2 ...
@@ -248,6 +265,7 @@ function obj = analyze_grid(obj)
 
 		% density perpendicular to bands
 		S.rot.x.(field{1})  = sum(S.rot.(field{1}),2)*df(2);
+
 		% over positive half-axis
 		S.rot.xp.(field{1}) = ( 2*S.rot.x.(field{1}) .* (cvec(obj.f.x) >= 0) );
 
@@ -276,14 +294,19 @@ function obj = analyze_grid(obj)
 		[R.radial.(field{1}),obj.r] = autocorr_radial(R.(field{1}),L);
 
 		% density maxima
-		% TODO use extreme3
-		[Sc.radial.(field{1}),id]  = max(S.radial.(field{1}));
-		fc.radial.(field{1})       = obj.f.r(id);
-		[Sc.x.(field{1})]          = max(cvec(S.rot.x.( field{1}))); %.*(obj.f.x>=0));
-		[Sc.xp.(field{1}),id]      = max(cvec(S.rot.xp.(field{1})));
-		fc.x.(field{1})            = obj.f.x(id);
+		[Sc.radial.([field{1},'_']),id]  = max(S.radial.(field{1}));
+		 fc.radial.([field{1},'_'])       = obj.f.r(id);
+		[Sc.radial.(field{1}),fc.radial.(field{1})] = extreme3(obj.f.r,S.radial.(field{1}),id);
+		% this is symmetric and we search here only in the positive half
+		[Sc.x.([field{1},'_']),id]          = max(cvec(S.rot.x.(field{1}).*(obj.f.x>=0)));
+		fc.x.([field{1},'_'])            = obj.f.x(id);
+		[Sc.x.(field{1}),fc.x.(field{1})] = extreme3(obj.f.x,S.rot.x.(field{1}),id);
+		[Sc.xp.([field{1},'_']),id]      = max(cvec(S.rot.xp.(field{1})));
+		fc.xp.([field{1},'_'])            = obj.f.x(id);
+		[Sc.xp.(field{1}),fc.xp.(field{1})] = extreme3(obj.f.x,S.rot.xp.(field{1}),id);
+		%[Sc.xp.(field{1}),id]      = max(cvec(S.rot.xp.(field{1})));
 		[Sc.y.(field{1}),id]       = max(cvec(S.rot.y.(field{1})).*(obj.f.y>=0));
-		% this should be the first field for anisotropic patterns, but we compute it anyway
+		% this should be 0 for anisotropic patterns, but we compute it anyway
 		fc.y.(field{1})            = obj.f.y(id);
 		[Sc.angular.(field{1})]    = max(S.rot.angular.(field{1}));
 		[Sc.angular_p.(field{1}),id] = max(S.rot.angular_p.(field{1}));
@@ -296,6 +319,20 @@ function obj = analyze_grid(obj)
 		end
 	end % for field
 
+	if (~isempty(obj.source))
+		S.e.rot.x.con  = sum(S.e.rot.con,2)*df(2);
+		S.be.rot.x.con = sum(S.be.rot.con,2)*df(2);
+		S.e.rot.y.con  = (sum(S.e.rot.con,1)')*df(1);
+		S.be.rot.y.con = (sum(S.be.rot.con,1)')*df(1);
+		T.rot.x = S.be.rot.x.con ./ S.e.rot.x.con;
+		T.rot.y = S.be.rot.y.con ./ S.e.rot.y.con;
+		% average radial coherence
+		rSr = cvec(obj.f.r).*cvec(S.radial.hat);
+		df = obj.f.r(2)-obj.f.r(1);
+		rSr = rSr/(sum(rSr)*df);
+		stat.coherence.radial = rSr'*obj.S.coherence.radial*df;
+	end
+
 	obj.msk.rot.f = fft_rotate(obj.msk.f,-angle_deg);
 
 	% store reasults
@@ -305,7 +342,7 @@ function obj = analyze_grid(obj)
 	stat.area_msk      = area_msk;
 	stat.fc            = fc;
 	stat.isisotropic   = isisotropic;
-	stat.fhp           = fhp;
+	stat.f_hp           = f_hp;
 	stat.nf            = nf;
 	stat.nf_test       = nf_test;
 	stat.p_isotropic   = p_isotropic;
@@ -319,6 +356,7 @@ function obj = analyze_grid(obj)
 	obj.stat = stat;
 	obj.R = R;
 	obj.S = S;
+	obj.T = T;
 
 	obj.stat.analyzed = true;
 	obj.stat = setfield_deep(obj.stat,'runtime.analysis',toc(timer));
