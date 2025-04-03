@@ -28,10 +28,10 @@ function [c,cbh] = plot(obj,field_str,varargin)
 	switch (field_C{1})
 	case {'b'}
 		if (isempty(obj.msk.b))
-			imagesc((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_square);
+			imagesc((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_.square);
 		else
 			%surface((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_square,'Edgecolor','none');
-			imagesc((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_square,'AlphaData',obj.msk.b_square)
+			imagesc((obj.x-obj.x(1))/lambda_c,(obj.y-obj.y(1))/lambda_c,obj.b_.square,'AlphaData',obj.msk.b_square)
 		end % else of isempty alpha
 		axis xy
 		axis equal
@@ -99,6 +99,8 @@ function [c,cbh] = plot(obj,field_str,varargin)
 		error('Spatial_Pattern:UnknownField', ['Unknown field ', field_str]);
 	end
 	else
+        switch (field_C{1})
+	case {'S'}
 	switch (field_C{end-1})
 	case {'radial'}
 		plot(obj.f.r*lambda_c,var/lambda_c,varargin{:});
@@ -141,6 +143,18 @@ function [c,cbh] = plot(obj,field_str,varargin)
 	otherwise
 		error('Spatial_Pattern:UnknownField',['Unknown field ', field_str]);
 	end % switch field_C{end-1}
+	case {'R'}
+	switch (field_C{end-1})
+	case {'radial'}
+		plot(obj.r/lambda_c,var,varargin{:});
+		xlabel('Lag distance $x/\lambda_c$','interpreter','latex');
+		ylabel('Autocorrelation $R_r$','interpreter','latex');
+		% TODO no magic numbers
+		xlim(obj.opt.xlim);
+	otherwise
+		error('Spatial_Pattern:UnknownField',['Unknown field ', field_str]);
+	end % switch field_C{end-1}
+	end
 	end % of else ~isvector
 end %
 

@@ -1,4 +1,18 @@
 % 2025-02-18 17:00:23.199551587 +0100 tile.m
+% Karl Kästner, Berlin
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 function [z,x,dx,dy] = tile(z1,L1,sdx,sL,s)
 	n1 = size(z1,1);
 	if (nargin()<2)
